@@ -1,5 +1,6 @@
 # CS-UY 4513 (Fall 2025)
-# Team 5 
+# Team 5 [Project Name](about:blank)
+
 ## Instructor
 - [@depasqua](https://github.com/depasqua)
 
@@ -11,7 +12,7 @@
 - Drastansh Nadola [@Drastansh7](https://github.com/Drastansh7)
 - Kevin Aguirre [@Kevin-Aguirre](https://github.com/Kevin-Aguirre)
 - Eric Ma [@mAE7777](https://github.com/mAE7777)
-- Moayad Alismail [maa9566@nyu.edu](mailto:maa9566@nyu.edu)
+- Moayad Alismail [@MoayadAlismail](https://github.com/MoayadAlismail)
 
 
 ## Stack

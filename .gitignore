@@ -72,9 +72,11 @@ yarn-debug.log*
 .DS_Store
 docs/
 temp/
-## block LLM files
-AGENTS.md
-CLAUDE.md
+mails/
+
+# ** block LLM files **
+**/AGENTS.md
+**/CLAUDE.md
 .vscode/
 .idea/
 .cursor/
