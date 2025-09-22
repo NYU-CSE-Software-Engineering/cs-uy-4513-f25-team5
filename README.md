@@ -3,9 +3,21 @@
 
 ## Instructor
 - Peter DePasquale [@depasqua](https://github.com/depasqua)
+- Email: pd80@nyu.edu
+- Office: 370 Jay Street, Rm 866
+- Office hours:
+  - Mondays: 1–3pm (in-person only)
+  - Tuesdays: 1–2pm (via Zoom only) (except when department meetings conflict or on exam dates)
+  - Wednesdays: 1–3pm (in-person only)
+  - Thursdays: 1–3pm (via Zoom only) (except when Tandon faculty meeting conflict)
+[schedule with this link](https://calendly.com/depasquale-cse/office-hours)
+
 
 ## TA
 - Taaha Bin Mohsin [@Taaha](https://github.com/taahamohsin)
+- Email: tb3486@nyu.edu
+- Office: Jacobs Rm 223
+- Office hours: Tuesdays and Thursdays, 12:30-3:30pm
 
 ## Team members
 
