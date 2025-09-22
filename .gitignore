@@ -70,7 +70,7 @@ yarn-debug.log*
 
 # User defined
 .DS_Store
-docs/
+pdf/
 temp/
 mails/
 
