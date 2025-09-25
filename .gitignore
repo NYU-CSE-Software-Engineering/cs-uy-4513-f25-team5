@@ -70,9 +70,8 @@ yarn-debug.log*
 
 # User defined
 .DS_Store
-pdf/
 temp/
-mails/
+course/
 
 # ** block LLM files **
 **/AGENTS.md
