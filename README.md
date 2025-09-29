@@ -1,47 +1,34 @@
-# CS-UY 4513 (Fall 2025)
+# RoomMate – CS-UY 4513 Team 5 (Fall 2025)
 
-# Team 5 [RoomMatch](about:blank)
+RoomMate is a SaaS platform that helps students and newcomers find compatible roommates and share housing costs.
 
-**Project Goal**
+- Build secure user profiles with lifestyle, budget, and housing preferences
+- Match seekers and listers with a compatibility engine and verified listings
+- Coordinate through messaging while persisting preferences, history, and matches
 
-Design and develop a SaaS platform, **RoomMatch**, to help students and newcomers find compatible roommates and share housing costs.
+Detailed requirements live in [docs/Project_Specification.md](docs/Project_Specification.md).
 
-**Key Features:**
-- User profiles with identity, budget, lifestyle, and housing preferences
-- Profile verification
-- Matching algorithm based on compatibility (budget, location, habits, schedules)
-- Messaging and coordination tools for users
-- Persistent storage for user preferences, search history, and matches
+## Contacts
 
-# Contact Information
-
-## Instructor
-
+**Instructor**
 - Peter DePasquale [@depasqua](https://github.com/depasqua)
 - Email: [pd80@nyu.edu](mailto:pd80@nyu.edu)
 - Office: 370 Jay Street, Rm 866
-- Office hours:
-  - Mondays: 1–3pm (in-person only)
-  - Tuesdays: 1–2pm (via Zoom only) (except when department meetings conflict or on exam dates)
-  - Wednesdays: 1–3pm (in-person only)
-  - Thursdays: 1–3pm (via Zoom only) (except when Tandon faculty meeting conflict)
-- [schedule with this link](https://calendly.com/depasquale-cse/office-hours)
+- Office hours: Mondays & Wednesdays 1–3 pm (in-person); Tuesdays 1–2 pm (Zoom); Thursdays 1–3 pm (Zoom)
+- [Schedule office hours](https://calendly.com/depasquale-cse/office-hours)
 
-## TA
-
+**TA**
 - Taaha Bin Mohsin [@Taaha](https://github.com/taahamohsin)
 - Email: [tb3486@nyu.edu](mailto:tb3486@nyu.edu)
 - Office: Jacobs Rm 223
-- Office hours: Tuesdays and Thursdays, 12:30-3:30pm
+- Office hours: Tuesdays & Thursdays, 12:30–3:30 pm
 
-## Team members
+## Team
 
-### Team leader
-
+**Team Lead**
 - Moayad Alismail [@MoayadAlismail](https://github.com/MoayadAlismail)
 
-### Team members
-
+**Developers**
 - Drastansh Nadola [@Drastansh7](https://github.com/Drastansh7)
 - Eric Ma [@mAE7777](https://github.com/mAE7777)
 - Kevin Aguirre [@Kevin-Aguirre](https://github.com/Kevin-Aguirre)
@@ -49,13 +36,17 @@ Design and develop a SaaS platform, **RoomMatch**, to help students and newcomer
 - Terry Li [@turtlelyte](https://github.com/turtlelyte)
 - Tianyi Xu [@tianyix033](https://github.com/tianyix033)
 
-# Stack
+## Stack
+- Language: Ruby, HTML, CSS
+- Framework: Ruby on Rails 7
+- Database: PostgreSQL
+- Testing:
+  - Unit: RSpec
+  - System: Cucumber, Capybara
 
-- Ruby on Rails
-
-# Links
-
+## Helpful Links
 - [GitHub](https://github.com/depasqua/cs-uy-4513-f25-team5)
+- [Project Specification](docs/Project_Specification.md)
 - [Ed Discussion](https://edstem.org/us/courses/85791/discussion/6967668)
 - [Brightspace](https://brightspace.nyu.edu/d2l/le/lessons/479123)
 - [Google Drive](https://drive.google.com/drive/folders/1_f-VSSiocMMotoAsxXHAGuWwao9Dp3jI)
