@@ -6,7 +6,9 @@ ruby "3.3.8"
 gem "rails", "~> 7.1.5", ">= 7.1.5.2"
 
 # Use postgresql as the database for Active Record
-gem "pg", "~> 1.1"
+# gem "pg", "~> 1.1"
+gem "sqlite3", "~> 1.7"
+
 
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
@@ -37,6 +39,9 @@ group :development, :test do
   gem "debug", platforms: %i[ mri windows ]
   gem "rspec-rails", "~> 6.1"
   gem "factory_bot_rails"
+  gem "cucumber-rails"
+  gem "capybara"
+  gem 'database_cleaner-active_record'
 end
 
 group :development do
