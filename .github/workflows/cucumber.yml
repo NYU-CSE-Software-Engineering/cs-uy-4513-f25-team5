@@ -1,0 +1,30 @@
+name: Cucumber
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  cucumber:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install system dependencies
+        run: sudo apt-get update && sudo apt-get install -y libsqlite3-dev
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.3.8
+          bundler-cache: true
+
+      - name: Prepare test database
+        run: bin/rails db:prepare
+        env:
+          RAILS_ENV: test
+
+      - name: Run Cucumber
+        run: bundle exec cucumber --publish-quiet
