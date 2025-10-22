@@ -6,7 +6,7 @@ RoomMate is a SaaS platform that helps students and newcomers find compatible ro
 - Match seekers and listers with a compatibility engine and verified listings
 - Coordinate through messaging while persisting preferences, history, and matches
 
-Detailed requirements live in [docs/Project_Specification.md](docs/Project_Specification.md).
+Detailed requirements live in `docs/Project_Specification.md`.
 
 ## Contacts
 
@@ -37,12 +37,23 @@ Detailed requirements live in [docs/Project_Specification.md](docs/Project_Speci
 - Tianyi Xu [@tianyix033](https://github.com/tianyix033)
 
 ## Stack
-- Language: Ruby, HTML, CSS
-- Framework: Ruby on Rails 7
+- Language: Ruby 3.3.8, HTML, CSS
+- Framework: Ruby on Rails 7 (API mode)
 - Database: PostgreSQL
 - Testing:
-  - Unit: RSpec
-  - System: Cucumber, Capybara
+  - Unit & request: RSpec
+  - System/acceptance: Cucumber, Capybara (planned)
+
+## Getting Started
+```bash
+rbenv install 3.3.8       # once per machine
+rbenv local 3.3.8         # ensures this version for the repo
+bundle install
+bin/rails db:prepare
+bin/rails server
+```
+
+Run the RSpec suite with `bundle exec rspec`. Cucumber support will arrive once feature specs are added.
 
 ## Helpful Links
 - [GitHub](https://github.com/depasqua/cs-uy-4513-f25-team5)

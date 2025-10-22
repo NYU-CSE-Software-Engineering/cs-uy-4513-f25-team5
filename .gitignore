@@ -11,26 +11,48 @@ capybara-*.html
 rerun.txt
 pickle-email-*.html
 
-# Ignore all logfiles and tempfiles.
+# Ignore bundler config.
+/.bundle
+
+# Ignore environment files (except templates committed intentionally).
+.env
+.env*.local
+/.env*
+!/.env*.erb
+
+# Ignore logfiles and tempfiles.
 /log/*
 /tmp/*
 !/log/.keep
 !/tmp/.keep
 
-# TODO Comment out this rule if you are OK with secrets being uploaded to the repo
-config/initializers/secret_token.rb
-config/master.key
+# Ignore pidfiles, but keep the directory.
+/tmp/pids/*
+!/tmp/pids/
+!/tmp/pids/.keep
 
-# Only include if you have production secrets in this file, which is no longer a Rails default
+# Ignore storage (uploaded files in development and any SQLite databases).
+/storage/*
+!/storage/.keep
+/tmp/storage/*
+!/tmp/storage/
+!/tmp/storage/.keep
+/public/uploads
+
+# Ignore master key for decrypting credentials and more.
+/config/master.key
+config/initializers/secret_token.rb
+
+# Only include if you have production secrets in this file, which is no longer a Rails default.
 # config/secrets.yml
 
+# Windows does not include zoneinfo files, so bundle the tzinfo-data gem.
+# gem "tzinfo-data", platforms: %i[ windows jruby ]
+
 # dotenv, dotenv-rails
-# TODO Comment out these rules if environment variables can be committed
-.env
-.env*.local
+# TODO Comment out these rules if environment variables can be committed.
 
 ## Environment normalization:
-/.bundle
 /vendor/bundle
 
 # these should all be checked in to normalize the environment:
@@ -63,11 +85,6 @@ node_modules/
 yarn-debug.log*
 .yarn-integrity
 
-# Ignore uploaded files in development
-/storage/*
-!/storage/.keep
-/public/uploads
-
 # User defined
 .DS_Store
 temp/
@@ -79,5 +96,4 @@ course/
 .vscode/
 .idea/
 .cursor/
-.cursorrules/
 .cursorrules/
