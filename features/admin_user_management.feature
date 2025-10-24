@@ -5,7 +5,7 @@ Feature: Admin user management
 
   Background:
     Given the test database is clean
-    And the following users exist:
+    And I create the following users:
       | email              | password  | display_name | role   |
       | admin@example.com  | admin123  | Admin User   | admin  |
       | john@example.com   | password  | John Doe     | member |

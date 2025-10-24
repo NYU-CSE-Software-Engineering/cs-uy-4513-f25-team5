@@ -6,7 +6,7 @@ As an administrator, I want to manage user accounts so that I can maintain platf
 
 ## Acceptance criteria
 
-1. An admin can visit `/admin/users` to see a list of all registered users, displaying their email, display name, and registration date.
+1. An admin can visit `/admin/users` to see a list of all registered users, displaying their email and display name.
 2. An admin can suspend a user account, preventing that user from logging in or accessing the platform.
 3. An admin can permanently delete a user account and all associated data (listings, profile information).
 4. A regular (non-admin) user attempting to access `/admin/users` is denied access with an "Access denied" message.
@@ -17,7 +17,7 @@ As an administrator, I want to manage user accounts so that I can maintain platf
 ### Models
 
 - `User`
-  - attributes: `email:string`, `password:string`, `display_name:string`, `bio:text`, `budget:integer`, `preferred_location:string`, `sleep_schedule:string`, `pets:string`, `housing_status:string`, `contact_visibility:string`, `role:string`
+  - attributes: `email:string`, `password:string`, `display_name:string`, `bio:text`, `budget:integer`, `preferred_location:string`, `sleep_schedule:string`, `pets:string`, `housing_status:string`, `contact_visibility:string`, `role:string`, `suspended:boolean`
   - validations: presence of `email` and `password`; `role` must be either "admin" or "member" (default: "member")
   - associations: `has_many :listings, dependent: :destroy`
   - methods: `admin?` returns true if role is "admin"

@@ -1,4 +1,8 @@
-Given('the following users exist:') do |table|
+Given('the test database is clean') do
+  DatabaseCleaner.clean_with(:truncation)
+end
+
+Given('I create the following users:') do |table|
   table.hashes.each do |user_attrs|
     User.create!(user_attrs)
   end
@@ -76,7 +80,7 @@ end
 
 Then('the user {string} should be suspended') do |email|
   user = User.find_by(email: email)
-  expect(user.suspended?).to be true
+  expect(user.reload.suspended).to be true
 end
 
 Then('I should see a confirmation message {string}') do |message|
