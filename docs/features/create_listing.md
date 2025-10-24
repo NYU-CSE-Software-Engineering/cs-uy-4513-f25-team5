@@ -32,3 +32,9 @@ end
 class User < ApplicationRecord
   has_many :listings
 end
+```
+
+### Screenshots
+![picture1](../../features/screenshots/create_listing_1.jpg)
+![picture2](../../features/screenshots/create_listing_2.jpg)
+![picture3](../../features/screenshots/create_listing_3.jpg)

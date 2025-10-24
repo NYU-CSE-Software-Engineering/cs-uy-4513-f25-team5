@@ -10,7 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_10_22_224915) do
+ActiveRecord::Schema[7.1].define(version: 2025_10_23_000001) do
+  create_table "avatars", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.text "image_base64", null: false
+    t.string "filename"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_avatars_on_user_id"
+  end
+
   create_table "listings", force: :cascade do |t|
     t.string "title"
     t.text "description"
@@ -27,7 +36,16 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_22_224915) do
     t.string "password"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "display_name"
+    t.text "bio"
+    t.integer "budget"
+    t.string "preferred_location"
+    t.string "sleep_schedule"
+    t.string "pets"
+    t.string "housing_status"
+    t.string "contact_visibility"
   end
 
+  add_foreign_key "avatars", "users"
   add_foreign_key "listings", "users"
 end
