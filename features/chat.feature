@@ -27,6 +27,9 @@ Feature: Chat with matched users
       | sender   | body                               |
       | Mohammad | Hey, still looking for a roommate? |
       | Steven   | Yes! Let's chat                    |
+    And the message "Hey, still looking for a roommate?" should show "Mohammad" as sender
+    And the message "Yes! Let's chat" should show "Steven" as sender
+    And each message should have a timestamp
 
   Scenario: User sends a valid message to matched user
     Given I am a signed-in user named "Mohammad"
