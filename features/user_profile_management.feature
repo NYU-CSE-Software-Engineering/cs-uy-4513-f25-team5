@@ -67,3 +67,16 @@ Feature: Manage a user profile
     When I remove my profile picture
     Then I should see a profile picture placeholder
     And my profile should not have a profile picture
+
+  Scenario: User fails to update profile with a negative budget
+    When I attempt to update my profile with:
+      | display_name       | Steven Li |
+      | bio                | Budget must not be negative |
+      | budget             | -500 |
+      | preferred_location | Brooklyn, NY |
+      | sleep_schedule     | Early riser |
+      | pets               | No pets |
+      | housing_status     | Looking for roommate |
+      | contact_visibility | Friends only |
+    Then the profile should not be saved
+    And I should see a profile validation error "Budget must be greater than or equal to 0"
