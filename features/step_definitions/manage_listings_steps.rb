@@ -1,0 +1,84 @@
+# Background Steps
+
+Given('I am a signed-in user') do
+  @user ||= User.create!(email: 'test@example.com', password: 'password')
+  visit new_user_session_path
+  fill_in 'Email', with: @user.email
+  fill_in 'Password', with: @user.password
+  click_button 'Log in'
+end
+
+Given("I have a listing titled {string}") do |title|
+  @listing ||= Listing.create!(
+    title: title,
+    description: 'Original description',
+    price: 800,
+    city: 'NYC',
+    user: @user || User.create!(email: 'test@example.com', password: 'password')
+  )
+end
+
+Given("another user has a listing titled {string}") do |title|
+  @other_user ||= User.create!(email: "other@example.com", password: "password")
+  @other_listing ||= Listing.create!(
+    title: title,
+    description: "Other listing",
+    price: 1500,
+    city: "Boston",
+    user: @other_user
+  )
+end
+
+# Edit Listing Steps
+
+When("I visit the edit page for {string}") do |title|
+  listing = Listing.find_by(title: title)
+  visit edit_listing_path(listing)
+end
+
+When("I fill in {string} with {string}") do |field, value|
+  fill_in field, with: value
+end
+
+When("I press {string}") do |button|
+  click_button button
+end
+
+Then("I should see the message {string}") do |message|
+  expect(page).to have_content(message)
+end
+
+Then("I should see {string} on the listing page") do |content|
+  expect(page).to have_content(content)
+end
+
+Then("I should see a validation error message") do
+  expect(page).to have_content("Invalid listing contents")
+end
+
+Then("the listing details should remain unchanged") do
+  @listing.reload
+  expect(@listing.title).to eq("Cozy Studio Apartment")
+  expect(@listing.price).to eq(800)
+end
+
+# Delete Listing Steps
+
+When("I click {string} for {string}") do |action, title|
+  listing = Listing.find_by(title: title)
+  visit user_path(@user)
+  within("#listing_#{listing.id}") do
+    click_link action
+  end
+end
+
+Then("I should not see {string} on my listings page") do |title|
+  visit user_path(@user)
+  expect(page).not_to have_content(title)
+end
+
+# Access Control Steps
+
+Then("I should see an error message") do
+  expect(page).to have_content("You are not authorized to edit this listing.")
+end
