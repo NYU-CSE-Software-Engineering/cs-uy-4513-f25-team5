@@ -1,0 +1,40 @@
+backend:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'app/**/*.rb'
+          - 'app/**/*.rake'
+          - 'lib/**/*.rb'
+          - 'config/**/*.rb'
+          - 'config/**/*.yml'
+
+frontend:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'app/javascript/**/*'
+          - 'app/assets/stylesheets/**/*'
+          - 'app/assets/javascripts/**/*'
+
+documentation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'docs/**/*'
+          - 'README.md'
+          - 'AGENTS.md'
+
+tests:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'spec/**/*'
+          - 'features/**/*'
+
+database:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'db/**/*'
+
+infrastructure:
+  - changed-files:
+      - any-glob-to-any-file:
+          - '.github/workflows/**/*'
+          - 'bin/**/*'
+          - 'Dockerfile'
