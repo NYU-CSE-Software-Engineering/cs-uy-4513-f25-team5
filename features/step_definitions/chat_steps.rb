@@ -139,6 +139,17 @@ Then('I should see messages in chronological order:') do |table|
   end
 end
 
+Then('the message {string} should show {string} as sender') do |message_text, sender_name|
+  message_element = page.find('.message', text: message_text)
+  expect(message_element).to have_content(sender_name)
+end
+
+Then('each message should have a timestamp') do
+  page.all('.message').each do |message|
+    expect(message).to have_css('.timestamp')
+  end
+end
+
 Then('I should see a validation error') do
   has_error = page.has_content?("can't be blank") || 
               page.has_content?("error") || 
