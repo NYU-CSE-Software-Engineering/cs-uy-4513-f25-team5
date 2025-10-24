@@ -32,4 +32,3 @@ Listing.create!(
   city: "Boston",
   user: user2
 )
-
