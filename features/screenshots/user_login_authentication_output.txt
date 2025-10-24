@@ -1,0 +1,146 @@
+﻿bundle : C:/Ruby34-x64/lib/ruby/gems/3.4.0/gems/sys-uname-1.4.1/lib/sys/windows/uname.rb:5: warning: win32ole was loade
+d from the standard library, but will no longer be part of the default gems starting from Ruby 3.5.0.
+所在位置 C:\Users\tiany\AppData\Local\Temp\ps-script-de176563-06fd-4ea7-88cc-b0776a7334ea.ps1:92 字符: 1
++ bundle exec cucumber features/user_login_authentication.feature --for ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:/Ruby34-x64/l...rom Ruby 3.5.0.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+You can add win32ole to your Gemfile or gemspec to silence this warning.
+C:/Ruby34-x64/lib/ruby/3.4.0/win32/registry.rb:2: warning: fiddle/import is found in fiddle, which will no longer be pa
+rt of the default gems starting from Ruby 3.5.0.
+You can add fiddle to your Gemfile or gemspec to silence this warning.
+Using the default profile...
+Feature: User login and authentication
+  As a student or newcomer to the city
+  I want to securely log in to my RoomMate account
+  So that I can access my profile and find compatible roommates
+
+  Background:                        # features/user_login_authentication.feature:6
+    Given the test database is clean # features/step_definitions/create_listing_steps.rb:1
+
+  Scenario: User successfully registers a new account               # features/user_login_authentication.feature:9
+    Given I am on the signup page                                   # features/step_definitions/user_login_authentication_steps.rb:7
+      undefined local variable or method 'signup_path' for #<Cucumber::Rails::World:0x000001cb83915370> (NameError)
+      ./features/step_definitions/user_login_authentication_steps.rb:8:in `"I am on the signup page"'
+      features/user_login_authentication.feature:10:in `I am on the signup page'
+    When I fill in "Email" with "newuser@example.com"               # features/step_definitions/user_login_authentication_steps.rb:37
+    And I fill in "Password" with "securepass123"                   # features/step_definitions/user_login_authentication_steps.rb:37
+    And I fill in "Password confirmation" with "securepass123"      # features/step_definitions/user_login_authentication_steps.rb:37
+    And I press "Sign up"                                           # features/step_definitions/user_login_authentication_steps.rb:41
+    Then I should be on the dashboard page                          # features/step_definitions/user_login_authentication_steps.rb:55
+    And I should see "Welcome! You have successfully signed up."    # features/step_definitions/user_login_authentication_steps.rb:46
+    And the user "newuser@example.com" should exist in the database # features/step_definitions/user_login_authentication_steps.rb:72
+
+  Scenario: User fails to register with an existing email                            # features/user_login_authentication.feature:19
+    Given a user exists with email "existing@example.com" and password "password123" # features/step_definitions/user_login_authentication_steps.rb:24
+      unknown attribute 'password_confirmation' for User. (ActiveModel::UnknownAttributeError)
+      ./features/step_definitions/user_login_authentication_steps.rb:25:in `"a user exists with email {string} and password {string}"'
+      features/user_login_authentication.feature:20:in `a user exists with email "existing@example.com" and password "password123"'
+    And I am on the signup page                                                      # features/step_definitions/user_login_authentication_steps.rb:7
+    When I fill in "Email" with "existing@example.com"                               # features/step_definitions/user_login_authentication_steps.rb:37
+    And I fill in "Password" with "newpassword"                                      # features/step_definitions/user_login_authentication_steps.rb:37
+    And I fill in "Password confirmation" with "newpassword"                         # features/step_definitions/user_login_authentication_steps.rb:37
+    And I press "Sign up"                                                            # features/step_definitions/user_login_authentication_steps.rb:41
+    Then I should see "Email has already been taken"                                 # features/step_definitions/user_login_authentication_steps.rb:46
+    And I should be on the signup page                                               # features/step_definitions/user_login_authentication_steps.rb:59
+
+  Scenario: User fails to register with invalid email format # features/user_login_authentication.feature:29
+    Given I am on the signup page                            # features/step_definitions/user_login_authentication_steps.rb:7
+      undefined local variable or method 'signup_path' for #<Cucumber::Rails::World:0x000001cb835bee88> (NameError)
+      ./features/step_definitions/user_login_authentication_steps.rb:8:in `"I am on the signup page"'
+      features/user_login_authentication.feature:30:in `I am on the signup page'
+    When I fill in "Email" with "invalid-email"              # features/step_definitions/user_login_authentication_steps.rb:37
+    And I fill in "Password" with "password123"              # features/step_definitions/user_login_authentication_steps.rb:37
+    And I fill in "Password confirmation" with "password123" # features/step_definitions/user_login_authentication_steps.rb:37
+    And I press "Sign up"                                    # features/step_definitions/user_login_authentication_steps.rb:41
+    Then I should see "Email is invalid"                     # features/step_definitions/user_login_authentication_steps.rb:46
+    And I should be on the signup page                       # features/step_definitions/user_login_authentication_steps.rb:59
+
+  Scenario: User fails to register with mismatched passwords   # features/user_login_authentication.feature:38
+    Given I am on the signup page                              # features/step_definitions/user_login_authentication_steps.rb:7
+      undefined local variable or method 'signup_path' for #<Cucumber::Rails::World:0x000001cb82f1fc80> (NameError)
+      ./features/step_definitions/user_login_authentication_steps.rb:8:in `"I am on the signup page"'
+      features/user_login_authentication.feature:39:in `I am on the signup page'
+    When I fill in "Email" with "user@example.com"             # features/step_definitions/user_login_authentication_steps.rb:37
+    And I fill in "Password" with "password123"                # features/step_definitions/user_login_authentication_steps.rb:37
+    And I fill in "Password confirmation" with "differentpass" # features/step_definitions/user_login_authentication_steps.rb:37
+    And I press "Sign up"                                      # features/step_definitions/user_login_authentication_steps.rb:41
+    Then I should see "Password confirmation doesn't match"    # features/step_definitions/user_login_authentication_steps.rb:46
+    And I should be on the signup page                         # features/step_definitions/user_login_authentication_steps.rb:59
+
+  Scenario: User successfully logs in with valid credentials                    # features/user_login_authentication.feature:47
+    Given a user exists with email "user@example.com" and password "mypassword" # features/step_definitions/user_login_authentication_steps.rb:24
+      unknown attribute 'password_confirmation' for User. (ActiveModel::UnknownAttributeError)
+      ./features/step_definitions/user_login_authentication_steps.rb:25:in `"a user exists with email {string} and password {string}"'
+      features/user_login_authentication.feature:48:in `a user exists with email "user@example.com" and password "mypassword"'
+    And I am on the login page                                                  # features/step_definitions/user_login_authentication_steps.rb:11
+    When I fill in "Email" with "user@example.com"                              # features/step_definitions/user_login_authentication_steps.rb:37
+    And I fill in "Password" with "mypassword"                                  # features/step_definitions/user_login_authentication_steps.rb:37
+    And I press "Log in"                                                        # features/step_definitions/user_login_authentication_steps.rb:41
+    Then I should be on the dashboard page                                      # features/step_definitions/user_login_authentication_steps.rb:55
+    And I should see "Successfully logged in"                                   # features/step_definitions/user_login_authentication_steps.rb:46
+
+  Scenario: User fails to log in with incorrect password                         # features/user_login_authentication.feature:56
+    Given a user exists with email "user@example.com" and password "correctpass" # features/step_definitions/user_login_authentication_steps.rb:24
+      unknown attribute 'password_confirmation' for User. (ActiveModel::UnknownAttributeError)
+      ./features/step_definitions/user_login_authentication_steps.rb:25:in `"a user exists with email {string} and password {string}"'
+      features/user_login_authentication.feature:57:in `a user exists with email "user@example.com" and password "correctpass"'
+    And I am on the login page                                                   # features/step_definitions/user_login_authentication_steps.rb:11
+    When I fill in "Email" with "user@example.com"                               # features/step_definitions/user_login_authentication_steps.rb:37
+    And I fill in "Password" with "wrongpassword"                                # features/step_definitions/user_login_authentication_steps.rb:37
+    And I press "Log in"                                                         # features/step_definitions/user_login_authentication_steps.rb:41
+    Then I should see "Invalid email or password"                                # features/step_definitions/user_login_authentication_steps.rb:46
+    And I should be on the login page                                            # features/step_definitions/user_login_authentication_steps.rb:63
+
+  Scenario: User fails to log in with non-existent email  # features/user_login_authentication.feature:65
+    Given I am on the login page                          # features/step_definitions/user_login_authentication_steps.rb:11
+      undefined local variable or method 'login_path' for #<Cucumber::Rails::World:0x000001cb827a6d28> (NameError)
+      ./features/step_definitions/user_login_authentication_steps.rb:12:in `"I am on the login page"'
+      features/user_login_authentication.feature:66:in `I am on the login page'
+    When I fill in "Email" with "nonexistent@example.com" # features/step_definitions/user_login_authentication_steps.rb:37
+    And I fill in "Password" with "somepassword"          # features/step_definitions/user_login_authentication_steps.rb:37
+    And I press "Log in"                                  # features/step_definitions/user_login_authentication_steps.rb:41
+    Then I should see "Invalid email or password"         # features/step_definitions/user_login_authentication_steps.rb:46
+    And I should be on the login page                     # features/step_definitions/user_login_authentication_steps.rb:63
+
+  Scenario: User successfully logs out                                           # features/user_login_authentication.feature:73
+    Given a user exists with email "user@example.com" and password "password123" # features/step_definitions/user_login_authentication_steps.rb:24
+      unknown attribute 'password_confirmation' for User. (ActiveModel::UnknownAttributeError)
+      ./features/step_definitions/user_login_authentication_steps.rb:25:in `"a user exists with email {string} and password {string}"'
+      features/user_login_authentication.feature:74:in `a user exists with email "user@example.com" and password "password123"'
+    And I am logged in as "user@example.com"                                     # features/step_definitions/user_login_authentication_steps.rb:28
+    When I am on the dashboard page                                              # features/step_definitions/user_login_authentication_steps.rb:19
+    And I press "Log out"                                                        # features/step_definitions/user_login_authentication_steps.rb:41
+    Then I should be on the home page                                            # features/step_definitions/user_login_authentication_steps.rb:67
+    And I should see "Successfully logged out"                                   # features/step_definitions/user_login_authentication_steps.rb:46
+    And I should not have access to protected pages                              # features/step_definitions/user_login_authentication_steps.rb:78
+
+Failing Scenarios:
+cucumber features/user_login_authentication.feature:9 # Scenario: User successfully registers a new account
+cucumber features/user_login_authentication.feature:19 # Scenario: User fails to register with an existing email
+cucumber features/user_login_authentication.feature:29 # Scenario: User fails to register with invalid email format
+cucumber features/user_login_authentication.feature:38 # Scenario: User fails to register with mismatched passwords
+cucumber features/user_login_authentication.feature:47 # Scenario: User successfully logs in with valid credentials
+cucumber features/user_login_authentication.feature:56 # Scenario: User fails to log in with incorrect password
+cucumber features/user_login_authentication.feature:65 # Scenario: User fails to log in with non-existent email
+cucumber features/user_login_authentication.feature:73 # Scenario: User successfully logs out
+
+8 scenarios (8 failed)
+鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
+65 steps (8 failed, 49 skipped, 8 passed)
+0m0.650s
+鈹?Share your Cucumber Report with your team at https://reports.cucumber.io     鈹?
+鈹?                                                                             鈹?
+鈹?Command line option:    --publish                                            鈹?
+鈹?Environment variable:   CUCUMBER_PUBLISH_ENABLED=true                        鈹?
+鈹?cucumber.yml:           default: --publish                                   鈹?
+鈹?                                                                             鈹?
+鈹?More information at https://cucumber.io/docs/cucumber/environment-variables/ 鈹?
+鈹?                                                                             鈹?
+鈹?To disable this message, specify CUCUMBER_PUBLISH_QUIET=true or use the      鈹?
+鈹?--publish-quiet option. You can also add this to your cucumber.yml:          鈹?
+鈹?default: --publish-quiet                                                     鈹?
+鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
