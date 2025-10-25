@@ -9,7 +9,8 @@ RoomMate is a SaaS platform that helps students and newcomers find compatible ro
 - Coordinate through messaging while persisting preferences, history, and matches
 
 Detailed requirements live in [Project_Specification](docs/Project_Specification.md).
-Features in [Features](docs/Features.md)
+
+Features in [Features](docs/features.md)
 
 ## Contacts
 
