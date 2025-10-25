@@ -1,47 +1,83 @@
 # features/step_definitions/potential_matches_steps.rb
 
 Given("I am logged in as a user") do
-  # Mock user login - in real implementation, this would set up authentication
-  @current_user = double("User", id: 1, name: "John Doe", email: "john@example.com")
+  # Create a real user in the test database using existing schema
+  @current_user = User.create!(
+    email: 'john@example.com',
+    password: 'password123',
+    display_name: 'John Doe',
+    bio: 'Looking for a roommate in NYC',
+    budget: 1200,
+    preferred_location: 'Manhattan',
+    sleep_schedule: 'Night owl',
+    pets: 'No pets',
+    housing_status: 'Looking for room',
+    contact_visibility: 'Public'
+  )
+  
+  # Simulate login by setting session or using authentication helper
+  # In a real Rails app, this would be handled by Devise or similar
   allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@current_user)
 end
 
 Given("I have a profile with preferences") do
-  # Mock user profile - in real implementation, this would create a profile
-  @user_profile = double("Profile", 
-    budget: 1000, 
-    location: "New York", 
-    lifestyle_preferences: "Quiet, non-smoker"
-  )
-  allow(@current_user).to receive(:profile).and_return(@user_profile)
+  # User profile is already created in the previous step with all preferences
+  # This step ensures the user has the required profile data
+  expect(@current_user.budget).to be_present
+  expect(@current_user.preferred_location).to be_present
+  expect(@current_user.sleep_schedule).to be_present
 end
 
 Given("there are potential matches available") do
-  # Mock potential matches - in real implementation, this would create match records
-  @potential_matches = [
-    double("Match", 
-      id: 1, 
-      matched_user: double("User", name: "Alice Smith", age: 25),
-      compatibility_score: 85,
-      lifestyle_preferences: "Quiet, student"
-    ),
-    double("Match", 
-      id: 2, 
-      matched_user: double("User", name: "Bob Johnson", age: 28),
-      compatibility_score: 78,
-      lifestyle_preferences: "Professional, non-smoker"
-    )
-  ]
-  allow(Match).to receive(:potential_for).with(@current_user).and_return(@potential_matches)
+  # Create potential match users in the database
+  @match_user_1 = User.create!(
+    email: 'alice@example.com',
+    password: 'password123',
+    display_name: 'Alice Smith',
+    bio: 'Student looking for quiet roommate',
+    budget: 1000,
+    preferred_location: 'Brooklyn',
+    sleep_schedule: 'Early bird',
+    pets: 'No pets',
+    housing_status: 'Looking for room',
+    contact_visibility: 'Public'
+  )
+  
+  @match_user_2 = User.create!(
+    email: 'bob@example.com',
+    password: 'password123',
+    display_name: 'Bob Johnson',
+    bio: 'Professional seeking roommate',
+    budget: 1500,
+    preferred_location: 'Queens',
+    sleep_schedule: 'Regular schedule',
+    pets: 'Cat',
+    housing_status: 'Looking for room',
+    contact_visibility: 'Public'
+  )
+  
+  # Create Match records (assuming Match model exists)
+  @match_1 = Match.create!(
+    user_id: @current_user.id,
+    matched_user_id: @match_user_1.id,
+    compatibility_score: 85
+  )
+  
+  @match_2 = Match.create!(
+    user_id: @current_user.id,
+    matched_user_id: @match_user_2.id,
+    compatibility_score: 78
+  )
 end
 
 Given("there are no potential matches available") do
-  # Mock empty matches
-  allow(Match).to receive(:potential_for).with(@current_user).and_return([])
+  # Ensure no matches exist for the current user
+  Match.where(user_id: @current_user.id).destroy_all
 end
 
 Given("I am not logged in") do
-  # Mock no user logged in
+  # Clear current user to simulate not being logged in
+  @current_user = nil
   allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(nil)
 end
 
@@ -81,12 +117,19 @@ Then("I should see detailed match information") do
   expect(page).to have_content("Alice Smith")
 end
 
+Then("I should see their profile information") do
+  expect(page).to have_content("Student looking for quiet roommate")
+  expect(page).to have_content("Brooklyn")
+  expect(page).to have_content("Early bird")
+end
+
 Then("I should see the compatibility score") do
   expect(page).to have_content("Compatibility: 85%")
 end
 
 Then("I should see lifestyle preferences") do
-  expect(page).to have_content("Quiet, student")
+  expect(page).to have_content("Early bird")
+  expect(page).to have_content("No pets")
 end
 
 Then("I should see {string} message") do |message|

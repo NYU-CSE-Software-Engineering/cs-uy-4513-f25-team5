@@ -19,6 +19,7 @@ Feature: Viewing Potential Matches
     When I visit the matches page
     And I click on a potential match
     Then I should see detailed match information
+    And I should see their profile information
     And I should see the compatibility score
     And I should see lifestyle preferences
 

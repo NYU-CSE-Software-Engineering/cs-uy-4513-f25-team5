@@ -23,10 +23,8 @@
 ### Model
 - **Match**: Stores potential roommate matches with compatibility scores
   - `id`, `user_id`, `matched_user_id`, `compatibility_score`, `created_at`, `updated_at`
-- **User**: Core user information
-  - `id`, `name`, `email`, `created_at`, `updated_at`
-- **Profile**: Extended user profile data
-  - `id`, `user_id`, `budget`, `location`, `lifestyle_preferences`, `created_at`, `updated_at`
+- **User**: Uses existing user model from schema
+  - `id`, `email`, `password`, `display_name`, `bio`, `budget`, `preferred_location`, `sleep_schedule`, `pets`, `housing_status`, `contact_visibility`, `created_at`, `updated_at`
 
 ### View
 - **matches/index.html.erb**: Dashboard page displaying list of potential matches
