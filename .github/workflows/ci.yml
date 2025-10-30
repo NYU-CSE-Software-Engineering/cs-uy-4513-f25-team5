@@ -1,4 +1,4 @@
-name: Cucumber
+name: CI
 
 on:
   push:
@@ -22,10 +22,13 @@ jobs:
           ruby-version: 3.3.8
           bundler-cache: true
 
-      - name: Prepare test database
-        run: bin/rails db:prepare
+      - name: Set up test database
+        run: bundle exec rails db:setup
         env:
           RAILS_ENV: test
+
+      - name: Run RSpec
+        run: bundle exec rspec
 
       - name: Run Cucumber
         run: bundle exec cucumber --publish-quiet
