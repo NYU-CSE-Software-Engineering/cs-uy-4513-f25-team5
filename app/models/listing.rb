@@ -21,6 +21,12 @@ class Listing < ApplicationRecord
       scope = scope.where('price <= ?', max_price)
     end
 
+    keywords = filters[:keywords]
+    if keywords.present?
+      pattern = "%#{keywords.downcase}%"
+      scope = scope.where('LOWER(title) LIKE ? OR LOWER(description) LIKE ?', pattern, pattern)
+    end
+
     scope
   end
 end
