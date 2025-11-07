@@ -9,6 +9,8 @@ class Listing < ApplicationRecord
   validates :title, :price, :city, :status, presence: true
   validates :price, numericality: { greater_than: 0 }
 
+  scope :pending_verification, -> { where(verification_requested: true) }
+
   def mark_as_verified!
     update!(status: STATUS_VERIFIED, verified: true)
   end
