@@ -1,0 +1,12 @@
+<h1><%= @listing.title %></h1>
+
+<% if @listing.verified %>
+  <span>Verified</span>
+<% end %>
+
+<p><strong>Owner:</strong> <%= @listing.owner_email %></p>
+<p><strong>Status:</strong> <%= @listing.status %></p>
+
+<% if @listing.verification_requested && !@listing.verified %>
+  <%= button_to 'Mark as Verified', verify_listing_path(@listing), method: :patch %>
+<% end %>
