@@ -8,6 +8,7 @@ class Listing < ApplicationRecord
 
   validates :title, :price, :city, :status, presence: true
   validates :price, numericality: { greater_than: 0 }
+  validates :status, inclusion: { in: %w[pending published Verified] }
 
   scope :pending_verification, -> { where(verification_requested: true) }
 
