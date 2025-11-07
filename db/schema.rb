@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_11_07_035027) do
+ActiveRecord::Schema[7.1].define(version: 2025_11_07_190849) do
   create_table "avatars", force: :cascade do |t|
     t.integer "user_id", null: false
     t.text "image_base64", null: false
@@ -48,6 +48,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_07_035027) do
     t.string "pets"
     t.string "housing_status"
     t.string "contact_visibility"
+    t.string "role"
+    t.boolean "suspended", default: false
   end
 
   add_foreign_key "avatars", "users"
