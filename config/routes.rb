@@ -9,4 +9,5 @@ Rails.application.routes.draw do
   # root "posts#index"
 
   get '/verification_requests', to: 'verification_requests#index'
+  patch '/listings/:id/verify', to: 'verification_requests#verify', as: :verify_listing
 end
