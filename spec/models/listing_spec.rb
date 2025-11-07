@@ -31,6 +31,18 @@ RSpec.describe Listing, type: :model do
       expect(listing).not_to be_valid
       expect(listing.errors[:status]).to include("can't be blank")
     end
+
+    it 'rejects invalid status values' do
+      listing = Listing.new(
+        title: 'Test',
+        price: 100,
+        city: 'NYC',
+        owner_email: 'test@example.com',
+        status: 'invalid_status'
+      )
+      expect(listing).not_to be_valid
+      expect(listing.errors[:status]).to include("is not included in the list")
+    end
   end
 
   describe '#mark_as_verified!' do
