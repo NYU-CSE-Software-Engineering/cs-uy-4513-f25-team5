@@ -2,6 +2,6 @@
 
 <ul>
   <% @listings.each do |listing| %>
-    <li><%= listing.title %></li>
+    <li><%= link_to listing.title, "/listings/#{listing.id}" %></li>
   <% end %>
 </ul>

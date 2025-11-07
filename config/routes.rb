@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
 
+  resources :listings, only: [:show]
   get '/verification_requests', to: 'verification_requests#index'
-  patch '/listings/:id/verify', to: 'verification_requests#verify', as: :verify_listing
+  match '/listings/:id/verify', to: 'verification_requests#verify', via: [:patch, :post], as: :verify_listing
 end

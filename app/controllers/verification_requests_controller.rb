@@ -7,7 +7,7 @@ class VerificationRequestsController < ApplicationController
 
   def verify
     @listing.mark_as_verified!
-    redirect_to verification_requests_path, notice: "Listing verified!"
+    redirect_to listing_path(@listing), notice: "Listing verified!"
   end
 
   private 
