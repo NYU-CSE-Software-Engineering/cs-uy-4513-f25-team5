@@ -32,4 +32,38 @@ RSpec.describe Listing, type: :model do
       expect(listing.errors[:status]).to include("can't be blank")
     end
   end
+
+  describe '#mark_as_verified!' do
+    it 'changes the listing status to Verified' do
+      listing = Listing.create!(
+        title: 'Test Listing',
+        price: 100,
+        city: 'NYC',
+        owner_email: 'owner@example.com',
+        status: 'pending',
+        verification_requested: true
+      )
+
+      listing.mark_as_verified!
+
+      expect(listing.status).to eq('Verified')
+      expect(listing.verified).to eq(true)
+    end
+
+    it 'persists the verification to the database' do
+      listing = Listing.create!(
+        title: 'Test Listing',
+        price: 100,
+        city: 'NYC',
+        owner_email: 'owner@example.com',
+        status: 'pending'
+      )
+
+      listing.mark_as_verified!
+      listing.reload
+
+      expect(listing.status).to eq('Verified')
+      expect(listing.verified).to eq(true)
+    end
+  end
 end
