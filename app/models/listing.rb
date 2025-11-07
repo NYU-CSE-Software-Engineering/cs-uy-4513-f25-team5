@@ -11,6 +11,16 @@ class Listing < ApplicationRecord
     city = filters[:city]
     scope = scope.where('LOWER(city) = ?', city.downcase) if city.present?
 
+    min_price = filters[:min_price]
+    max_price = filters[:max_price]
+    if min_price.present? && max_price.present?
+      scope = scope.where(price: min_price..max_price)
+    elsif min_price.present?
+      scope = scope.where('price >= ?', min_price)
+    elsif max_price.present?
+      scope = scope.where('price <= ?', max_price)
+    end
+
     scope
   end
 end
