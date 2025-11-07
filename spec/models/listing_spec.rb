@@ -1,5 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe Listing, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  describe 'database columns' do
+    it 'has an owner_email column' do
+      listing = Listing.new
+      expect(listing).to respond_to(:owner_email)
+    end
+  end
 end
