@@ -6,6 +6,11 @@ class Listing < ApplicationRecord
   validates :price, numericality: { greater_than: 0 }
 
   def self.search(filters = {})
-    all
+    scope = all
+
+    city = filters[:city]
+    scope = scope.where('LOWER(city) = ?', city.downcase) if city.present?
+
+    scope
   end
 end
