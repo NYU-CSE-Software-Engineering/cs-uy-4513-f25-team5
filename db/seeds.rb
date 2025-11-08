@@ -22,6 +22,8 @@ Listing.create!(
   description: "Furnished, utilities included",
   price: 600,
   city: "New York",
+  status: Listing::STATUS_PENDING,
+  owner_email: user1.email,
   user: user1
 )
 
@@ -30,5 +32,7 @@ Listing.create!(
   description: "Small but cozy studio apartment",
   price: 700,
   city: "Boston",
+  status: Listing::STATUS_PENDING,
+  owner_email: user2.email,
   user: user2
 )
