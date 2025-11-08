@@ -21,7 +21,14 @@ RSpec.describe User, type: :model do
   describe 'associations' do
     it 'destroys associated listings when the user is destroyed' do
       user = described_class.create!(email: 'owner@example.com', password: 'password123')
-      user.listings.create!(title: 'Test Listing', description: 'Sample', price: 500, city: 'New York')
+      user.listings.create!(
+        title: 'Test Listing',
+        description: 'Sample',
+        price: 500,
+        city: 'New York',
+        status: Listing::STATUS_PENDING,
+        owner_email: user.email
+      )
 
       expect { user.destroy }.to change { Listing.count }.by(-1)
     end

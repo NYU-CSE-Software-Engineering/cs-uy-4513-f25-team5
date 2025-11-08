@@ -2,6 +2,11 @@
 
 <ul>
   <% @listings.each do |listing| %>
-    <li><%= link_to listing.title, "/listings/#{listing.id}" %></li>
+    <li>
+      <%= link_to listing.title, listing_path(listing) %>
+      <% if listing.verified %>
+        <span>Verified</span>
+      <% end %>
+    </li>
   <% end %>
 </ul>

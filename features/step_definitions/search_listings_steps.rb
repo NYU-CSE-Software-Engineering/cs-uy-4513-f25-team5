@@ -20,6 +20,8 @@ Given('there are listings with the following details:') do |table|
       description: listing_data['description'],
       city: listing_data['city'],
       price: listing_data['price'].to_f,
+      status: Listing::STATUS_PENDING,
+      owner_email: owner.email,
       user: owner
     )
   end

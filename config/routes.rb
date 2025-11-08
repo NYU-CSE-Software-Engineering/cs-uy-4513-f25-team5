@@ -9,4 +9,10 @@ Rails.application.routes.draw do
   # root "posts#index"
 
   get '/search/listings', to: 'listings#search'
+  resources :listings, only: [:show] do
+    member do
+      patch :verify, to: 'verification_requests#verify'
+    end
+  end
+  resources :verification_requests, only: [:index]
 end
