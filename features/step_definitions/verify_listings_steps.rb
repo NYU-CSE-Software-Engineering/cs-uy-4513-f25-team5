@@ -1,8 +1,7 @@
 Given('I am logged in as a Community Verifier') do
   @current_user = User.create!(
     email: 'verifier@example.com',
-    password: 'password123',
-    role: 'verifier'
+    password: 'password123'
   )
 end
 

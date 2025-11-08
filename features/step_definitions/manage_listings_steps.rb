@@ -1,13 +1,3 @@
-# Background Steps
-
-Given('I am a signed-in user') do
-  @user ||= User.create!(email: 'test@example.com', password: 'password')
-  visit new_user_session_path
-  fill_in 'Email', with: @user.email
-  fill_in 'Password', with: @user.password
-  click_button 'Log in'
-end
-
 Given("I have a listing titled {string}") do |title|
   @listing ||= Listing.create!(
     title: title,
@@ -34,14 +24,6 @@ end
 When("I visit the edit page for {string}") do |title|
   listing = Listing.find_by(title: title)
   visit edit_listing_path(listing)
-end
-
-When("I fill in {string} with {string}") do |field, value|
-  fill_in field, with: value
-end
-
-When("I press {string}") do |button|
-  click_button button
 end
 
 Then("I should see the message {string}") do |message|

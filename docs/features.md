@@ -7,3 +7,4 @@
 * [Admin User Management (Eric Ma)](./features/admin_user_management.md)
 * [Manage Listings (Terry Li)](./features/manage_listings.md)
 * [Potential Matches (Drastansh Nadola)](./features/potential_matches.md)
+* [Search Listings (Tianyi)](./features/search_listings.md)

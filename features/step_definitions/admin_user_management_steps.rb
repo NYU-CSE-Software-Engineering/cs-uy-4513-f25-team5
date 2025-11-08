@@ -1,7 +1,3 @@
-Given('the test database is clean') do
-  DatabaseCleaner.clean_with(:truncation)
-end
-
 Given('I create the following users:') do |table|
   table.hashes.each do |user_attrs|
     User.create!(user_attrs)

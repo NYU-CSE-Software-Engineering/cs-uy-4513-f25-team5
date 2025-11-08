@@ -1,15 +1,3 @@
-Given('the test database is clean') do
-  DatabaseCleaner.clean_with(:truncation)
-end
-
-Given('I am a signed-in user') do
-  @user ||= User.create!(email: 'test@example.com', password: 'password')
-  visit new_user_session_path
-  fill_in 'Email', with: @user.email
-  fill_in 'Password', with: @user.password
-  click_button 'Log in'
-end
-
 When(/I (?:create|attempt to create) a listing with:/) do |table|  
   visit new_listing_path
   data = table.rows_hash

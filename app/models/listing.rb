@@ -15,4 +15,29 @@ class Listing < ApplicationRecord
   def mark_as_verified!
     update!(status: STATUS_VERIFIED, verified: true)
   end
+
+  def self.search(filters = {})
+    scope = all
+
+    city = filters[:city]
+    scope = scope.where('LOWER(city) = ?', city.downcase) if city.present?
+
+    min_price = filters[:min_price]
+    max_price = filters[:max_price]
+    if min_price.present? && max_price.present?
+      scope = scope.where(price: min_price..max_price)
+    elsif min_price.present?
+      scope = scope.where('price >= ?', min_price)
+    elsif max_price.present?
+      scope = scope.where('price <= ?', max_price)
+    end
+
+    keywords = filters[:keywords]
+    if keywords.present?
+      pattern = "%#{keywords.downcase}%"
+      scope = scope.where('LOWER(title) LIKE ? OR LOWER(description) LIKE ?', pattern, pattern)
+    end
+
+    scope
+  end
 end

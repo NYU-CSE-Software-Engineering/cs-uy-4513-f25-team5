@@ -1,0 +1,1 @@
+default: --publish-quiet features/search_listings.feature features/verify_listings.feature

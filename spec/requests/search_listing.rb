@@ -1,0 +1,46 @@
+require 'rails_helper'
+
+# Request spec mirroring docs/features/search_listings.md behavior expectations.
+RSpec.describe 'Search Listings', type: :request do
+  let!(:user) { User.create!(email: 'owner@example.com') }
+  let!(:matching_listing) do
+    Listing.create!(
+      title: 'NYC Loft',
+      description: 'Close to campus with skyline views',
+      price: 1500,
+      city: 'New York',
+      user: user
+    )
+  end
+  let!(:non_matching_listing) do
+    Listing.create!(
+      title: 'SF Flat',
+      description: 'Bay views near Golden Gate',
+      price: 2800,
+      city: 'San Francisco',
+      user: user
+    )
+  end
+
+  describe 'GET /search/listings' do
+    it 'filters listings by city, price range, and keywords' do
+      get '/search/listings', params: {
+        city: 'New York',
+        min_price: 1000,
+        max_price: 2000,
+        keywords: 'Loft'
+      }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(matching_listing.title)
+      expect(response.body).not_to include(non_matching_listing.title)
+    end
+
+    it 'renders a no results message when nothing matches' do
+      get '/search/listings', params: { city: 'Boston', keywords: 'penthouse' }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include('No results found')
+    end
+  end
+end

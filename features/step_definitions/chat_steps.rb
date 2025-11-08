@@ -111,10 +111,6 @@ When('I try to start a conversation with {string}') do |name|
   visit new_conversation_path(user_id: other.id)
 end
 
-When('I fill in {string} with {string}') do |field, value|
-  fill_in field, with: value
-end
-
 When('I click {string}') do |button_text|
   click_button button_text
 end
@@ -168,10 +164,6 @@ Then('I should be denied access') do
               page.has_content?("You are not authorized") ||
               page.has_content?("You must be matched")
   expect(has_error).to be true
-end
-
-Then('I should see {string}') do |text|
-  expect(page).to have_content(text)
 end
 
 Then('{string} should be blocked') do |name|

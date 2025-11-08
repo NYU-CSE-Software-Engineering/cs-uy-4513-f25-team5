@@ -1,0 +1,42 @@
+<h1>Search Listings</h1>
+
+<%= form_with url: search_listings_path, method: :get, local: true do %>
+  <div>
+    <%= label_tag :city, 'City' %>
+    <%= text_field_tag :city, @filters[:city], placeholder: 'e.g., New York' %>
+  </div>
+
+  <div>
+    <%= label_tag :min_price, 'Min Price' %>
+    <%= number_field_tag :min_price, @filters[:min_price], min: 0 %>
+  </div>
+
+  <div>
+    <%= label_tag :max_price, 'Max Price' %>
+    <%= number_field_tag :max_price, @filters[:max_price], min: 0 %>
+  </div>
+
+  <div>
+    <%= label_tag :keywords, 'Keywords' %>
+    <%= text_field_tag :keywords, @filters[:keywords], placeholder: 'e.g., furnished' %>
+  </div>
+
+  <%= submit_tag 'Search' %>
+<% end %>
+
+<section>
+  <% if @listings.any? %>
+    <ul>
+      <% @listings.each do |listing| %>
+        <li>
+          <strong><%= listing.title %></strong><br>
+          <span>City: <%= listing.city %></span><br>
+          <span>Price: <%= number_to_currency(listing.price) %></span><br>
+          <span><%= listing.description %></span>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p>No listings found matching your search criteria</p>
+  <% end %>
+</section>
