@@ -8,3 +8,4 @@
 * [Manage Listings (Terry Li)](./features/manage_listings.md)
 * [Potential Matches (Drastansh Nadola)](./features/potential_matches.md)
 * [Search Listings (Tianyi)](./features/search_listings.md)
+* [Verify Listings (Team)](./features/verify_listings.md)

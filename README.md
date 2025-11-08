@@ -8,6 +8,11 @@ RoomMate is a SaaS platform that helps students and newcomers find compatible ro
 - Match seekers and listers with a compatibility engine and verified listings
 - Coordinate through messaging while persisting preferences, history, and matches
 
+## Key Features
+- Search active listings by city, price band, and free-text keywords
+- Flag listings for community verification and surface a “Verified” badge once approved
+- Maintain listing state via statuses (`pending`, `published`, `Verified`) so staff can gate what members see
+
 Detailed requirements live in [Project_Specification](docs/Project_Specification.md).
 
 Features in [Features](docs/features.md)
@@ -46,10 +51,13 @@ Features in [Features](docs/features.md)
 - Database: PostgreSQL
 - Testing:
   - Unit & request: RSpec
-  - System/acceptance: Cucumber, Capybara (planned)
+  - System/acceptance: Cucumber, Capybara (search + listing verification flows today)
 
 ## Getting Started
 ```bash
+# ensure your shell loads rbenv shims
+eval "$(rbenv init - zsh)"   # or "- bash" for Bash users
+
 rbenv install 3.3.8       # once per machine
 rbenv local 3.3.8         # ensures this version for the repo
 bundle install
@@ -57,7 +65,14 @@ bin/rails db:prepare
 bin/rails server
 ```
 
-Run the RSpec suite with `bundle exec rspec`. Cucumber support will arrive once feature specs are added.
+Use `bin/rails db:prepare` for day-to-day work; run `bundle exec rails db:setup` on a fresh machine to create, migrate, and seed everything in one shot. The seeds create listings with valid statuses and owner emails so the verification UI has data to demonstrate.
+
+## Testing
+- Unit/request suite: `bundle exec rspec`
+- Acceptance flows (search + verification): `bundle exec cucumber`
+  - By default, `cucumber.yml` limits runs to `features/search_listings.feature` and `features/verify_listings.feature`
+  - To run the focused profile explicitly (CI equivalent): `bundle exec cucumber features/search_listings.feature features/verify_listings.feature`
+  - Provide paths for any additional `.feature` files you add later.
 
 ## Helpful Links
 - [GitHub](https://github.com/depasqua/cs-uy-4513-f25-team5)
