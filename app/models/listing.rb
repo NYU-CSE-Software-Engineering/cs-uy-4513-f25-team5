@@ -1,8 +1,12 @@
 class Listing < ApplicationRecord
-  belongs_to :user
+  belongs_to :user, optional: true
 
-  validates :title, :price, :city, presence: true
+  # Status constants
+  STATUS_PENDING = 'pending'.freeze
+  STATUS_PUBLISHED = 'published'.freeze
+  STATUS_VERIFIED = 'Verified'.freeze
 
+  validates :title, :price, :city, :status, :owner_email, presence: true
   validates :price, numericality: { greater_than: 0 }
 
   def self.search(filters = {})
