@@ -78,6 +78,13 @@ end
 Then('I should not have access to protected pages') do
   visit dashboard_path
   # After logout, attempting to access protected pages should redirect to login
-  expect(current_path).to eq(login_path).or eq(root_path)
+  expect([login_path, root_path]).to include(current_path)
 end
 
+Given('I am not signed in') do
+  pending 'Real authentication must manage sessions instead of bootstrapping users'
+end
+
+Then('I should be redirected to the login page') do
+  pending 'Expect a redirect to login once session enforcement is implemented'
+end

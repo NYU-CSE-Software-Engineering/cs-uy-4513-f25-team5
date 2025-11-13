@@ -6,8 +6,12 @@ on:
   pull_request:
 
 jobs:
-  cucumber:
+  tests:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        suite: [rspec, cucumber]
 
     steps:
       - name: Checkout code
@@ -27,8 +31,10 @@ jobs:
         env:
           RAILS_ENV: test
 
-      - name: Run RSpec
-        run: bundle exec rspec
-
-      - name: Run Cucumber
-        run: bundle exec cucumber --publish-quiet
+      - name: Run ${{ matrix.suite }}
+        run: |
+          if [ "${{ matrix.suite }}" = "rspec" ]; then
+            bundle exec rspec
+          else
+            bundle exec cucumber --publish-quiet
+          fi

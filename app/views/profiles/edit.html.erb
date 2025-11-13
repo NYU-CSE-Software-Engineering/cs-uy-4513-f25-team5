@@ -1,0 +1,122 @@
+<section class="profile-edit">
+  <h1>Edit Profile</h1>
+
+  <% if @user.errors.any? %>
+    <div class="alert alert-danger">
+      <p>There were problems saving your profile:</p>
+      <ul>
+        <% @user.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= form_with model: @user, url: profile_path, method: :patch, local: true, html: { multipart: true } do |form| %>
+    <div>
+      <%= form.label :display_name, 'Display name' %>
+      <%= form.text_field :display_name %>
+    </div>
+
+    <div>
+      <%= form.label :bio, 'Bio' %>
+      <%= form.text_area :bio %>
+    </div>
+
+    <div>
+      <%= form.label :budget, 'Budget' %>
+      <%= form.number_field :budget, min: 0 %>
+    </div>
+
+    <div>
+      <%= form.label :preferred_location, 'Preferred location' %>
+      <%= form.text_field :preferred_location %>
+    </div>
+
+    <div>
+      <%= form.label :sleep_schedule, 'Sleep schedule' %>
+      <%= form.text_field :sleep_schedule %>
+    </div>
+
+    <div>
+      <%= form.label :pets, 'Pets' %>
+      <%= form.text_field :pets %>
+    </div>
+
+    <div>
+      <%= form.label :housing_status, 'Housing status' %>
+      <%= form.text_field :housing_status %>
+    </div>
+
+    <div>
+      <%= form.label :contact_visibility, 'Contact visibility' %>
+      <%= form.text_field :contact_visibility %>
+    </div>
+
+    <div>
+      <%= form.label :avatar, 'Avatar' %>
+      <%= render 'avatar_preview', user: @user %>
+      <%= form.file_field :avatar, accept: 'image/*' %>
+    </div>
+
+    <div>
+      <%= form.submit 'Save Profile' %>
+    </div>
+  <% end %>
+
+  <%= button_to 'Remove Profile Picture', profile_path(remove_avatar: '1'), method: :patch, form: { data: { turbo: false } } %>
+
+  <%= link_to 'Back to Profile', profile_path %>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const avatarInput = document.querySelector('#user_avatar');
+
+    if (!avatarInput) return;
+
+    avatarInput.addEventListener('change', event => {
+      const [file] = event.target.files || [];
+
+      if (!file || !file.type.startsWith('image/')) return;
+
+      const reader = new FileReader();
+      const image = new Image();
+
+      reader.onload = loadEvent => {
+        image.onload = () => {
+          const canvas = document.createElement('canvas');
+          canvas.width = 128;
+          canvas.height = 128;
+          const ctx = canvas.getContext('2d');
+          ctx.clearRect(0, 0, 128, 128);
+
+          const scale = Math.min(128 / image.width, 128 / image.height);
+          const width = image.width * scale;
+          const height = image.height * scale;
+          const offsetX = (128 - width) / 2;
+          const offsetY = (128 - height) / 2;
+
+          ctx.drawImage(image, offsetX, offsetY, width, height);
+
+          canvas.toBlob(blob => {
+            if (!blob) return;
+
+            const resizedFile = new File([blob], file.name.replace(/\.\w+$/, '.png'), {
+              type: 'image/png',
+              lastModified: Date.now()
+            });
+
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(resizedFile);
+            avatarInput.files = dataTransfer.files;
+          }, 'image/png');
+        };
+
+        image.src = loadEvent.target.result;
+      };
+
+      reader.readAsDataURL(file);
+    });
+  });
+</script>

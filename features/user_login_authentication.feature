@@ -79,3 +79,9 @@ Feature: User login and authentication
     And I should see "Successfully logged out"
     And I should not have access to protected pages
 
+  @todo_auth
+  # TODO: This scenario should pass once real session-based authentication replaces the demo bootstrap user.
+  Scenario: Unauthenticated user is redirected when visiting the profile page
+    Given I am not signed in
+    When I visit my profile page
+    Then I should be redirected to the login page
