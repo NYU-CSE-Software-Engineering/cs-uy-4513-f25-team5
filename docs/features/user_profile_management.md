@@ -43,3 +43,12 @@ end
 
 ![cucumber run 1](../../features/screenshots/user_profile_management_1.png)
 ![cucumber run 2](../../features/screenshots/user_profile_management_2.png)
+
+## Follow-up For Authentication Team
+
+- The current profile feature assumes a placeholder `current_user`. When the user login/authentication team delivers real sign-in/sign-out, make sure to delete the bootstrap logic in `app/controllers/application_controller.rb` and replace it with their session handling.
+- Add corresponding TDD/BDD coverage (RSpec request specs + Cucumber background steps) that proves a user session is established during login and required before visiting `/profile` or submitting the edit form. This guards against CSRF regressions once the fake user is removed.
+- Placeholder tests were added to guide this work:
+  - `spec/requests/profiles_spec.rb` includes pending examples under “authentication requirements (TODO)”.
+  - `features/user_login_authentication.feature` has the `@todo_auth` scenario “Unauthenticated user is redirected when visiting the profile page” with pending step definitions in `features/step_definitions/user_login_authentication_steps.rb`.
+  Update these once the login flow is finished so they assert the real redirect behavior instead of calling `pending`.

@@ -1,1 +1,1 @@
-default: --publish-quiet features/search_listings.feature features/verify_listings.feature
+default: --publish-quiet features/search_listings.feature features/verify_listings.feature features/user_profile_management.feature

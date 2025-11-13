@@ -8,6 +8,8 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
 
+  resource :profile, only: [:show, :edit, :update]
+
   get '/search/listings', to: 'listings#search'
   resources :listings, only: [:show] do
     member do

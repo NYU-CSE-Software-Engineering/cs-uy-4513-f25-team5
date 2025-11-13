@@ -65,5 +65,5 @@ Then('I should see a profile picture placeholder') do
 end
 
 Then('my profile should not have a profile picture') do
-  expect(@user.reload.avatar.attached?).to be(false)
+  expect(@user.reload.avatar).to be_nil
 end
