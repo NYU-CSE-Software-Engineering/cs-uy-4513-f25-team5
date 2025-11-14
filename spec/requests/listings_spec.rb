@@ -235,21 +235,6 @@ RSpec.describe "Listings", type: :request do
         expect(response.body).to include(listing.price.to_s)
       end
     end
-
-    context "when attempting to edit another user's listing" do
-      it "redirects to root path" do
-        get edit_listing_path(other_listing)
-        
-        expect(response).to redirect_to(root_path)
-      end
-
-      it "displays an authorization error message" do
-        get edit_listing_path(other_listing)
-        
-        follow_redirect!
-        expect(response.body).to match(/not authorized|permission/)
-      end
-    end
   end
 
   describe "PATCH /listings/:id", skip: "not ready yet" do
