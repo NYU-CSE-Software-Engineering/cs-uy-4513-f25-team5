@@ -3,6 +3,10 @@ class ListingsController < ApplicationController
     @listing = Listing.find(params[:id])
   end
 
+  def new 
+    @listing = Listing.new
+  end
+
   def search
     @filters = params.slice(:city, :min_price, :max_price, :keywords).permit!.to_h.symbolize_keys
     @listings = Listing.search(@filters)

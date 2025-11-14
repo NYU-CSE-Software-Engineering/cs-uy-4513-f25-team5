@@ -11,7 +11,7 @@ Rails.application.routes.draw do
   resource :profile, only: [:show, :edit, :update]
 
   get '/search/listings', to: 'listings#search'
-  resources :listings, only: [:show] do
+  resources :listings, only: [:show, :new] do
     member do
       patch :verify, to: 'verification_requests#verify'
     end
