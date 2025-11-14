@@ -29,7 +29,7 @@ RSpec.describe "Listings", type: :request do
     end
   end
 
-  describe "POST /listings", skip: "not ready yet" do
+  describe "POST /listings" do
     context "with valid parameters" do
       let(:valid_attributes) do
         {
