@@ -1,0 +1,42 @@
+#!/bin/bash
+#
+# Pre-commit hook to run RSpec and Cucumber tests before allowing commits.
+# This ensures all tests pass before code is committed, preventing "fix tests" commits.
+#
+# To bypass this hook (use sparingly): git commit --no-verify
+
+set -e
+
+echo "🔍 Running pre-commit checks..."
+echo ""
+
+# Check if bundle is available
+if ! command -v bundle &> /dev/null; then
+    echo "❌ Error: 'bundle' command not found. Please install bundler first."
+    exit 1
+fi
+
+# Run RSpec tests
+echo "▶️  Running RSpec tests..."
+if ! bundle exec rspec; then
+    echo ""
+    echo "❌ RSpec tests failed. Please fix the failing tests before committing."
+    echo "💡 To bypass this check (not recommended): git commit --no-verify"
+    exit 1
+fi
+
+echo "✅ RSpec tests passed"
+echo ""
+
+# Run Cucumber tests
+echo "▶️  Running Cucumber tests..."
+if ! bundle exec cucumber --publish-quiet; then
+    echo ""
+    echo "❌ Cucumber tests failed. Please fix the failing tests before committing."
+    echo "💡 To bypass this check (not recommended): git commit --no-verify"
+    exit 1
+fi
+
+echo "✅ Cucumber tests passed"
+echo ""
+echo "✨ All tests passed! Proceeding with commit..."

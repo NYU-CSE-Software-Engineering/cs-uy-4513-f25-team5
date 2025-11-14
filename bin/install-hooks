@@ -1,0 +1,40 @@
+#!/bin/bash
+#
+# Install Git hooks from .git-hooks/ directory
+# This script creates symlinks from .git/hooks/ to .git-hooks/
+
+set -e
+
+REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+HOOKS_DIR="$REPO_ROOT/.git-hooks"
+GIT_HOOKS_DIR="$REPO_ROOT/.git/hooks"
+
+echo "📦 Installing Git hooks..."
+
+# Check if .git directory exists
+if [ ! -d "$GIT_HOOKS_DIR" ]; then
+    echo "❌ Error: .git/hooks directory not found. Are you in a Git repository?"
+    exit 1
+fi
+
+# Install each hook from .git-hooks/
+for hook in "$HOOKS_DIR"/*; do
+    if [ -f "$hook" ]; then
+        hook_name=$(basename "$hook")
+        target="$GIT_HOOKS_DIR/$hook_name"
+        
+        # Remove existing hook or symlink
+        if [ -e "$target" ] || [ -L "$target" ]; then
+            echo "  Replacing existing $hook_name hook..."
+            rm "$target"
+        fi
+        
+        # Create symlink
+        ln -s "$hook" "$target"
+        echo "  ✅ Installed $hook_name hook"
+    fi
+done
+
+echo ""
+echo "✨ Git hooks installed successfully!"
+echo "💡 To bypass the pre-commit hook: git commit --no-verify"

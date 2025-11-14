@@ -61,6 +61,7 @@ eval "$(rbenv init - zsh)"   # or "- bash" for Bash users
 rbenv install 3.3.8       # once per machine
 rbenv local 3.3.8         # ensures this version for the repo
 bundle install
+bin/install-hooks         # install Git hooks (pre-commit test runner)
 bin/rails db:prepare
 bin/rails server
 ```
@@ -73,6 +74,22 @@ Use `bin/rails db:prepare` for day-to-day work; run `bundle exec rails db:setup`
   - By default, `cucumber.yml` limits runs to `features/search_listings.feature` and `features/verify_listings.feature`
   - To run the focused profile explicitly (CI equivalent): `bundle exec cucumber features/search_listings.feature features/verify_listings.feature`
   - Provide paths for any additional `.feature` files you add later.
+
+## Git Hooks
+This project uses a pre-commit hook to ensure all tests pass before commits are created. This prevents "fix tests" commits and keeps the Git history clean.
+
+**Installation:** Run `bin/install-hooks` after cloning the repository (already included in Getting Started instructions).
+
+**What it does:** Before each commit, the hook automatically runs:
+- `bundle exec rspec` (unit/request tests)
+- `bundle exec cucumber` (acceptance tests)
+
+If any tests fail, the commit is blocked. The test suite is fast (~5 seconds), so this adds minimal overhead.
+
+**Bypass (use sparingly):** If you need to commit despite failing tests, use:
+```bash
+git commit --no-verify
+```
 
 ## Helpful Links
 - [GitHub](https://github.com/depasqua/cs-uy-4513-f25-team5)
