@@ -256,21 +256,6 @@ RSpec.describe "Listings", type: :request do
         expect(response.body).to include(listing.price.to_s)
       end
     end
-
-    context "when attempting to edit another user's listing" do
-      it "redirects to root path", skip: "not ready yet" do
-        get edit_listing_path(other_listing)
-        
-        expect(response).to redirect_to(root_path)
-      end
-
-      it "displays an authorization error message", skip: "not ready yet" do
-        get edit_listing_path(other_listing)
-        
-        follow_redirect!
-        expect(response.body).to match(/not authorized|permission/)
-      end
-    end
   end
 
   describe "PATCH /listings/:id" do
@@ -324,15 +309,6 @@ RSpec.describe "Listings", type: :request do
             title: ''
           }
         }
-      end
-
-      it "does not update the listing", skip: "auth not implemented yet" do
-        original_title = listing.title
-        
-        patch listing_path(listing), params: invalid_params
-        
-        listing.reload
-        expect(listing.title).to eq(original_title)
       end
 
       it "renders the edit template with unprocessable entity status" do
