@@ -91,6 +91,7 @@ yarn-debug.log*
 .DS_Store
 temp/
 course/
+test-pre-commit-hook.sh
 
 # ** block LLM files **
 **/AGENTS.md
