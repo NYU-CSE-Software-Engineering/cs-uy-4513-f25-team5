@@ -19,7 +19,7 @@ RSpec.describe "Listings", type: :request do
   # CREATE LISTING FEATURE
   # ========================================
   
-  describe "GET /listings/new", skip: "not ready yet" do
+  describe "GET /listings/new" do
     it "renders the new listing form" do
       
       get new_listing_path
