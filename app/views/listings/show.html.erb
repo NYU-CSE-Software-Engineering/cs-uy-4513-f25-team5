@@ -11,6 +11,10 @@
 <p><strong>Price:</strong> <%= @listing.price %></p>
 <p><strong>City:</strong> <%= @listing.city %></p>
 
+<%= link_to 'Edit', edit_listing_path(@listing) %> |
+<%= link_to 'Back', listings_path %> |
+<%= button_to 'Delete', listing_path(@listing), method: :delete, data: { confirm: 'Are you sure?' } %>
+
 <% if @listing.verification_requested && !@listing.verified %>
   <%= button_to 'Mark as Verified', verify_listing_path(@listing), method: :patch %>
 <% end %>

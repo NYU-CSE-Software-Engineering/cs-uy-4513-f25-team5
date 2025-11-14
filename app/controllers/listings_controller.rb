@@ -5,6 +5,11 @@ class ListingsController < ApplicationController
     @listings = Listing.all
   end
 
+  def destroy
+    @listing.destroy  # This deletes the record from database
+    redirect_to listings_path, notice: 'Listing was successfully deleted.'
+  end
+
   def show
     @listing = Listing.find(params[:id])
   end
