@@ -193,7 +193,7 @@ RSpec.describe "Listings", type: :request do
     )
   end
 
-  describe "GET /listings/:id", skip: "not ready yet" do
+  describe "GET /listings/:id" do
     it "displays the listing details" do
       get listing_path(listing)
       
