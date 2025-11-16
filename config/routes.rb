@@ -8,6 +8,11 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
 
+  # Authentication routes
+  post '/auth/register', to: 'users#create'
+  post '/auth/login', to: 'sessions#create'
+  post '/auth/logout', to: 'sessions#destroy'
+
   get '/search/listings', to: 'listings#search'
   resources :listings, only: [:show] do
     member do
