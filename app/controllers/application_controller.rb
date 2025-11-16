@@ -14,5 +14,6 @@ class ApplicationController < ActionController::Base
   def require_login
     return if logged_in?
     redirect_to '/auth/login', alert: 'Please sign in first.'
+
   end
 end

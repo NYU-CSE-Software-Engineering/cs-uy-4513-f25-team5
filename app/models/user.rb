@@ -2,6 +2,7 @@ class User < ApplicationRecord
   has_secure_password
 
   has_many :listings, dependent: :destroy
+  has_one :avatar, dependent: :destroy
 
   validates :email, uniqueness: true, allow_nil: true
   validates :password, presence: true, on: :create
@@ -15,8 +16,6 @@ class User < ApplicationRecord
   private
 
   def profile_display_name_required?
-    # Add logic here if needed, or return true to always require it
-    # For now, making it optional by returning false
-    false
+    display_name.present? || will_save_change_to_display_name?
   end
 end

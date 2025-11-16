@@ -6,6 +6,7 @@ class Listing < ApplicationRecord
   STATUS_PUBLISHED = 'published'.freeze
   STATUS_VERIFIED = 'Verified'.freeze
 
+
   validates :title, :price, :city, :status, :owner_email, presence: true
   validates :price, numericality: { greater_than: 0 }
   validates :status, inclusion: { in: [STATUS_PENDING, STATUS_PUBLISHED, STATUS_VERIFIED] }
@@ -39,5 +40,11 @@ class Listing < ApplicationRecord
     end
 
     scope
+  end
+
+  private
+  
+  def set_default_status
+    self.status ||= STATUS_PENDING
   end
 end

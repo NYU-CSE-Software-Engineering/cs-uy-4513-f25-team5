@@ -1,0 +1,9 @@
+<div class="profile__avatar">
+  <% if user.avatar.present? %>
+    <img src="<%= user.avatar.data_uri %>" alt="Profile picture" width="128" height="128" />
+  <% else %>
+    <div data-testid="profile-picture-placeholder">
+      No profile picture uploaded
+    </div>
+  <% end %>
+</div>

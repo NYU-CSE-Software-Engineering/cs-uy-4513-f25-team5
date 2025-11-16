@@ -57,7 +57,15 @@ RSpec.configure do |config|
   # The different available types are documented in the features, such as in
   # https://rspec.info/features/6-0/rspec-rails
   config.infer_spec_type_from_file_location!
+  config.before(:each, type: :request) do
+    # This prevents RSpec from showing full HTML output
+  end
 
+   # Show shorter failure messages
+  config.default_formatter = 'doc' if config.files_to_run.one?
+  
+  # Limit backtrace
+  config.backtrace_exclusion_patterns << /gems/
   # Filter lines from Rails gems in backtraces.
   config.filter_rails_from_backtrace!
   # arbitrary gems may also be filtered via:

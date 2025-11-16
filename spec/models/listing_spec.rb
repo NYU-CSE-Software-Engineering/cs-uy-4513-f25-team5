@@ -88,4 +88,120 @@ RSpec.describe Listing, type: :model do
       expect(results).to contain_exactly(matching)
     end
   end
+
+  describe 'validations' do
+    let(:user) { User.create!(email: 'test@example.com', password: 'password123') }
+
+    it 'is invalid without a title' do
+      listing = Listing.new(
+        price: 600,
+        city: 'New York',
+        status: Listing::STATUS_PENDING,
+        owner_email: user.email,
+        user: user
+      )
+      expect(listing).not_to be_valid
+      expect(listing.errors[:title]).to include("can't be blank")
+    end
+
+    it 'is invalid without a price' do
+      listing = Listing.new(
+        title: 'Cozy room',
+        city: 'New York',
+        status: Listing::STATUS_PENDING,
+        owner_email: user.email,
+        user: user
+      )
+      expect(listing).not_to be_valid
+      expect(listing.errors[:price]).to include("can't be blank")
+    end
+
+    it 'is invalid with a negative price' do
+      listing = Listing.new(
+        title: 'Budget room',
+        price: -100,
+        city: 'San Francisco',
+        status: Listing::STATUS_PENDING,
+        owner_email: user.email,
+        user: user
+      )
+      expect(listing).not_to be_valid
+      expect(listing.errors[:price]).to include("must be greater than 0")
+    end
+
+    it 'is invalid with a zero price' do
+      listing = Listing.new(
+        title: 'Free room',
+        price: 0,
+        city: 'Boston',
+        status: Listing::STATUS_PENDING,
+        owner_email: user.email,
+        user: user
+      )
+      expect(listing).not_to be_valid
+      expect(listing.errors[:price]).to include("must be greater than 0")
+    end
+
+    it 'is invalid without a city' do
+      listing = Listing.new(
+        title: 'Cozy room',
+        price: 600,
+        status: Listing::STATUS_PENDING,
+        owner_email: user.email,
+        user: user
+      )
+      expect(listing).not_to be_valid
+      expect(listing.errors[:city]).to include("can't be blank")
+    end
+
+    it 'is invalid without a status' do
+      listing = Listing.new(
+        title: 'Cozy room',
+        price: 600,
+        city: 'New York',
+        owner_email: user.email,
+        user: user
+      )
+      expect(listing).not_to be_valid
+      expect(listing.errors[:status]).to include("can't be blank")
+    end
+
+    it 'is invalid with an invalid status' do
+      listing = Listing.new(
+        title: 'Cozy room',
+        price: 600,
+        city: 'New York',
+        status: 'invalid_status',
+        owner_email: user.email,
+        user: user
+      )
+      expect(listing).not_to be_valid
+      expect(listing.errors[:status]).to include("is not included in the list")
+    end
+
+    it 'is invalid without an owner email' do
+      listing = Listing.new(
+        title: 'Cozy room',
+        price: 600,
+        city: 'New York',
+        status: Listing::STATUS_PENDING,
+        user: user
+      )
+      expect(listing).not_to be_valid
+      expect(listing.errors[:owner_email]).to include("can't be blank")
+    end
+
+    it 'is valid with all required attributes' do
+      listing = Listing.new(
+        title: 'Cozy room near campus',
+        description: 'Small furnished room',
+        price: 600,
+        city: 'New York',
+        status: Listing::STATUS_PENDING,
+        owner_email: user.email,
+        user: user
+      )
+      expect(listing).to be_valid
+    end
+  end
 end

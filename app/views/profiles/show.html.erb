@@ -1,0 +1,41 @@
+<section class="profile">
+  <% if notice.present? %>
+    <p class="flash flash--notice"><%= notice %></p>
+  <% end %>
+
+  <% if alert.present? %>
+    <p class="flash flash--alert"><%= alert %></p>
+  <% end %>
+
+  <h1>My Profile</h1>
+
+  <%= render 'avatar_preview', user: @user %>
+
+  <dl>
+    <dt>Display name</dt>
+    <dd><%= @user.display_name.presence || 'Not set' %></dd>
+
+    <dt>Bio</dt>
+    <dd><%= @user.bio.presence || 'Not set' %></dd>
+
+    <dt>Budget</dt>
+    <dd><%= @user.budget || 'Not set' %></dd>
+
+    <dt>Preferred location</dt>
+    <dd><%= @user.preferred_location.presence || 'Not set' %></dd>
+
+    <dt>Sleep schedule</dt>
+    <dd><%= @user.sleep_schedule.presence || 'Not set' %></dd>
+
+    <dt>Pets</dt>
+    <dd><%= @user.pets.presence || 'Not set' %></dd>
+
+    <dt>Housing status</dt>
+    <dd><%= @user.housing_status.presence || 'Not set' %></dd>
+
+    <dt>Contact visibility</dt>
+    <dd><%= @user.contact_visibility.presence || 'Not set' %></dd>
+  </dl>
+
+  <%= link_to 'Edit Profile', edit_profile_path, class: 'button' %>
+</section>
