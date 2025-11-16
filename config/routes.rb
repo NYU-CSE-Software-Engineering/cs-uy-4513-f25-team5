@@ -13,6 +13,8 @@ Rails.application.routes.draw do
   post '/auth/login', to: 'sessions#create'
   post '/auth/logout', to: 'sessions#destroy'
 
+  resource :profile, only: [:show, :edit, :update]
+
   get '/search/listings', to: 'listings#search'
   resources :listings, only: [:show] do
     member do
