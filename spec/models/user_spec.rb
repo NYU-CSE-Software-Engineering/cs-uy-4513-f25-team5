@@ -86,4 +86,22 @@ RSpec.describe User, type: :model do
       expect(user).to be_active
     end
   end
+
+  describe '#destroyable_by?' do
+    let(:admin) do
+      described_class.create!(email: 'admin@example.com', password: 'secret', role: 'admin')
+    end
+
+    let(:other_admin) do
+      described_class.create!(email: 'other@example.com', password: 'secret', role: 'admin')
+    end
+
+    it 'returns false when an admin attempts to delete themselves' do
+      expect(admin.destroyable_by?(admin)).to be(false)
+    end
+
+    it 'returns true when a different admin performs the delete' do
+      expect(admin.destroyable_by?(other_admin)).to be(true)
+    end
+  end
 end
