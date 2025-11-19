@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_11_07_195000) do
+ActiveRecord::Schema[7.1].define(version: 2025_11_07_195500) do
   create_table "active_matches", force: :cascade do |t|
     t.integer "user_one_id", null: false
     t.integer "user_two_id", null: false
@@ -29,6 +29,16 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_07_195000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_avatars_on_user_id"
+  end
+
+  create_table "conversations", force: :cascade do |t|
+    t.integer "participant_one_id", null: false
+    t.integer "participant_two_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["participant_one_id", "participant_two_id"], name: "idx_on_participant_one_id_participant_two_id_34e343b89f", unique: true
+    t.index ["participant_one_id"], name: "index_conversations_on_participant_one_id"
+    t.index ["participant_two_id"], name: "index_conversations_on_participant_two_id"
   end
 
   create_table "listings", force: :cascade do |t|
@@ -68,5 +78,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_07_195000) do
   add_foreign_key "active_matches", "users", column: "user_one_id"
   add_foreign_key "active_matches", "users", column: "user_two_id"
   add_foreign_key "avatars", "users"
+  add_foreign_key "conversations", "users", column: "participant_one_id"
+  add_foreign_key "conversations", "users", column: "participant_two_id"
   add_foreign_key "listings", "users"
 end
