@@ -10,7 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_11_19_203245) do
+ActiveRecord::Schema[7.1].define(version: 2025_11_07_195000) do
+  create_table "active_matches", force: :cascade do |t|
+    t.integer "user_one_id", null: false
+    t.integer "user_two_id", null: false
+    t.string "status", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_one_id", "user_two_id"], name: "index_active_matches_on_user_one_id_and_user_two_id", unique: true
+    t.index ["user_one_id"], name: "index_active_matches_on_user_one_id"
+    t.index ["user_two_id"], name: "index_active_matches_on_user_two_id"
+  end
+
   create_table "avatars", force: :cascade do |t|
     t.integer "user_id", null: false
     t.text "image_base64", null: false
@@ -50,8 +61,12 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_19_203245) do
     t.string "contact_visibility"
     t.string "role"
     t.boolean "suspended", default: false
+    t.string "role"
+    t.boolean "suspended", default: false
   end
 
+  add_foreign_key "active_matches", "users", column: "user_one_id"
+  add_foreign_key "active_matches", "users", column: "user_two_id"
   add_foreign_key "avatars", "users"
   add_foreign_key "listings", "users"
 end
