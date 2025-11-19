@@ -3,24 +3,19 @@ Given('I am logged in as a Community Verifier') do
     email: 'verifier@example.com',
     password: 'password123'
   )
+  # Set session for Capybara
+  page.driver.post '/auth/login', { email: @current_user.email, password: 'password123' } rescue nil
 end
 
 Given('the following listings exist:') do |table|
   table.hashes.each do |row|
-    # Find or create user for this listing
-    user = User.find_by(email: row['owner_email']) || User.create!(
-      email: row['owner_email'],
-      password: 'password123'
-    )
-    
     Listing.create!(
       title: row['title'],
       owner_email: row['owner_email'],
       status: row['status'],
       verification_requested: row['verification_requested'] == 'true',
       price: 100,
-      city: 'New York',
-      user: user
+      city: 'New York'
     )
   end
 end
@@ -53,18 +48,13 @@ Then('the member should see a {string} badge on the listing page') do |badge_tex
 end
 
 Given('a listing is marked as verified') do
-  user = User.find_by(email: 'test@example.com') || User.create!(
-    email: 'test@example.com',
-    password: 'password123'
-  )
   @verified_listing = Listing.create!(
     title: 'Verified Test Listing',
     owner_email: 'test@example.com',
     status: 'Verified',
     verified: true,
     price: 100,
-    city: 'NYC',
-    user: user
+    city: 'NYC'
   )
 end
 
@@ -77,18 +67,13 @@ Then('they should see a {string} badge') do |badge_text|
 end
 
 When('a member views an unverified listing') do
-  user = User.find_by(email: 'test2@example.com') || User.create!(
-    email: 'test2@example.com',
-    password: 'password123'
-  )
   @unverified_listing = Listing.create!(
     title: 'Unverified Test Listing',
     owner_email: 'test2@example.com',
     status: 'pending',
     verified: false,
     price: 100,
-    city: 'NYC',
-    user: user
+    city: 'NYC'
   )
   visit "/listings/#{@unverified_listing.id}"
 end

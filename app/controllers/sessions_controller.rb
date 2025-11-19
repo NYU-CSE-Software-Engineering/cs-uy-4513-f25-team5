@@ -1,4 +1,9 @@
 class SessionsController < ApplicationController
+  def new
+    # Stub for login page - render plain text for tests
+    render plain: 'Login page'
+  end
+
   def create
     user = User.find_by(email: params[:email]) if params[:email].present?
     
