@@ -33,4 +33,18 @@ RSpec.describe User, type: :model do
       expect { user.destroy }.to change { Listing.count }.by(-1)
     end
   end
+
+  describe 'roles' do
+    it 'defaults to member' do
+      user = described_class.new(email: 'test@example.com', password: 'secret123')
+      user.validate
+      expect(user.role).to eq('member')
+    end
+
+    it 'rejects invalid roles' do
+      user = described_class.new(email: 'test@example.com', password: 'secret123', role: 'owner')
+      expect(user).not_to be_valid
+      expect(user.errors[:role]).to include('is not included in the list')
+    end
+  end
 end
