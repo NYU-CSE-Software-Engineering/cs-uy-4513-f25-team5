@@ -47,4 +47,15 @@ RSpec.describe User, type: :model do
       expect(user.errors[:role]).to include('is not included in the list')
     end
   end
+
+  describe '#admin?' do
+    it 'returns true when role is admin' do
+      user = described_class.new(email: 'admin@example.com', password: 'secret', role: 'admin')
+    end
+
+    it 'returns false when role is not admin' do
+      user = described_class.new(email: 'member@example.com', password: 'secret', role: 'member')
+      expect(user.admin?).to be(false)
+    end
+  end
 end
