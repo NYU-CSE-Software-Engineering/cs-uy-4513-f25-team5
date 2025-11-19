@@ -32,6 +32,13 @@ RSpec.describe User, type: :model do
 
       expect { user.destroy }.to change { Listing.count }.by(-1)
     end
+
+    it 'destroys associated avatar when the user is destroyed' do
+      user = described_class.create!(email: 'avatar@example.com', password: 'password123')
+      user.create_avatar!(image_base64: 'abc123')
+
+      expect { user.destroy }.to change { Avatar.count }.by(-1)
+    end
   end
 
   describe 'roles' do
