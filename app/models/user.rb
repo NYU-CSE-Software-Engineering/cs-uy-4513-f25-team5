@@ -15,6 +15,10 @@ class User < ApplicationRecord
 
   alias_attribute :name, :display_name
 
+  def admin?
+    role == 'admin'
+  end
+
   private
 
   def profile_display_name_required?
