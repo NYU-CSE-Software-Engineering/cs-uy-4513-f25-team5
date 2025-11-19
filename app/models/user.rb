@@ -31,6 +31,12 @@ class User < ApplicationRecord
     !suspended?
   end
 
+  def destroyable_by?(actor)
+    return false if actor == self && admin?
+
+    true
+  end
+
   private
 
   def profile_display_name_required?
