@@ -3,6 +3,8 @@ class User < ApplicationRecord
 
   has_many :listings, dependent: :destroy
   has_one :avatar, dependent: :destroy
+  has_many :matches, dependent: :destroy
+  has_many :matched_as, class_name: 'Match', foreign_key: 'matched_user_id', dependent: :destroy
 
   validates :email, presence: true, uniqueness: true
   validates :password, presence: true, on: :create
