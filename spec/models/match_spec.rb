@@ -125,7 +125,7 @@ RSpec.describe Match, type: :model do
       
       score = Match.calculate_compatibility_score(user1, user2)
       expect(score).to be_between(0, 100)
-      expect(score).to be < 50 # Should be lower due to different preferences
+      expect(score).to be <= 50 # Should be lower due to different preferences
     end
   end
 

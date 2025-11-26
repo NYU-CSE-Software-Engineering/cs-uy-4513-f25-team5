@@ -45,7 +45,8 @@ class Match < ApplicationRecord
       end
     end
 
-    score.round(2)
+    # Cap score at 100
+    [score.round(2), 100.0].min
   end
 
   private
