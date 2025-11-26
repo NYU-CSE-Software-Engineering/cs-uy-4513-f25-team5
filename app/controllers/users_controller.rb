@@ -6,7 +6,7 @@ class UsersController < ApplicationController
       session[:user_id] = @user.id
       respond_to do |format|
         format.html { redirect_to '/search/listings', notice: 'Account created successfully!' }
-        format.json { render json: { user: @user }, status: :created }
+        format.json { render json: { user: @user.slice(:id, :email, :display_name) }, status: :created }
       end
     else
       respond_to do |format|
