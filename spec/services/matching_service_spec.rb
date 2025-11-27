@@ -44,25 +44,58 @@ RSpec.describe MatchingService, type: :service do
 
   describe '.generate_matches_for' do
     it 'creates matches for users with compatible preferences' do
-      # Ensure users are created before generating matches
-      user1
-      user2
-      user3
+      # Create users explicitly to ensure they exist
+      u1 = User.create!(
+        email: 'user1_test@example.com',
+        password: 'password123',
+        display_name: 'User 1',
+        budget: 1000,
+        preferred_location: 'New York',
+        sleep_schedule: 'Early bird',
+        pets: 'No pets'
+      )
       
-      matches_created = MatchingService.generate_matches_for(user1)
+      u2 = User.create!(
+        email: 'user2_test@example.com',
+        password: 'password123',
+        display_name: 'User 2',
+        budget: 950,
+        preferred_location: 'New York',
+        sleep_schedule: 'Early bird',
+        pets: 'No pets'
+      )
+      
+      matches_created = MatchingService.generate_matches_for(u1)
       
       expect(matches_created).to be > 0
-      expect(Match.where(user_id: user1.id).count).to eq(matches_created)
+      expect(Match.where(user_id: u1.id).count).to eq(matches_created)
     end
 
     it 'creates match with user2 who has similar preferences' do
-      # Ensure users are created before generating matches
-      user1
-      user2
+      # Create users explicitly
+      u1 = User.create!(
+        email: 'user1_detail@example.com',
+        password: 'password123',
+        display_name: 'User 1',
+        budget: 1000,
+        preferred_location: 'New York',
+        sleep_schedule: 'Early bird',
+        pets: 'No pets'
+      )
       
-      MatchingService.generate_matches_for(user1)
+      u2 = User.create!(
+        email: 'user2_detail@example.com',
+        password: 'password123',
+        display_name: 'User 2',
+        budget: 950,
+        preferred_location: 'New York',
+        sleep_schedule: 'Early bird',
+        pets: 'No pets'
+      )
       
-      match = Match.find_by(user_id: user1.id, matched_user_id: user2.id)
+      MatchingService.generate_matches_for(u1)
+      
+      match = Match.find_by(user_id: u1.id, matched_user_id: u2.id)
       expect(match).to be_present
       expect(match.compatibility_score).to be >= 50
     end
@@ -121,10 +154,26 @@ RSpec.describe MatchingService, type: :service do
 
   describe '.generate_all_matches' do
     it 'generates matches for all users' do
-      # Ensure all users are created
-      user1
-      user2
-      user3
+      # Create users explicitly
+      u1 = User.create!(
+        email: 'user1_all@example.com',
+        password: 'password123',
+        display_name: 'User 1',
+        budget: 1000,
+        preferred_location: 'New York',
+        sleep_schedule: 'Early bird',
+        pets: 'No pets'
+      )
+      
+      u2 = User.create!(
+        email: 'user2_all@example.com',
+        password: 'password123',
+        display_name: 'User 2',
+        budget: 950,
+        preferred_location: 'New York',
+        sleep_schedule: 'Early bird',
+        pets: 'No pets'
+      )
       
       total_matches = MatchingService.generate_all_matches
       
@@ -133,16 +182,32 @@ RSpec.describe MatchingService, type: :service do
     end
 
     it 'creates bidirectional matches for compatible users' do
-      # Ensure all users are created
-      user1
-      user2
+      # Create users explicitly
+      u1 = User.create!(
+        email: 'user1_bidir@example.com',
+        password: 'password123',
+        display_name: 'User 1',
+        budget: 1000,
+        preferred_location: 'New York',
+        sleep_schedule: 'Early bird',
+        pets: 'No pets'
+      )
+      
+      u2 = User.create!(
+        email: 'user2_bidir@example.com',
+        password: 'password123',
+        display_name: 'User 2',
+        budget: 950,
+        preferred_location: 'New York',
+        sleep_schedule: 'Early bird',
+        pets: 'No pets'
+      )
       
       MatchingService.generate_all_matches
       
       # If user1 and user2 are compatible, at least one should have a match
-      # (generate_all_matches creates matches for each user, so user1->user2 or user2->user1)
-      expect(Match.exists?(user_id: user1.id, matched_user_id: user2.id) ||
-             Match.exists?(user_id: user2.id, matched_user_id: user1.id)).to be true
+      expect(Match.exists?(user_id: u1.id, matched_user_id: u2.id) ||
+             Match.exists?(user_id: u2.id, matched_user_id: u1.id)).to be true
     end
   end
 end
