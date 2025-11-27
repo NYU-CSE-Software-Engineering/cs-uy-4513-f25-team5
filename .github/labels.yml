@@ -1,0 +1,63 @@
+- name: controllers
+  color: "0ea5e9" # sky-500
+  description: Changes to Rails controllers and request handling
+
+- name: models
+  color: "10b981" # emerald-500
+  description: Active Record models and business logic updates
+
+- name: views
+  color: "8b5cf6" # violet-500
+  description: View templates, helpers, and presentation tweaks
+
+- name: jobs
+  color: "f59e0b" # amber-500
+  description: Active Job workers and background processing
+
+- name: mailers
+  color: "eab308" # yellow-500
+  description: Action Mailer classes, templates, or delivery setup
+
+- name: channels
+  color: "06b6d4" # cyan-500
+  description: Action Cable channels and real-time messaging
+
+- name: lib
+  color: "64748b" # slate-500
+  description: Shared libraries, service objects, or utilities
+
+- name: config
+  color: "737373" # neutral-500
+  description: Configuration, initializers, and environment settings
+
+- name: docs
+  color: "6366f1" # indigo-500
+  description: Documentation, README, or course note changes
+
+- name: meeting-notes
+  color: "78716c" # stone-500
+  description: Updates to docs/meeting notes artifacts
+
+- name: database
+  color: "14b8a6" # teal-500
+  description: Database schema files or seed data changes
+
+- name: migrations
+  color: "f97316" # orange-500
+  description: Rails migration files and schema evolution
+
+- name: tests
+  color: "a855f7" # purple-500
+  description: Test suites or helpers spanning multiple test types
+
+- name: tests-rspec
+  color: "d946ef" # fuchsia-500
+  description: RSpec specs or configuration updates
+
+- name: tests-cucumber
+  color: "84cc16" # lime-500
+  description: Cucumber features, steps, or support files
+
+- name: infrastructure
+  color: "6b7280" # gray-500
+  description: CI/CD, Docker, bin scripts, and GitHub configs
