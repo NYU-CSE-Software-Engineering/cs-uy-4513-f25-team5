@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
 
   # Defines the root path route ("/")
-  # root "posts#index"
+  root "pages#home"
   # Authentication routes
   post '/auth/register', to: 'users#create'
   get '/auth/login', to: 'sessions#new'
