@@ -7,7 +7,11 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
-
+  # Authentication routes
+  post '/auth/register', to: 'users#create'
+  get '/auth/login', to: 'sessions#new'
+  post '/auth/login', to: 'sessions#create'
+  post '/auth/logout', to: 'sessions#destroy'
   resource :profile, only: [:show, :edit, :update]
 
   get '/search/listings', to: 'listings#search'
