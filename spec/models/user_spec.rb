@@ -39,5 +39,23 @@ RSpec.describe User, type: :model do
 
       expect { user.destroy }.to change { Listing.count }.by(-2)
     end
+
+    it 'destroys associated conversations and messages when the user is destroyed' do
+      user = described_class.create!(email: 'user@example.com', password: 'password123')
+      other_user = described_class.create!(email: 'other@example.com', password: 'password123')
+      
+      conversation = Conversation.create!(
+        participant_one_id: user.id,
+        participant_two_id: other_user.id
+      )
+      message = Message.create!(
+        conversation: conversation,
+        user: user,
+        body: 'Hello'
+      )
+
+      expect { user.destroy }.to change { Conversation.count }.by(-1)
+        .and change { Message.count }.by(-1)
+    end
   end
 end

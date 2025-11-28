@@ -3,6 +3,9 @@ class User < ApplicationRecord
 
   has_many :listings, dependent: :destroy
   has_one :avatar, dependent: :destroy
+  has_many :conversations_as_participant_one, class_name: 'Conversation', foreign_key: 'participant_one_id', dependent: :destroy
+  has_many :conversations_as_participant_two, class_name: 'Conversation', foreign_key: 'participant_two_id', dependent: :destroy
+  has_many :messages, dependent: :destroy
 
   validates :email, presence: true, uniqueness: true
   validates :password, presence: true, on: :create
