@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>RoomMate</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+        corePlugins: {
+            // this keeps default formatting for html tags like <h1>
+            preflight: false 
+        },
+    }
+    </script>
+  </head>
+
+  <body>   
+    <%= render 'shared/navbar' %>
+    <%= yield %>
+  </body>
+</html>
