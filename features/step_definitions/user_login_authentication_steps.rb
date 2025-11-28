@@ -5,11 +5,11 @@
 
 # Navigation steps
 Given('I am on the signup page') do
-  visit signup_path
+  visit auth_register_path
 end
 
 Given('I am on the login page') do
-  visit login_path
+  visit auth_login_path
 end
 
 Given('I am on the home page') do
@@ -22,15 +22,21 @@ end
 
 # User creation steps
 Given('a user exists with email {string} and password {string}') do |email, password|
+  @user_passwords ||= {}
+  @user_passwords[email] = password
   User.create!(email: email, password: password, password_confirmation: password)
 end
 
 Given('I am logged in as {string}') do |email|
-  @current_user = User.find_by(email: email)
-  visit login_path
-  fill_in 'Email', with: @current_user.email
-  fill_in 'Password', with: @current_user.password || 'password123'
+  password = @user_passwords[email]
+  raise "Password for #{email} is not defined" if password.blank?
+
+  visit auth_login_path
+  fill_in 'Email', with: email
+  fill_in 'Password', with: password
   click_button 'Log in'
+
+  @current_user = User.find_by(email: email)
 end
 
 # Form interaction steps - using standard Capybara methods
@@ -57,15 +63,20 @@ Then('I should be on the dashboard page') do
 end
 
 Then('I should be on the signup page') do
-  expect(current_path).to eq(signup_path)
+  expect(current_path).to eq(auth_register_path)
 end
 
 Then('I should be on the login page') do
-  expect(current_path).to eq(login_path)
+  expect(current_path).to eq(auth_login_path)
 end
 
 Then('I should be on the home page') do
   expect(current_path).to eq(root_path)
+end
+
+Then('the {string} field should contain {string}') do |field_label, expected_value|
+  field = find_field(field_label)
+  expect(field.value).to eq(expected_value)
 end
 
 # Database assertion steps
@@ -77,14 +88,10 @@ end
 # Authorization/access control steps
 Then('I should not have access to protected pages') do
   visit dashboard_path
-  # After logout, attempting to access protected pages should redirect to login
-  expect([login_path, root_path]).to include(current_path)
+  expect(current_path).to eq(auth_login_path)
+  expect(page).to have_content('Please sign in first.')
 end
 
 Given('I am not signed in') do
-  pending 'Real authentication must manage sessions instead of bootstrapping users'
-end
-
-Then('I should be redirected to the login page') do
-  pending 'Expect a redirect to login once session enforcement is implemented'
+  page.driver.post(auth_logout_path)
 end

@@ -150,5 +150,5 @@ Then("the match should be saved to my favorites") do
 end
 
 Then("I should be redirected to the login page") do
-  expect(current_path).to eq(login_path)
+  expect(current_path).to eq(auth_login_path)
 end

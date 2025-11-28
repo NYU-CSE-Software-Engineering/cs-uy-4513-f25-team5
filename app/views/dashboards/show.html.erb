@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+<p id="alert"><%= alert %></p>
+
+<h1>Dashboard</h1>
+
+<p>
+  Welcome,
+  <%= current_user&.display_name.presence || current_user&.email || "Guest" %>!
+</p>
+
+<p>You can access your profile and find compatible matches from here.</p>
+
+<%= button_to 'Log out', auth_logout_path, method: :post %>
+
