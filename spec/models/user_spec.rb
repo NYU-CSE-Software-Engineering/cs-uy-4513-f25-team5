@@ -37,7 +37,7 @@ RSpec.describe User, type: :model do
         owner_email: user.email
       )
 
-      expect { user.destroy }.to change { Listing.count }.by(-1)
+      expect { user.destroy }.to change { Listing.count }.by(-2)
     end
   end
 end
