@@ -6,3 +6,5 @@ std_opts = "--format #{ENV['CUCUMBER_FORMAT'] || 'pretty'} --strict --tags 'not 
 %>
 default: <%= std_opts %> features
 rerun: <%= rerun_opts %> --format rerun --out rerun.txt --strict --tags 'not @wip'
+user_login_authentication: <%= std_opts %> features/user_login_authentication.feature
+ci: <%= std_opts %> features/user_login_authentication.feature

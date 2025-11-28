@@ -6,8 +6,15 @@ ruby "3.3.8"
 gem "rails", "~> 7.1.5", ">= 7.1.5.2"
 
 # Use postgresql as the database for Active Record
-# gem "pg", "~> 1.1"
-gem "sqlite3", "~> 1.7"
+# Use sqlite3 for development and test environments
+# Use pg for production environment
+group :development, :test do
+  gem "sqlite3", "~> 1.7"
+end
+
+group :production do
+  gem "pg", "~> 1.1"
+end
 
 
 # Use the Puma web server [https://github.com/puma/puma]

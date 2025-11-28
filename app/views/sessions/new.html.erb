@@ -1,0 +1,23 @@
+<p id="notice"><%= notice %></p>
+<p id="alert"><%= alert || flash[:alert] %></p>
+
+<h1>Log in</h1>
+
+<%= form_with url: auth_login_path, local: true do |form| %>
+  <div>
+    <%= form.label :email, "Email" %><br>
+    <%= form.email_field :email, value: params[:email] %>
+  </div>
+
+  <div>
+    <%= form.label :password, "Password" %><br>
+    <%= form.password_field :password %>
+  </div>
+
+  <div>
+    <%= form.submit "Log in" %>
+  </div>
+<% end %>
+
+<p>Need an account? <%= link_to 'Sign up', auth_register_path %></p>
+

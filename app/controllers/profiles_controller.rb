@@ -1,7 +1,7 @@
 require 'base64'
 
 class ProfilesController < ApplicationController
-  before_action :ensure_current_user!
+  before_action :require_login
   before_action :set_user
 
   def show; end
@@ -23,10 +23,6 @@ class ProfilesController < ApplicationController
   end
 
   private
-
-  def ensure_current_user!
-    head :unauthorized unless current_user
-  end
 
   def set_user
     @user = current_user
