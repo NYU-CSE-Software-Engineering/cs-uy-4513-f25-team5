@@ -5,6 +5,8 @@
   <span>Verified</span>
 <% end %>
 
+<%= render 'image_preview', listing: @listing %>
+
 <p><strong>Owner:</strong> <%= @listing.owner_email %></p>
 <p><strong>Status:</strong> <%= @listing.status %></p>
 <p><strong>Description:</strong> <%= @listing.description %></p>
