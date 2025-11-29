@@ -1,0 +1,37 @@
+<p id="notice"><%= notice %></p>
+<p id="alert"><%= alert %></p>
+
+<h1>Potential Matches</h1>
+
+<div class="actions">
+  <%= button_to "Find Matches", generate_matches_path, method: :post, class: "btn btn-primary" %>
+</div>
+
+<% if @no_matches_message %>
+  <div class="no-matches">
+    <p><%= @no_matches_message %></p>
+    <% if @suggestions_message %>
+      <p>Update your profile preferences</p>
+    <% end %>
+  </div>
+<% else %>
+  <div class="matches-list">
+    <% @matches.each do |match| %>
+      <div class="match-card">
+        <h3><%= link_to match.matched_user.display_name, match_path(match) %></h3>
+        <p><strong>Compatibility Score:</strong> <%= match.compatibility_score %>%</p>
+        <% if match.matched_user.preferred_location.present? %>
+          <p><strong>Location:</strong> <%= match.matched_user.preferred_location %></p>
+        <% end %>
+        <% if match.matched_user.budget.present? %>
+          <p><strong>Budget:</strong> $<%= match.matched_user.budget %></p>
+        <% end %>
+        <p>
+          <%= link_to "View Details", match_path(match), class: "btn btn-primary" %>
+          <%= button_to "Like", like_match_path(match), method: :post, class: "btn btn-secondary" %>
+        </p>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+
