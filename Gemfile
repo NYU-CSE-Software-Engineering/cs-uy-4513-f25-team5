@@ -42,6 +42,8 @@ gem "bootsnap", require: false
 # gem "rack-cors"
 
 group :development, :test do
+  gem 'simplecov', require: false          # Core coverage gem
+  gem 'simplecov-console', require: false  
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri mingw mswin x64_mingw ]
   gem "rspec-rails", "~> 6.1"
