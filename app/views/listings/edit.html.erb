@@ -1,46 +1,47 @@
-<h1>Edit Listing</h1>
 
-<%= form_with(model: @listing, local: true) do |form| %>
-  <% if @listing.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@listing.errors.count, "error") %> prohibited this listing from being saved:</h2>
-      <ul>
-        <% @listing.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
+<div class="bg-white shadow p-6 rounded-lg max-w-3xl mx-auto space-y-4">
+  <h1 class="text-3xl font-bold text-gray-800 mb-6">Edit Listing</h1>
+  <%= form_with(model: @listing, local: true, class: "space-y-6") do |form| %>
+    <% if @listing.errors.any? %>
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+        <h2 class="font-semibold mb-2"><%= pluralize(@listing.errors.count, "error") %> prohibited this listing from being saved:</h2>
+        <ul class="list-disc list-inside">
+          <% @listing.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="flex flex-col">
+      <%= form.label :title, class: "mb-1 font-semibold text-gray-700" %>
+      <%= form.text_field :title, class: "px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" %>
+    </div>
+
+    <div class="flex flex-col">
+      <%= form.label :description, class: "mb-1 font-semibold text-gray-700" %>
+      <%= form.text_area :description, rows: 5, class: "px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" %>
+    </div>
+
+    <div class="flex flex-col">
+      <%= form.label :price, class: "mb-1 font-semibold text-gray-700" %>
+      <%= form.number_field :price, step: 0.01, class: "px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" %>
+    </div>
+
+    <div class="flex flex-col">
+      <%= form.label :city, class: "mb-1 font-semibold text-gray-700" %>
+      <%= form.text_field :city, class: "px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" %>
+    </div>
+
+    <div class="flex flex-col">
+      <%= form.label :owner_email, "Contact Email", class: "mb-1 font-semibold text-gray-700" %>
+      <%= form.email_field :owner_email, class: "px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" %>
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <%= form.submit "Save changes", class: "w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition" %>
+    <%= link_to 'Back to All Listings', listings_path, class: "w-full sm:w-auto px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 text-center" %>
     </div>
   <% end %>
 
-  <div class="field">
-    <%= form.label :title %>
-    <%= form.text_field :title %>
-  </div>
-
-  <div class="field">
-    <%= form.label :description %>
-    <%= form.text_area :description %>
-  </div>
-
-  <div class="field">
-    <%= form.label :price %>
-    <%= form.number_field :price, step: 0.01 %>
-  </div>
-
-  <div class="field">
-    <%= form.label :city %>
-    <%= form.text_field :city %>
-  </div>
-
-  <div class="field">
-    <%= form.label :owner_email, "Contact Email" %>
-    <%= form.email_field :owner_email %>
-  </div>
-
-  <div class="actions">
-    <%= form.submit "Save changes" %>
-  </div>
-<% end %>
-
-<%= link_to 'Show', @listing %> |
-<%= link_to 'Back', listings_path %>
+</div>

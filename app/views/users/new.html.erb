@@ -1,38 +1,41 @@
-<p id="notice"><%= notice %></p>
-<p id="alert"><%= alert %></p>
+<p id="notice" class="text-green-600 mb-2"><%= notice %></p>
+<p id="alert" class="text-red-600 mb-2"><%= alert %></p>
 
-<h1>Sign up</h1>
+<div class="max-w-md mx-auto bg-white shadow p-6 rounded-lg">
+  <h1 class="text-3xl font-bold text-gray-800 mb-6">Sign Up</h1>
 
-<%= form_with model: @user, url: auth_register_path, local: true do |form| %>
-  <% if @user.errors.any? %>
-    <div class="errors">
-      <ul>
-        <% @user.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
+  <%= form_with model: @user, url: auth_register_path, local: true, class: "space-y-4" do |form| %>
+    <% if @user.errors.any? %>
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+        <ul class="list-disc list-inside">
+          <% @user.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="flex flex-col">
+      <%= form.label :email, "Email", class: "mb-1 font-semibold text-gray-700" %>
+      <%= form.email_field :email, class: "px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" %>
+    </div>
+
+    <div class="flex flex-col">
+      <%= form.label :password, "Password", class: "mb-1 font-semibold text-gray-700" %>
+      <%= form.password_field :password, class: "px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" %>
+    </div>
+
+    <div class="flex flex-col">
+      <%= form.label :password_confirmation, "Password confirmation", class: "mb-1 font-semibold text-gray-700" %>
+      <%= form.password_field :password_confirmation, class: "px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" %>
+    </div>
+
+    <div>
+      <%= form.submit "Sign Up", class: "w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition" %>
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :email, "Email" %><br>
-    <%= form.email_field :email %>
-  </div>
-
-  <div>
-    <%= form.label :password, "Password" %><br>
-    <%= form.password_field :password %>
-  </div>
-
-  <div>
-    <%= form.label :password_confirmation, "Password confirmation" %><br>
-    <%= form.password_field :password_confirmation %>
-  </div>
-
-  <div>
-    <%= form.submit "Sign up" %>
-  </div>
-<% end %>
-
-<p>Already have an account? <%= link_to 'Log in', auth_login_path %></p>
-
+  <p class="mt-4 text-gray-700 text-center">
+    Already have an account? <%= link_to 'Log in', auth_login_path, class: "text-blue-500 hover:underline" %>
+  </p>
+</div>

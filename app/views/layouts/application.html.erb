@@ -10,14 +10,24 @@
     tailwind.config = {
         corePlugins: {
             // this keeps default formatting for html tags like <h1>
-            preflight: false 
+            // preflight: false 
+        },
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'ui-sans-serif', 'system-ui'], // choose your font here
+            },
+          },
         },
     }
     </script>
   </head>
 
-  <body>   
+  <body class="font-sans bg-gray-50">
     <%= render 'shared/navbar' %>
-    <%= yield %>
+    <div class="max-w-1xl mx-auto p-6">
+      <%= yield %>
+    </div>
   </body>
+
 </html>

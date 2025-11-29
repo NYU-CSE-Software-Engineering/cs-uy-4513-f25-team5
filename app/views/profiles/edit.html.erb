@@ -1,10 +1,10 @@
-<section class="profile-edit">
-  <h1>Edit Profile</h1>
+<section class="max-w-3xl mx-auto px-4 py-6">
+  <h1 class="text-3xl font-bold text-gray-800 mb-6">Edit Profile</h1>
 
   <% if @user.errors.any? %>
-    <div class="alert alert-danger">
-      <p>There were problems saving your profile:</p>
-      <ul>
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+      <p class="font-semibold">There were problems saving your profile:</p>
+      <ul class="list-disc list-inside mt-2">
         <% @user.errors.full_messages.each do |message| %>
           <li><%= message %></li>
         <% end %>
@@ -12,111 +12,70 @@
     </div>
   <% end %>
 
-  <%= form_with model: @user, url: profile_path, method: :patch, local: true, html: { multipart: true } do |form| %>
-    <div>
-      <%= form.label :display_name, 'Display name' %>
-      <%= form.text_field :display_name %>
+  <%= form_with model: @user, url: profile_path, method: :patch, local: true, html: { multipart: true }, class: "bg-white shadow p-6 rounded-lg space-y-6" do |form| %>
+    
+    <%# Display avatar centered %>
+    <div class="flex flex-col items-center space-y-4">
+      <div class="w-32 h-32 rounded-full overflow-hidden">
+        <%= render 'avatar_preview', user: @user %>
+      </div>
+
+      <div class="flex flex-col items-center">
+        <%= form.label :avatar, 'Avatar', class: 'font-semibold mb-1' %>
+        <%= form.file_field :avatar, accept: 'image/*', class: 'border rounded p-1' %>
+      </div>
     </div>
 
-    <div>
-      <%= form.label :bio, 'Bio' %>
-      <%= form.text_area :bio %>
+    <%# Full-width fields %>
+    <div class="flex flex-col w-full">
+      <%= form.label :display_name, 'Display name', class: 'font-semibold mb-1' %>
+      <%= form.text_field :display_name, class: 'border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300 w-full' %>
+
+      <%= form.label :bio, 'Bio', class: 'font-semibold mt-4 mb-1' %>
+      <%= form.text_area :bio, rows: 3, class: 'border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300 w-full' %>
     </div>
 
-    <div>
-      <%= form.label :budget, 'Budget' %>
-      <%= form.number_field :budget, min: 0 %>
+    <%# Remaining fields in two-column grid %>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="flex flex-col">
+        <%= form.label :budget, 'Budget', class: 'font-semibold mb-1' %>
+        <%= form.number_field :budget, min: 0, class: 'border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300' %>
+      </div>
+
+      <div class="flex flex-col">
+        <%= form.label :preferred_location, 'Preferred location', class: 'font-semibold mb-1' %>
+        <%= form.text_field :preferred_location, class: 'border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300' %>
+      </div>
+
+      <div class="flex flex-col">
+        <%= form.label :sleep_schedule, 'Sleep schedule', class: 'font-semibold mb-1' %>
+        <%= form.text_field :sleep_schedule, class: 'border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300' %>
+      </div>
+
+      <div class="flex flex-col">
+        <%= form.label :pets, 'Pets', class: 'font-semibold mb-1' %>
+        <%= form.text_field :pets, class: 'border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300' %>
+      </div>
+
+      <div class="flex flex-col">
+        <%= form.label :housing_status, 'Housing status', class: 'font-semibold mb-1' %>
+        <%= form.text_field :housing_status, class: 'border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300' %>
+      </div>
+
+      <div class="flex flex-col">
+        <%= form.label :contact_visibility, 'Contact visibility', class: 'font-semibold mb-1' %>
+        <%= form.text_field :contact_visibility, class: 'border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300' %>
+      </div>
     </div>
 
+    <%# Submit button %>
     <div>
-      <%= form.label :preferred_location, 'Preferred location' %>
-      <%= form.text_field :preferred_location %>
-    </div>
-
-    <div>
-      <%= form.label :sleep_schedule, 'Sleep schedule' %>
-      <%= form.text_field :sleep_schedule %>
-    </div>
-
-    <div>
-      <%= form.label :pets, 'Pets' %>
-      <%= form.text_field :pets %>
-    </div>
-
-    <div>
-      <%= form.label :housing_status, 'Housing status' %>
-      <%= form.text_field :housing_status %>
-    </div>
-
-    <div>
-      <%= form.label :contact_visibility, 'Contact visibility' %>
-      <%= form.text_field :contact_visibility %>
-    </div>
-
-    <div>
-      <%= form.label :avatar, 'Avatar' %>
-      <%= render 'avatar_preview', user: @user %>
-      <%= form.file_field :avatar, accept: 'image/*' %>
-    </div>
-
-    <div>
-      <%= form.submit 'Save Profile' %>
+      <%= form.submit 'Save Profile', class: 'w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600' %>
     </div>
   <% end %>
 
-  <%= button_to 'Remove Profile Picture', profile_path(remove_avatar: '1'), method: :patch, form: { data: { turbo: false } } %>
-
-  <%= link_to 'Back to Profile', profile_path %>
+  <div class="flex flex-col space-y-2 mt-4">
+    <%= button_to 'Remove Profile Picture', profile_path(remove_avatar: '1'), method: :patch, form: { data: { turbo: false } }, class: 'w-full bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600' %>
+    <%= link_to 'Back to Profile', profile_path, class: 'w-full text-center px-4 py-2 border rounded hover:bg-gray-100' %>
+  </div>
 </section>
-
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const avatarInput = document.querySelector('#user_avatar');
-
-    if (!avatarInput) return;
-
-    avatarInput.addEventListener('change', event => {
-      const [file] = event.target.files || [];
-
-      if (!file || !file.type.startsWith('image/')) return;
-
-      const reader = new FileReader();
-      const image = new Image();
-
-      reader.onload = loadEvent => {
-        image.onload = () => {
-          const canvas = document.createElement('canvas');
-          canvas.width = 128;
-          canvas.height = 128;
-          const ctx = canvas.getContext('2d');
-          ctx.clearRect(0, 0, 128, 128);
-
-          const scale = Math.min(128 / image.width, 128 / image.height);
-          const width = image.width * scale;
-          const height = image.height * scale;
-          const offsetX = (128 - width) / 2;
-          const offsetY = (128 - height) / 2;
-
-          ctx.drawImage(image, offsetX, offsetY, width, height);
-
-          canvas.toBlob(blob => {
-            if (!blob) return;
-
-            const resizedFile = new File([blob], file.name.replace(/\.\w+$/, '.png'), {
-              type: 'image/png',
-              lastModified: Date.now()
-            });
-
-            const dataTransfer = new DataTransfer();
-            dataTransfer.items.add(resizedFile);
-            avatarInput.files = dataTransfer.files;
-          }, 'image/png');
-        };
-
-        image.src = loadEvent.target.result;
-      };
-
-      reader.readAsDataURL(file);
-    });
-  });
-</script>
