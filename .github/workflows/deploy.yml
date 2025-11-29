@@ -1,0 +1,40 @@
+name: Deploy to Heroku
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    branches: [main]
+    types:
+      - completed
+  workflow_dispatch:
+
+concurrency:
+  group: heroku-deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    env:
+      HEROKU_APP_NAME: ${{ vars.HEROKU_APP_NAME }}
+      HEROKU_EMAIL: ${{ vars.HEROKU_EMAIL }}
+    steps:
+      # Heroku are not default for ubuntu actions anymore, see https://github.com/AkhileshNS/heroku-deploy/issues/188
+      - name: Install Heroku CLI
+        run: curl https://cli-assets.heroku.com/install.sh | sh 
+        
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to Heroku
+        uses: AkhileshNS/heroku-deploy@v3.14.15
+        with:
+          heroku_api_key: ${{ secrets.STEVEN_HEROKU_USER_TOKEN }}
+          heroku_app_name: ${{ env.HEROKU_APP_NAME }}
+          heroku_email: ${{ env.HEROKU_EMAIL }}
+          branch: main
+          dontautocreate: true

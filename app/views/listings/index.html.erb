@@ -1,38 +1,31 @@
-<p id="notice"><%= notice %></p>
-<p id="alert"><%= alert %></p>
+<p id="notice" class="text-green-600 mb-2"><%= notice %></p>
+<p id="alert" class="text-red-600 mb-2"><%= alert %></p>
 
-<h1>All Listings</h1>
+<h1 class="text-2xl font-bold mb-4">All Listings</h1>
 
 <% if @listings.any? %>
-  <table>
-    <thead>
-      <tr>
-        <th>Title</th>
-        <th>Price</th>
-        <th>City</th>
-        <th>Status</th>
-        <th colspan="3"></th>
-      </tr>
-    </thead>
+  <div class="space-y-4">
+    <% @listings.each do |listing| %>
+      <div class="flex items-center justify-between bg-white shadow p-4 rounded-lg hover:bg-gray-200 transition cursor-pointer"
+           onclick="window.location='<%= listing_path(listing) %>'">
+        <div class="space-y-1">
+          <p class="font-semibold text-gray-800"><%= listing.title %></p>
+          <p class="text-gray-600">$<%= number_with_precision(listing.price, precision: 2) %> • <%= listing.city %> • <%= listing.status %></p>
+        </div>
 
-    <tbody>
-      <% @listings.each do |listing| %>
-        <tr>
-          <td><%= listing.title %></td>
-          <td>$<%= number_with_precision(listing.price, precision: 2) %></td>
-          <td><%= listing.city %></td>
-          <td><%= listing.status %></td>
-          <td><%= link_to 'Show', listing_path(listing) %></td>
-          <td><%= link_to 'Edit', edit_listing_path(listing) %></td>
-          <td><%= button_to 'Delete', listing_path(listing), method: :delete, data: { confirm: 'Are you sure?' } %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
+        <div class="flex space-x-2">
+          <%= link_to 'Edit', edit_listing_path(listing), class: 'px-3 py-1 bg-yellow-400 text-white rounded hover:bg-yellow-500' %>
+          <%= button_to 'Delete', listing_path(listing), method: :delete, data: { confirm: 'Are you sure?' }, class: 'px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600' %>
+        </div>
+      </div>
+    <% end %>
+  </div>
 <% else %>
-  <p>No listings found.</p>
+  <p class="text-gray-600">No listings found.</p>
 <% end %>
 
+  <div class="flex flex-col gap-2 text-center">
+    <%= link_to 'Create New Listing', new_listing_path, class: 'w-full px-4 py-2 mt-4 bg-green-500 text-white rounded hover:bg-green-600' %>
+  </div>
 <br>
 
-<%= link_to 'Create New Listing', new_listing_path %>

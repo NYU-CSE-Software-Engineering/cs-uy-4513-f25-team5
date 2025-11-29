@@ -10,11 +10,13 @@ RSpec.describe 'Profiles', type: :request do
     )
   end
 
-  before do
-    allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
+  def log_in(user)
+    post '/auth/login', params: { email: user.email, password: 'password123' }
   end
 
   describe 'GET /profile' do
+    before { log_in(user) }
+
     it 'renders the profile page successfully' do
       get profile_path
 
@@ -38,6 +40,8 @@ RSpec.describe 'Profiles', type: :request do
         }
       }
     end
+
+    before { log_in(user) }
 
     it 'updates the profile with valid data' do
       patch profile_path, params: valid_params
@@ -86,20 +90,18 @@ RSpec.describe 'Profiles', type: :request do
     end
   end
 
-  describe 'authentication requirements (TODO)' do
+  describe 'authentication requirements' do
     it 'requires a signed-in user before showing the profile' do
-      pending 'Replace bootstrap user with session-backed authentication'
       get profile_path
 
-      expect(response).to redirect_to('/login')
+      expect(response).to redirect_to('/auth/login')
     end
 
     it 'rejects profile updates without a valid session' do
-      pending 'Replace bootstrap user with session-backed authentication'
       patch profile_path,
             params: { user: { display_name: 'Blocked', bio: 'N/A' } }
 
-      expect(response).to redirect_to('/login')
+      expect(response).to redirect_to('/auth/login')
     end
   end
 end

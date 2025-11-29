@@ -1,88 +1,56 @@
 controllers:
-  - changed-files:
-      - any-glob-to-any-file:
-          - 'app/controllers/**/*'
+  - 'app/controllers/**/*'
 
 models:
-  - changed-files:
-      - any-glob-to-any-file:
-          - 'app/models/**/*'
+  - 'app/models/**/*'
 
 views:
-  - changed-files:
-      - any-glob-to-any-file:
-          - 'app/views/**/*'
+  - 'app/views/**/*'
 
 jobs:
-  - changed-files:
-      - any-glob-to-any-file:
-          - 'app/jobs/**/*'
+  - 'app/jobs/**/*'
 
 mailers:
-  - changed-files:
-      - any-glob-to-any-file:
-          - 'app/mailers/**/*'
+  - 'app/mailers/**/*'
 
 channels:
-  - changed-files:
-      - any-glob-to-any-file:
-          - 'app/channels/**/*'
+  - 'app/channels/**/*'
 
 lib:
-  - changed-files:
-      - any-glob-to-any-file:
-          - 'lib/**/*'
+  - 'lib/**/*'
 
 config:
-  - changed-files:
-      - any-glob-to-any-file:
-          - 'config/**/*'
+  - 'config/**/*'
 
 docs:
-  - changed-files:
-      - any-glob-to-any-file:
-          - 'docs/**/*'
-          - 'README.md'
-          - 'AGENTS.md'
+  - 'docs/**/*'
+  - 'README.md'
+  - 'AGENTS.md'
 
 meeting-notes:
-  - changed-files:
-      - any-glob-to-any-file:
-          - 'docs/meeting notes/**/*'
+  - 'docs/meeting notes/**/*'
 
 database:
-  - changed-files:
-      - any-glob-to-any-file:
-          - 'db/seeds.rb'
-          - 'db/schema.rb'
-          - 'db/structure.sql'
+  - 'db/seeds.rb'
+  - 'db/schema.rb'
+  - 'db/structure.sql'
 
 migrations:
-  - changed-files:
-      - any-glob-to-any-file:
-          - 'db/migrate/**/*'
+  - 'db/migrate/**/*'
 
 tests:
-  - changed-files:
-      - any-glob-to-any-file:
-          - 'spec/**/*'
-          - 'features/**/*'
+  - 'spec/**/*'
+  - 'features/**/*'
 
 tests-rspec:
-  - changed-files:
-      - any-glob-to-any-file:
-          - 'spec/**/*'
-          - '.rspec'
+  - 'spec/**/*'
+  - '.rspec'
 
 tests-cucumber:
-  - changed-files:
-      - any-glob-to-any-file:
-          - 'features/**/*'
-          - 'cucumber.yml'
+  - 'features/**/*'
+  - 'cucumber.yml'
 
 infrastructure:
-  - changed-files:
-      - any-glob-to-any-file:
-          - '.github/**/*'
-          - 'bin/**/*'
-          - 'Dockerfile'
+  - '.github/**/*'
+  - 'bin/**/*'
+  - 'Dockerfile'

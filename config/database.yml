@@ -1,20 +1,19 @@
 default: &default
-  adapter: sqlite3
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   timeout: 5000
 
 development:
   <<: *default
+  adapter: sqlite3
   database: db/development.sqlite3
 
 test:
   <<: *default
+  adapter: sqlite3
   database: db/test.sqlite3
 
 production:
   <<: *default
-  # keep Postgres or comment it out if you only need local setup
-  # adapter: postgresql
-  # encoding: unicode
-  # database: your_production_db
-
+  adapter: postgresql
+  encoding: unicode
+  url: <%= ENV["DATABASE_URL"] %>

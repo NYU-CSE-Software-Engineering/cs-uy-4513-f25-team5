@@ -3,6 +3,8 @@ Given('I am logged in as a Community Verifier') do
     email: 'verifier@example.com',
     password: 'password123'
   )
+  # Set session for Capybara
+  page.driver.post '/auth/login', { email: @current_user.email, password: 'password123' } rescue nil
 end
 
 Given('the following listings exist:') do |table|

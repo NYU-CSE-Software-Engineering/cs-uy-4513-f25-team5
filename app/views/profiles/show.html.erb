@@ -1,41 +1,66 @@
-<section class="profile">
+<div class="max-w-3xl mx-auto px-4 py-6">
   <% if notice.present? %>
-    <p class="flash flash--notice"><%= notice %></p>
+    <p class="text-green-600 mb-2"><%= notice %></p>
   <% end %>
 
   <% if alert.present? %>
-    <p class="flash flash--alert"><%= alert %></p>
+    <p class="text-red-600 mb-2"><%= alert %></p>
   <% end %>
 
-  <h1>My Profile</h1>
+  <div class="bg-white shadow p-6 rounded-lg space-y-4">
+    <%# Header with avatar on the right %>
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-3xl font-bold text-gray-800">My Profile</h1>
+      <div class="w-24 h-24 rounded-full overflow-hidden">
+        <%= render 'avatar_preview', user: @user, class: "w-full h-full object-cover" %>
+      </div>
 
-  <%= render 'avatar_preview', user: @user %>
+    </div>
 
-  <dl>
-    <dt>Display name</dt>
-    <dd><%= @user.display_name.presence || 'Not set' %></dd>
+    <dl class="grid grid-cols-1 gap-4">
+      <div class="flex justify-between border-b pb-2">
+        <dt class="font-semibold text-gray-700">Display name</dt>
+        <dd class="text-gray-800"><%= @user.display_name.presence || 'Not set' %></dd>
+      </div>
 
-    <dt>Bio</dt>
-    <dd><%= @user.bio.presence || 'Not set' %></dd>
+      <div class="flex justify-between border-b pb-2">
+        <dt class="font-semibold text-gray-700">Bio</dt>
+        <dd class="text-gray-800"><%= @user.bio.presence || 'Not set' %></dd>
+      </div>
 
-    <dt>Budget</dt>
-    <dd><%= @user.budget || 'Not set' %></dd>
+      <div class="flex justify-between border-b pb-2">
+        <dt class="font-semibold text-gray-700">Budget</dt>
+        <dd class="text-gray-800"><%= @user.budget || 'Not set' %></dd>
+      </div>
 
-    <dt>Preferred location</dt>
-    <dd><%= @user.preferred_location.presence || 'Not set' %></dd>
+      <div class="flex justify-between border-b pb-2">
+        <dt class="font-semibold text-gray-700">Preferred location</dt>
+        <dd class="text-gray-800"><%= @user.preferred_location.presence || 'Not set' %></dd>
+      </div>
 
-    <dt>Sleep schedule</dt>
-    <dd><%= @user.sleep_schedule.presence || 'Not set' %></dd>
+      <div class="flex justify-between border-b pb-2">
+        <dt class="font-semibold text-gray-700">Sleep schedule</dt>
+        <dd class="text-gray-800"><%= @user.sleep_schedule.presence || 'Not set' %></dd>
+      </div>
 
-    <dt>Pets</dt>
-    <dd><%= @user.pets.presence || 'Not set' %></dd>
+      <div class="flex justify-between border-b pb-2">
+        <dt class="font-semibold text-gray-700">Pets</dt>
+        <dd class="text-gray-800"><%= @user.pets.presence || 'Not set' %></dd>
+      </div>
 
-    <dt>Housing status</dt>
-    <dd><%= @user.housing_status.presence || 'Not set' %></dd>
+      <div class="flex justify-between border-b pb-2">
+        <dt class="font-semibold text-gray-700">Housing status</dt>
+        <dd class="text-gray-800"><%= @user.housing_status.presence || 'Not set' %></dd>
+      </div>
 
-    <dt>Contact visibility</dt>
-    <dd><%= @user.contact_visibility.presence || 'Not set' %></dd>
-  </dl>
+      <div class="flex justify-between">
+        <dt class="font-semibold text-gray-700">Contact visibility</dt>
+        <dd class="text-gray-800"><%= @user.contact_visibility.presence || 'Not set' %></dd>
+      </div>
+    </dl>
 
-  <%= link_to 'Edit Profile', edit_profile_path, class: 'button' %>
-</section>
+    <div class="flex flex-col mt-6">
+      <%= link_to 'Edit Profile', edit_profile_path, class: 'w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 text-center' %>
+    </div>
+  </div>
+</div>

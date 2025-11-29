@@ -13,8 +13,8 @@ User.destroy_all
 Listing.destroy_all
 
 # users
-user1 = User.create!(email: "kevin@example.com", password: "password")
-user2 = User.create!(email: "alex@example.com", password: "password")
+user1 = User.create!(email: "kevin@example.com", password: "password123", password_confirmation: "password123")
+user2 = User.create!(email: "alex@example.com", password: "password123", password_confirmation: "password123")
 
 # listings
 Listing.create!(

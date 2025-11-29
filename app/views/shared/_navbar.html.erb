@@ -1,0 +1,36 @@
+<nav class="bg-midnight text-lavender px-4 py-3 shadow-md">
+  <ul class="flex list-none items-center gap-8">
+    <li>
+      <%= link_to 'Dashboard', dashboard_path, class: "hover:text-mint font-semibold transition-colors" %>
+    </li>
+    <li>
+      <%= link_to 'All Listings', listings_path, class: "hover:text-mint font-semibold transition-colors" %>
+    </li>
+    <li>
+      <%= link_to 'Search Listings', search_listings_path, class: "hover:text-mint font-semibold transition-colors" %>
+    </li>
+
+    <% if logged_in? %>
+      <% if current_user.admin? %>
+        <li>
+          <%= link_to 'Verify Listings', verification_requests_path, class: "hover:text-mint font-semibold transition-colors" %>
+        </li>
+      <% end %>
+      <li>
+        <%= link_to 'Profile', profile_path, class: "hover:text-mint font-semibold transition-colors" %>
+      </li>
+      <li>
+        <%= button_to 'Logout', auth_logout_path, method: :post,
+              form: { class: "inline" },
+              class: "bg-red-600 text-white font-semibold px-4 py-1 rounded hover:bg-red-700 transition-colors" %>
+      </li>
+    <% else %>
+      <li>
+        <%= link_to 'Register', auth_register_path, class: "bg-blue-600 text-white font-semibold px-4 py-1 rounded hover:bg-blue-700 transition-colors" %>
+      </li>
+      <li>
+        <%= link_to 'Login', auth_login_path, class: "bg-green-600 text-white font-semibold px-4 py-1 rounded hover:bg-green-700 transition-colors" %>
+      </li>
+    <% end %>
+  </ul>
+</nav>
