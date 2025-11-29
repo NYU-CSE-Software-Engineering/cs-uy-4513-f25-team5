@@ -4,8 +4,17 @@
 # instead of editing this one. Cucumber will automatically load all features/**/*.rb
 # files.
 
-
 require 'cucumber/rails'
+require 'simplecov'
+require 'simplecov-console'
+
+SimpleCov.start 'rails' do
+  add_filter '/features/'  # Exclude feature files themselves
+end
+SimpleCov.formatters = SimpleCov::Formatter::MultiFormatter.new([
+  SimpleCov::Formatter::HTMLFormatter,
+  SimpleCov::Formatter::Console
+])
 
 # By default, any exception happening in your Rails application will bubble up
 # to Cucumber so that your scenario will fail. This is a different from how
