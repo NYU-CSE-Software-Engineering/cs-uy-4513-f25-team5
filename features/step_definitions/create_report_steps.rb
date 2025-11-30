@@ -2,18 +2,18 @@
 
 Given("an admin exists") do
   @admin ||= User.find_or_create_by!(email: "admin@example.com") do |user|
-    user.password = "password"
+    user.password = "password1234"
     user.role = "admin"
   end
 end
 
 Given("at least one report exists in the system") do
   reporter = User.find_or_create_by!(email: "reporter@example.com") do |user|
-    user.password = "password"
+    user.password = "password1234"
   end
   
   reported_user = User.find_or_create_by!(email: "reporteduser@example.com") do |user|
-    user.password = "password"
+    user.password = "password1234"
   end
   
   @existing_report ||= Report.create!(
@@ -27,7 +27,7 @@ end
 
 Given("a reporter user exists") do
   @reporter_user ||= User.find_or_create_by!(email: "cucumberreporter@example.com") do |user|
-    user.password = "password"
+    user.password = "password1234"
   end
 end
 
@@ -79,7 +79,7 @@ end
 
 # Admin Reports Page Steps
 
-Given("I visit the admin reports page as an admin") do
+Given('I visit the admin reports page as an admin') do
   visit admin_reports_path
 end
 
