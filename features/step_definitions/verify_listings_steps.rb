@@ -34,7 +34,7 @@ When('I open the {string} listing details') do |title|
 end
 
 When('I mark the listing as verified') do
-  click_button 'Mark as Verified'
+  click_button 'Verify'
 end
 
 Then('I should see the listing marked as {string}') do |status|

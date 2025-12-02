@@ -20,7 +20,9 @@ When(/I (?:update|attempt to update) my profile with:/) do |table|
   visit edit_profile_path
   @previous_profile_snapshot = @user.attributes.slice(*attributes.keys).transform_values(&:to_s)
   attributes.each do |field, value|
-    fill_in field.humanize, with: value
+    # Match the uppercase label format used in the UI
+    label_text = field.humanize
+    fill_in label_text, with: value
   end
   click_button 'Save Profile'
   @last_submitted_profile = attributes
@@ -50,14 +52,17 @@ end
 
 Given('I have uploaded a profile picture') do
   visit edit_profile_path
-  attach_file 'Avatar', Rails.root.join('features', 'screenshots', 'create_listing_1.jpg')
+  # Find the hidden file input and attach file to it
+  file_input = find('#user_avatar', visible: false)
+  file_input.attach_file(Rails.root.join('features', 'screenshots', 'create_listing_1.jpg').to_s)
   click_button 'Save Profile'
   @user.reload
 end
 
 When('I remove my profile picture') do
   visit edit_profile_path
-  click_button 'Remove Profile Picture'
+  # Click the delete icon button (trash icon) which is only visible when avatar exists
+  find('button[title="Remove profile picture"]').click
 end
 
 Then('I should see a profile picture placeholder') do

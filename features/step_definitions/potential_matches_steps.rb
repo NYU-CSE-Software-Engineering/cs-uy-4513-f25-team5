@@ -102,7 +102,7 @@ When("I try to visit the matches page") do
 end
 
 Then("I should see a list of potential matches") do
-  expect(page).to have_content("Potential Matches")
+  expect(page).to have_content("Find Matches")
   expect(page).to have_css(".match-card", minimum: 1)
 end
 
@@ -118,7 +118,7 @@ Then("each match should show a compatibility score") do
 end
 
 Then("I should see detailed match information") do
-  expect(page).to have_content("Match Details")
+  expect(page).to have_content("Profile Information")
   expect(page).to have_content("Alice Smith")
 end
 
