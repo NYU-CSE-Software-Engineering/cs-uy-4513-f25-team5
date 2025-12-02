@@ -1,6 +1,7 @@
 require 'base64'
 
 class ProfilesController < ApplicationController
+  layout false
   before_action :require_login
   before_action :set_user
 
