@@ -1,7 +1,8 @@
 Given('I am logged in as a Community Verifier') do
   @current_user = User.create!(
     email: 'verifier@example.com',
-    password: 'password123'
+    password: 'password123',
+    role: 'admin'  # Community Verifiers need admin role to verify listings
   )
   # Set session for Capybara
   page.driver.post '/auth/login', { email: @current_user.email, password: 'password123' } rescue nil
@@ -34,7 +35,8 @@ When('I open the {string} listing details') do |title|
 end
 
 When('I mark the listing as verified') do
-  click_button 'Verify'
+  # The button text on listing show page is "Mark as Verified"
+  click_button 'Mark as Verified'
 end
 
 Then('I should see the listing marked as {string}') do |status|
