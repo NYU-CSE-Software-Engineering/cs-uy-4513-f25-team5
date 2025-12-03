@@ -34,4 +34,8 @@ Rails.application.routes.draw do
       post :like, to: 'matches#like'
     end
   end
+
+  resources :conversations, only: [:index, :show, :create] do
+    resources :messages, only: [:create]
+  end
 end
