@@ -82,3 +82,4 @@ Use `bin/rails db:prepare` for day-to-day work; run `bundle exec rails db:setup`
 - [Google Drive](https://drive.google.com/drive/folders/1_f-VSSiocMMotoAsxXHAGuWwao9Dp3jI)
 - [Google Chat Room](https://chat.google.com/room/AAQA1jtdT-k?cls=7)
  
+
