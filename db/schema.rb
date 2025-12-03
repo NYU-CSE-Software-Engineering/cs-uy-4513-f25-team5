@@ -56,17 +56,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_19_203245) do
     t.index ["user_id"], name: "index_listings_on_user_id"
   end
 
-  create_table "messages", force: :cascade do |t|
-    t.integer "conversation_id", null: false
-    t.integer "user_id", null: false
-    t.text "body", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["conversation_id"], name: "index_messages_on_conversation_id"
-    t.index ["user_id"], name: "index_messages_on_user_id"
-   
-  end
-   create_table "matches", force: :cascade do |t|
+  create_table "matches", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "matched_user_id", null: false
     t.decimal "compatibility_score", precision: 5, scale: 2, null: false
@@ -75,6 +65,16 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_19_203245) do
     t.index ["matched_user_id"], name: "index_matches_on_matched_user_id"
     t.index ["user_id", "matched_user_id"], name: "index_matches_on_user_id_and_matched_user_id", unique: true
     t.index ["user_id"], name: "index_matches_on_user_id"
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.integer "conversation_id", null: false
+    t.integer "user_id", null: false
+    t.text "body", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["conversation_id"], name: "index_messages_on_conversation_id"
+    t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
