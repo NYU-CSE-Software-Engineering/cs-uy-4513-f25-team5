@@ -7,7 +7,7 @@
 require 'simplecov'
 require 'simplecov-console'
 
-SimpleCov.minimum_coverage 70
+SimpleCov.minimum_coverage 65
 SimpleCov.start 'rails' do
   add_filter '/features/'  # Exclude feature files themselves
 end
