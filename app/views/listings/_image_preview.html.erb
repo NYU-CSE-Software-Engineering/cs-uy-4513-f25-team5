@@ -1,0 +1,9 @@
+<div class="listing__image">
+  <% if listing.image_base64.present? %>
+    <img src="<%= listing.data_uri %>" alt="Listing picture" width="128" height="128" />
+  <% else %>
+    <div data-testid="listing-picture-placeholder">
+      No listing picture uploaded
+    </div>
+  <% end %>
+</div>

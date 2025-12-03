@@ -42,6 +42,10 @@ class Listing < ApplicationRecord
     scope
   end
 
+  def data_uri
+    "data:image/*;base64,#{image_base64}" if image_base64.present?
+  end
+
   private
   
   def set_default_status

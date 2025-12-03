@@ -8,6 +8,11 @@
     <% @listings.each do |listing| %>
       <div class="flex items-center justify-between bg-white shadow p-4 rounded-lg hover:bg-gray-200 transition cursor-pointer"
            onclick="window.location='<%= listing_path(listing) %>'">
+        <% if listing.image_base64.present? %>
+          <img src="data:image/png;base64,<%= listing.image_base64 %>" width="64" height="64">
+        <% else %>
+          <span>No image</span>
+        <% end %>
         <div class="space-y-1">
           <p class="font-semibold text-gray-800"><%= listing.title %></p>
           <p class="text-gray-600">$<%= number_with_precision(listing.price, precision: 2) %> • <%= listing.city %> • <%= listing.status %></p>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_11_19_203245) do
+ActiveRecord::Schema[7.1].define(version: 2025_11_29_005538) do
   create_table "avatars", force: :cascade do |t|
     t.integer "user_id", null: false
     t.text "image_base64", null: false
@@ -32,6 +32,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_19_203245) do
     t.string "status"
     t.boolean "verification_requested", default: false
     t.boolean "verified", default: false
+    t.text "image_base64"
+    t.string "filename"
     t.index ["user_id"], name: "index_listings_on_user_id"
   end
 
