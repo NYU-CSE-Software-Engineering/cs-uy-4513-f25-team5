@@ -1,6 +1,6 @@
 class ConversationsController < ApplicationController
   before_action :require_login
-  before_action :set_conversation, only: [:show]
+  before_action :set_conversation, only: [:show, :poll]
 
   # GET /conversations
   def index
@@ -9,7 +9,7 @@ class ConversationsController < ApplicationController
       current_user.id, 
       current_user.id
     ).includes(:participant_one, :participant_two, :messages)
-     .order('messages.created_at DESC')
+     .order(created_at: :desc)
   end
 
   # GET /conversations/:id
@@ -23,6 +23,26 @@ class ConversationsController < ApplicationController
                              .includes(:user)
                              .order(created_at: :asc)
     @message = Message.new
+  end
+
+  # GET /conversations/:id/poll
+  def poll
+    unless conversation_participant?
+      render json: { error: "Unauthorized" }, status: :forbidden
+      return
+    end
+
+    since = params[:since].present? ? Time.zone.parse(params[:since]) : 1.hour.ago
+    
+    new_messages = @conversation.messages
+                                .where('created_at > ?', since)
+                                .includes(:user)
+                                .order(created_at: :asc)
+
+    render json: {
+      messages: new_messages.map { |msg| message_json(msg) },
+      last_checked: Time.current.iso8601
+    }
   end
 
   # POST /conversations
@@ -66,6 +86,17 @@ class ConversationsController < ApplicationController
       participant_one_id: sorted_ids[0],
       participant_two_id: sorted_ids[1]
     )
+  end
+
+  def message_json(message)
+    {
+      id: message.id,
+      body: message.body,
+      created_at: message.created_at.strftime("%b %d, %I:%M %p"),
+      user_id: message.user_id,
+      user_name: message.user.display_name,
+      is_current_user: message.user_id == current_user.id
+    }
   end
 
   def require_login

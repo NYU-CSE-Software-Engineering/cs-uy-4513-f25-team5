@@ -9,11 +9,9 @@
     
     <div class="conversation-title">
       <% if other_user.avatar %>
-        <div class="avatar">
-          <%= image_tag "data:image/png;base64,#{other_user.avatar.image_base64}", 
-                        alt: "#{other_user.display_name}'s avatar", 
-                        class: 'avatar-img' %>
-        </div>
+        <%= image_tag "data:image/png;base64,#{other_user.avatar.image_base64}", 
+                      alt: "#{other_user.display_name}'s avatar", 
+                      class: 'avatar-img' %>
       <% else %>
         <div class="avatar-placeholder">
           <%= other_user.display_name.first.upcase %>
@@ -31,7 +29,7 @@
       </div>
     <% else %>
       <% @messages.each do |message| %>
-        <div class="message <%= message.user_id == current_user.id ? 'message-sent' : 'message-received' %>">
+        <div class="message <%= message.user_id == current_user.id ? 'message-sent' : 'message-received' %>" data-message-id="<%= message.id %>">
           <div class="message-header">
             <span class="message-sender">
               <%= message.user_id == current_user.id ? 'You' : message.user.display_name %>
@@ -269,21 +267,81 @@
 </style>
 
 <script>
-  // Auto-scroll to bottom of messages on page load
-  document.addEventListener('DOMContentLoaded', function() {
-    const messagesContainer = document.getElementById('messages');
-    if (messagesContainer) {
-      messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    }
-  });
+  (function() {
+    const conversationId = <%= @conversation.id %>;
+    const currentUserId = <%= current_user.id %>;
+    let lastChecked = new Date().toISOString();
+    let pollInterval;
 
-  // Auto-scroll after form submission (if using Turbo)
-  document.addEventListener('turbo:submit-end', function() {
-    const messagesContainer = document.getElementById('messages');
-    if (messagesContainer) {
-      setTimeout(() => {
+    // Auto-scroll to bottom of messages
+    function scrollToBottom() {
+      const messagesContainer = document.getElementById('messages');
+      if (messagesContainer) {
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
-      }, 100);
+      }
     }
-  });
+
+    // Create message HTML
+    function createMessageHTML(message) {
+      const isSent = message.is_current_user;
+      const messageClass = isSent ? 'message-sent' : 'message-received';
+      
+      return `
+        <div class="message ${messageClass}" data-message-id="${message.id}">
+          <div class="message-header">
+            <span class="message-sender">${isSent ? 'You' : message.user_name}</span>
+            <span class="message-time">${message.created_at}</span>
+          </div>
+          <div class="message-body">
+            ${message.body.replace(/\n/g, '<br>')}
+          </div>
+        </div>
+      `;
+    }
+
+    // Poll for new messages
+    function pollMessages() {
+      fetch(`/conversations/${conversationId}/poll?since=${encodeURIComponent(lastChecked)}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.messages && data.messages.length > 0) {
+            const messagesContainer = document.getElementById('messages');
+            const emptyState = messagesContainer.querySelector('.empty-messages');
+            
+            // Remove empty state if it exists
+            if (emptyState) {
+              emptyState.remove();
+            }
+
+            // Add new messages
+            data.messages.forEach(message => {
+              // Check if message already exists
+              if (!document.querySelector(`[data-message-id="${message.id}"]`)) {
+                messagesContainer.insertAdjacentHTML('beforeend', createMessageHTML(message));
+              }
+            });
+
+            scrollToBottom();
+          }
+          
+          lastChecked = data.last_checked;
+        })
+        .catch(error => console.error('Polling error:', error));
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+      scrollToBottom();
+      
+      // Start polling every 2 seconds
+      pollInterval = setInterval(pollMessages, 2000);
+    });
+
+    // Stop polling when leaving page
+    window.addEventListener('beforeunload', function() {
+      if (pollInterval) {
+        clearInterval(pollInterval);
+      }
+    });
+  })();
 </script>
