@@ -1,5 +1,4 @@
 name: CI
-
 on:
   push:
     branches: [ main ]
@@ -8,35 +7,82 @@ on:
 jobs:
   tests:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        suite: [rspec, cucumber]
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
+      
       - name: Install system dependencies
         run: sudo apt-get update && sudo apt-get install -y libsqlite3-dev
-
+      
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.3.8
           bundler-cache: true
-
+      
       - name: Set up test database
         run: |
           bundle exec rails db:create
           bundle exec rails db:migrate
         env:
           RAILS_ENV: test
-
-      - name: Run ${{ matrix.suite }}
+      
+      # Clean any existing coverage
+      - name: Clean coverage
+        run: rm -rf coverage/
+      
+      - name: Run RSpec tests
+        run: bundle exec rspec
+        env:
+          RAILS_ENV: test
+          TEST_SUITE: RSpec
+      
+      - name: Check RSpec coverage was created
         run: |
-          if [ "${{ matrix.suite }}" = "rspec" ]; then
-            bundle exec rspec
+          echo "=== After RSpec ==="
+          ls -la coverage/
+          if [ -f coverage/.resultset.json ]; then
+            echo "RSpec resultset exists"
+            cat coverage/.resultset.json | jq 'keys'
           else
-            bundle exec cucumber --publish-quiet
+            echo "ERROR: No RSpec coverage generated!"
+            exit 1
           fi
+      
+      - name: Run Cucumber tests
+        run: bundle exec cucumber --publish-quiet
+        env:
+          RAILS_ENV: test
+          TEST_SUITE: Cucumber
+      
+      - name: Check merged coverage
+        run: |
+          echo "=== After Cucumber ==="
+          ls -la coverage/
+          if [ -f coverage/.resultset.json ]; then
+            echo "Merged resultset exists"
+            cat coverage/.resultset.json | jq 'keys'
+          else
+            echo "ERROR: No merged coverage!"
+            exit 1
+          fi
+      
+      - name: Generate final coverage report
+        run: |
+          ruby -e "
+          require 'simplecov'
+          SimpleCov.coverage_dir 'coverage'
+          result = SimpleCov::ResultMerger.merged_result
+          result.format!
+          puts \"Total Coverage: #{result.covered_percent.round(2)}%\"
+          puts \"Covered Lines: #{result.covered_lines} / #{result.total_lines}\"
+          "
+        env:
+          RAILS_ENV: test
+      
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: coverage/
