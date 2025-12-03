@@ -28,20 +28,39 @@
   <% end %>
 
   <section class="mt-6 space-y-4">
-    <% if @listings.any? %>
-      <ul class="space-y-4">
-        <% @listings.each do |listing| %>
-          <li class="bg-white shadow p-4 rounded-lg hover:bg-gray-50 transition cursor-pointer"
-              onclick="window.location='<%= listing_path(listing) %>'">
+  <% if @listings.any? %>
+    <ul class="space-y-4">
+      <% @listings.each do |listing| %>
+        <li class="shadow px-2 py-4 rounded-lg hover:bg-gray-50 transition cursor-pointer flex items-center space-x-4"
+            onclick="window.location='<%= listing_path(listing) %>'">
+
+          <!-- Tiny image on the left -->
+          <div class="flex-shrink-0">
+            <% if listing.image_base64.present? %>
+              <img src="data:image/png;base64,<%= listing.image_base64 %>" 
+                   alt="Listing Image"
+                   class="w-20 h-20 object-cover rounded border">
+            <% else %>
+              <div class="w-20 h-20 bg-gray-100 flex items-center justify-center text-gray-400 rounded border text-sm">
+                No image
+              </div>
+            <% end %>
+          </div>
+
+          <!-- Listing info -->
+          <div class="flex-1 flex flex-col">
             <p class="font-semibold text-gray-800 text-lg"><%= listing.title %></p>
             <p class="text-gray-600">City: <%= listing.city %></p>
             <p class="text-gray-600">Price: <%= number_to_currency(listing.price) %></p>
-            <p class="italic text-gray-700 mt-2"><%= listing.description %></p>
-          </li>
-        <% end %>
-      </ul>
-    <% else %>
-      <p class="text-gray-600">No listings found matching your search criteria.</p>
-    <% end %>
-  </section>
+            <p class="italic text-gray-700 mt-2 line-clamp-3"><%= listing.description %></p>
+          </div>
+
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p class="text-gray-600">No listings found matching your search criteria.</p>
+  <% end %>
+</section>
+
 </div>

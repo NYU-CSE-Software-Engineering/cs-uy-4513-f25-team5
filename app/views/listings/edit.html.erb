@@ -19,6 +19,20 @@
     </div>
 
     <div class="flex flex-col">
+      <div class="flex flex-row items-center">
+        <%= form.label :image, "Listing Image", class: "mb-1 mr-5 font-semibold text-gray-700" %>
+        <%= form.file_field :image, accept: "image/*", class: "px-3 py-2 rounded-lg" %>
+      </div>
+       <% if @listing.image_base64.present? %>
+        <div class="flex justify-center mt-2">
+          <img src="data:image/png;base64,<%= @listing.image_base64 %>" 
+              alt="Listing Image"
+              class="max-w-full max-h-full object-contain">
+        </div>
+      <% end %>
+    </div>
+
+    <div class="flex flex-col">
       <%= form.label :description, class: "mb-1 font-semibold text-gray-700" %>
       <%= form.text_area :description, rows: 5, class: "px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" %>
     </div>
@@ -36,15 +50,6 @@
     <div class="flex flex-col">
       <%= form.label :owner_email, "Contact Email", class: "mb-1 font-semibold text-gray-700" %>
       <%= form.email_field :owner_email, class: "px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" %>
-    </div>
-
-    <div class="field">
-      <%= form.label :image, "Listing Image" %>
-      <% if @listing.image_base64.present? %>
-        <img src="data:image/png;base64,<%= @listing.image_base64 %>" width="128" height="128">
-      <% end %>
-
-      <%= form.file_field :image, accept: "image/*" %>
     </div>
 
     <div class="flex flex-col gap-2">
