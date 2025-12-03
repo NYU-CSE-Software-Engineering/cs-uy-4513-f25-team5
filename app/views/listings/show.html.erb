@@ -132,10 +132,11 @@
               <div>
                 <div class="flex items-center gap-3 mb-2">
                   <% if @listing.status == 'verified' %>
-                    <span class="w-7 h-7 rounded-full bg-blue-500 flex items-center justify-center" title="Verified">
-                      <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <span class="flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500 text-white text-xs font-semibold">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                       </svg>
+                      Verified
                     </span>
                   <% elsif @listing.status == 'pending' %>
                     <span class="px-3 py-1 text-xs font-semibold rounded-full bg-gray-500/10 text-gray-400 border border-gray-500/20">Pending</span>
