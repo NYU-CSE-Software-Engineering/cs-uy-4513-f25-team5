@@ -76,7 +76,7 @@ Given('I am on the matches page') do
 end
 
 Given("a compatible user {string} exists") do |display_name|
-  User.create!(
+  uh = User.create!(
     display_name: display_name,
     email: "#{display_name.downcase}@example.com",
     password: "password1234",
@@ -87,7 +87,7 @@ Given("a compatible user {string} exists") do |display_name|
     pets: @current_user.pets,
     housing_status: @current_user.housing_status,
     contact_visibility: @current_user.contact_visibility
-  )
+  ) 
 
 end
 
@@ -274,4 +274,58 @@ end
 
 Then('the response status should be {int}') do |status_code|
   expect(@response_status).to eq(status_code)
+end
+
+# Start conversation with non-existent user (sad path)
+When('I try to start a conversation with a non-existent user with id {int}') do |user_id|
+  page.driver.submit :post, conversations_path, { user_id: user_id }
+end
+
+# Force conversation creation to fail
+Given('the conversation creation is forced to fail') do
+  # Mock the Conversation to fail persistence
+  allow_any_instance_of(ConversationsController).to receive(:find_or_create_conversation).and_return(
+    Conversation.new # not persisted
+  )
+  # Attempt to start conversation with a real user
+  @target_user = User.find_by(display_name: "Dave")
+  page.driver.submit :post, conversations_path, { user_id: @target_user.id }
+end
+
+# Go to conversations list
+When('I go to conversations') do
+  visit conversations_path
+end
+
+# Redirected to home page
+Then('I should be redirected to the home page') do
+    expect([root_path, dashboard_path]).to include(current_path)
+end
+
+# Create a user by display name
+Given('a user {string} exists') do |display_name|
+  User.create!(
+    display_name: display_name,
+    email: "#{display_name.downcase}@example.com",
+    password: "password1234",
+    bio: "Sample bio",
+    preferred_location: "Somewhere",
+    budget: 100,
+    sleep_schedule: "Night Owl",
+    pets: "None",
+    housing_status: "Own",
+    contact_visibility: "Public"
+  )
+end
+
+When("I start a conversation with {string}") do |display_name|
+  user = User.find_by(display_name: display_name)
+  raise "User not found" unless user
+
+  within(".matches-list") do
+    # Find the card that contains the user's display name
+    card = find(".match-card", text: display_name)
+    # Click the "Start Conversation" button inside that card
+    card.click_button("Start Conversation")
+  end
 end

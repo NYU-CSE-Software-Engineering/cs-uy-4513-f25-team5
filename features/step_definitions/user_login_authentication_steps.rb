@@ -82,7 +82,7 @@ Then('I should be on the login page') do
 end
 
 Then('I should be on the home page') do
-  expect(current_path).to eq(root_path)
+  expect(current_path).to eq(dashboard_path)
 end
 
 Then('the {string} field should contain {string}') do |field_label, expected_value|

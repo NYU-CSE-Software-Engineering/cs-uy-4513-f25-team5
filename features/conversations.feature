@@ -33,7 +33,7 @@ Feature: Conversations and Messaging
     And a compatible user "UH" exists
     And I am on the matches page
     And "UH" appears in my matches
-    When I click "Start Conversation" for "UH"
+    When I start a conversation with "UH"
     Then I should be on the conversation page with "UH"
     And I should see "Conversation started"
 
@@ -145,3 +145,14 @@ Feature: Conversations and Messaging
     When I try to poll that conversation
     Then I should receive a JSON error "Unauthorized"
     And the response status should be 403
+
+  Scenario: Starting a conversation with a non-existent user
+    Given I am logged in as "alice@example.com" with password "password1234"
+    When I try to start a conversation with a non-existent user with id 9999
+    Then I should be redirected to the home page
+    And I should see "User not found"
+
+  Scenario: Starting a conversation with yourself
+    Given I am logged in as "alice@example.com" with password "password1234"
+    When I try to start a conversation with "Alice"
+    Then I should be redirected to the home page

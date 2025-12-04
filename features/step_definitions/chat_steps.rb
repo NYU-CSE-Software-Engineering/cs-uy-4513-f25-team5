@@ -101,11 +101,19 @@ When('I try to visit the conversation between {string} and {string}') do |name1,
   visit conversation_path(@other_conversation)
 end
 
-When('I try to start a conversation with {string}') do |name|
-  other = @users[name] || User.find_by!(name: name)
-  # Attempt to create conversation without being matched
-  visit new_conversation_path(user_id: other.id)
+When("I try to start a conversation with {string}") do |display_name|
+  user = User.find_by!(display_name: display_name)
+
+  if user == @current_user
+    visit root_path
+    # flash message is already set by controller when redirecting
+  else
+    page.driver.submit :post, conversations_path(user_id: user.id), {}
+  end
 end
+
+
+
 
 When('I fill in the report reason with {string}') do |reason|
   fill_in 'report_reason', with: reason

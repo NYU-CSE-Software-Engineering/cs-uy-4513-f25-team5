@@ -50,12 +50,12 @@ class ConversationsController < ApplicationController
     other_user = User.find_by(id: params[:user_id])
     
     unless other_user
-      redirect_to request.referrer || root_path, alert: "User not found."
+      redirect_to request.referrer || dashboard_path, alert: "User not found."
       return
     end
 
     if other_user.id == current_user.id
-      redirect_to request.referrer || root_path, alert: "You cannot start a conversation with yourself."
+      redirect_to request.referrer || dashboard_path, alert: "You cannot start a conversation with yourself."
       return
     end
 
@@ -64,7 +64,7 @@ class ConversationsController < ApplicationController
     if @conversation.persisted?
       redirect_to conversation_path(@conversation), notice: "Conversation started."
     else
-      redirect_to request.referrer || root_path, alert: "Unable to create conversation."
+      redirect_to request.referrer || dashboard_path, alert: "Unable to create conversation."
     end
   end
 
