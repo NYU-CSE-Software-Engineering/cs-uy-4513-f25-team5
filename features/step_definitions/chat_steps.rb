@@ -88,10 +88,6 @@ Given('{string} has a conversation with {string}') do |name1, name2|
   )
 end
 
-When('I visit the conversations page') do
-  visit conversations_path
-end
-
 When('I visit the conversation with {string}') do |name|
   other = @users[name] || User.find_by!(name: name)
   @conversation ||= Conversation.where(participant_one_id: @me.id, participant_two_id: other.id)
@@ -109,10 +105,6 @@ When('I try to start a conversation with {string}') do |name|
   other = @users[name] || User.find_by!(name: name)
   # Attempt to create conversation without being matched
   visit new_conversation_path(user_id: other.id)
-end
-
-When('I click {string}') do |button_text|
-  click_button button_text
 end
 
 When('I fill in the report reason with {string}') do |reason|

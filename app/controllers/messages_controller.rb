@@ -1,7 +1,7 @@
 class MessagesController < ApplicationController
   before_action :require_login
   before_action :set_conversation
-
+  
   # POST /conversations/:conversation_id/messages
   def create
     unless conversation_participant?
@@ -39,6 +39,7 @@ class MessagesController < ApplicationController
   def require_login
     unless current_user
       redirect_to auth_login_path, alert: "You must be logged in."
+      return
     end
   end
 end

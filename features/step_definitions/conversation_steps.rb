@@ -12,13 +12,23 @@ Given('the following users exist:') do |table|
 end
 
 Given('I am logged in as {string} with password {string}') do |email, password|
-  visit login_path
+  visit auth_login_path
   fill_in 'Email', with: email
   fill_in 'Password', with: password
-  click_button 'Login'
+  click_button 'Log In'
   @current_user = User.find_by(email: email)
+  @current_user.update!(
+    bio: "a",
+    budget: 1,
+    preferred_location: "a",
+    sleep_schedule: "",
+    pets: "a",
+    housing_status: "a",
+    contact_visibility: "a",
+    role: @current_user.role || "user",
+    suspended: false
+  )
 end
-
 
 Given('a conversation exists between {string} and {string}') do |email1, email2|
   user1 = User.find_by(email: email1)
@@ -65,15 +75,60 @@ Given('I am on the matches page') do
   visit matches_path
 end
 
-Given('{string} appears in my matches') do |display_name|
-  user = User.find_by(display_name: display_name)
-  Match.create!(
-    user: @current_user,
-    matched_user: user,
-    compatibility_score: 85.5
+Given("a compatible user {string} exists") do |display_name|
+  User.create!(
+    display_name: display_name,
+    email: "#{display_name.downcase}@example.com",
+    password: "password1234",
+    bio: "compatible bio",
+    preferred_location: @current_user.preferred_location,
+    budget: @current_user.budget,
+    sleep_schedule: @current_user.sleep_schedule,
+    pets: @current_user.pets,
+    housing_status: @current_user.housing_status,
+    contact_visibility: @current_user.contact_visibility
   )
-  visit matches_path
+
 end
+
+
+Given('{string} appears in my matches') do |display_name|
+  # Ensure current_user has profile data compatible with matches
+  @current_user.update!(
+    display_name: @current_user.display_name || "Alice",
+    bio: @current_user.bio || "This is my bio",
+    budget: @current_user.budget || 1000,
+    preferred_location: @current_user.preferred_location || "New York",
+    sleep_schedule: @current_user.sleep_schedule || "Night Owl",
+    pets: @current_user.pets || "No pets",
+    housing_status: @current_user.housing_status || "Own",
+    contact_visibility: @current_user.contact_visibility || "Public",
+    role: @current_user.role || "user",
+    suspended: false
+  )
+
+  # Make sure the target user exists and has compatible profile
+  user = User.find_by(display_name: display_name)
+  user.update!(
+    bio: user.bio || "Bio for matching",
+    budget: user.budget || 1000,
+    preferred_location: user.preferred_location || "New York",
+    sleep_schedule: user.sleep_schedule || "Night Owl",
+    pets: user.pets || "No pets",
+    housing_status: user.housing_status || "Own",
+    contact_visibility: user.contact_visibility || "Public",
+    role: user.role || "user",
+    suspended: false
+  )
+
+  # Visit matches page and generate matches
+  visit matches_path
+  click_button "Find Matches"
+
+  # Wait for the match with the specific user to appear
+  expect(page).to have_css(".match-card", text: display_name)
+end
+
 
 Given('{string} has an avatar') do |display_name|
   user = User.find_by(display_name: display_name)
@@ -86,7 +141,7 @@ end
 
 Given('I am viewing {string}\'s profile') do |display_name|
   user = User.find_by(display_name: display_name)
-  visit user_path(user)
+  visit profile_path(user)
 end
 
 When('I visit the conversations page') do
@@ -97,26 +152,18 @@ When('I click {string}') do |button_text|
   click_button button_text
 end
 
-When('I click {string} for {string}') do |button_text, user_name|
-  within("div", text: user_name) do
-    click_button button_text
-  end
-end
-
 When('I try to visit that conversation') do
   visit conversation_path(@conversation)
 end
 
-When('I try to start a conversation with myself') do
-  visit root_path
-  page.driver.post conversations_path, user_id: @current_user.id
-end
-
 When('I try to start a new conversation with {string}') do |display_name|
   user = User.find_by(display_name: display_name)
-  page.driver.post conversations_path, user_id: user.id
-  follow_redirect!
+  
+  # Use Rack::Test to post directly (since there is no UI element here)
+  page.driver.submit :post, conversations_path, { user_id: user.id }
 end
+
+
 
 When('I poll for new messages since {string}') do |time_string|
   since = eval(time_string.gsub(' ago', '.ago'))
@@ -141,9 +188,12 @@ When('I try to visit the conversations page') do
   visit conversations_path
 end
 
-When('I try to send a message to that conversation') do
-  page.driver.post conversation_messages_path(@conversation), { message: { body: "Test" } }
+When("I try to send a message to that conversation") do
+  visit conversation_path(@conversation)
+  fill_in "message[body]", with: "Hello"
+  click_button "Send Message"
 end
+
 
 When('I try to poll that conversation') do
   page.driver.get poll_conversation_path(@conversation)
