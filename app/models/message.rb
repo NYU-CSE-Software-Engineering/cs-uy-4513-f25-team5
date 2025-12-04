@@ -5,8 +5,8 @@ class Message < ApplicationRecord
   validate :body_not_blank
 
   def body_not_blank
-    if body.strip.empty?
-      errors.add(:body, "cannot be blank")
+    if body.nil? || body.strip.empty?
+      errors.add(:body, "can't be blank")
     end
   end
 
