@@ -1,5 +1,4 @@
 <h1 class="text-3xl font-bold mb-6">Match Details</h1>
-
 <div class="match-details space-y-6">
   <h2 class="text-2xl font-semibold text-gray-800"><%= @matched_user.display_name %></h2>
   
@@ -34,8 +33,9 @@
     <% end %>
   </div>
   
-  <div class="actions flex space-x-2">
-    <%= link_to "Back to Matches", matches_path, class: "bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded" %>
+  <div class="actions flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+    <%= link_to "Back to Matches", matches_path, class: "bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded text-center" %>
     <%= button_to "Like", like_match_path(@match), method: :post, class: "bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded" %>
+    <%= button_to "Start Conversation", conversations_path(user_id: @matched_user.id), method: :post, class: "bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded" %>
   </div>
 </div>

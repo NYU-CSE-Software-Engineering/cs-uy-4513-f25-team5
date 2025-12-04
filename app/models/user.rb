@@ -65,4 +65,8 @@ class User < ApplicationRecord
   def set_default_role
     self.role ||= 'member'
   end
+
+  def all_conversations
+    Conversation.where("participant_one_id = ? OR participant_two_id = ?", id, id)
+  end
 end

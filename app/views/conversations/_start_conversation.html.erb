@@ -1,0 +1,36 @@
+<!-- 
+  Partial to add "Start Conversation" button
+  Usage: <%= render 'conversations/start_conversation', user: @user %>
+-->
+
+<% if current_user && user.id != current_user.id %>
+  <%= button_to "Start Conversation", 
+                conversations_path(user_id: user.id), 
+                method: :post,
+                class: 'btn-start-conversation' %>
+<% end %>
+
+<style>
+  .btn-start-conversation {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background 0.2s;
+    display: inline-block;
+    text-decoration: none;
+    margin: 10px 0;
+  }
+
+  .btn-start-conversation:hover {
+    background: #45a049;
+  }
+
+  .btn-start-conversation:active {
+    transform: scale(0.98);
+  }
+</style>

@@ -48,14 +48,14 @@ end
 
 When("I click {string} for {string}") do |action, title|
   listing = Listing.find_by(title: title)
-  visit user_path(@user)
+  visit profile_path(@user)
   within("#listing_#{listing.id}") do
     click_link action
   end
 end
 
 Then("I should not see {string} on my listings page") do |title|
-  visit user_path(@user)
+  visit profile_path(@user)
   expect(page).not_to have_content(title)
 end
 

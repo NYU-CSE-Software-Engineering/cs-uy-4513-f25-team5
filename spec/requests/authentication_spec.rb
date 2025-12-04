@@ -20,7 +20,7 @@ RSpec.describe 'Authentication', type: :request do
 
     it 'rejects invalid credentials' do
       post '/auth/login', params: { email: user.email, password: 'wrongpassword' }
-      expect(response).to have_http_status(:unauthorized).or have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unauthorized).or have_http_status(:unprocessable_content)
       expect(session[:user_id]).to be_nil
     end
   end
