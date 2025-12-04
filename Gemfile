@@ -51,6 +51,7 @@ group :development, :test do
   gem "cucumber-rails", require: false
   gem "capybara"
   gem 'database_cleaner-active_record'
+  gem 'rails-controller-testing'
 end
 
 group :development do

@@ -5,7 +5,7 @@ class MessagesController < ApplicationController
   # POST /conversations/:conversation_id/messages
   def create
     unless conversation_participant?
-      redirect_to conversations_path, alert: "You don't have access to this conversation."
+      redirect_to conversations_path, alert: "You do not have access to this conversation."
       return
     end
 

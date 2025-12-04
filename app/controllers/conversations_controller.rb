@@ -1,6 +1,17 @@
 class ConversationsController < ApplicationController
   before_action :require_login
   before_action :set_conversation, only: [:show, :poll]
+  before_action :authorize_participant!, only: [:show, :poll]
+
+  def authorize_participant!
+    unless conversation_participant?
+      respond_to do |format|
+        format.html { redirect_to conversations_path, alert: "You do not have access to this conversation." }
+        format.json { render json: { error: "Unauthorized" }, status: :forbidden }
+      end
+    end
+  end
+
 
   # GET /conversations
   def index
@@ -14,11 +25,6 @@ class ConversationsController < ApplicationController
 
   # GET /conversations/:id
   def show
-    unless conversation_participant?
-      redirect_to conversations_path, alert: "You don't have access to this conversation."
-      return
-    end
-
     @messages = @conversation.messages
                              .includes(:user)
                              .order(created_at: :asc)
@@ -27,13 +33,8 @@ class ConversationsController < ApplicationController
 
   # GET /conversations/:id/poll
   def poll
-    unless conversation_participant?
-      render json: { error: "Unauthorized" }, status: :forbidden
-      return
-    end
-
     since = params[:since].present? ? Time.zone.parse(params[:since]) : 1.hour.ago
-    
+
     new_messages = @conversation.messages
                                 .where('created_at > ?', since)
                                 .includes(:user)
@@ -44,6 +45,7 @@ class ConversationsController < ApplicationController
       last_checked: Time.current.iso8601
     }
   end
+
 
   # POST /conversations
   def create
