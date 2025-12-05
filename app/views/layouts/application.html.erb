@@ -15,7 +15,7 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-      tailwind.config = {
+    tailwind.config = {
         theme: {
           extend: {
             colors: {
@@ -139,7 +139,7 @@
       <main class="<%= content_for?(:main_class) ? yield(:main_class) : 'flex-1 pt-24 pb-4 px-6' %>">
         <div class="<%= content_for?(:content_class) ? yield(:content_class) : 'max-w-7xl mx-auto' %>">
           <%= render 'shared/flash_messages' %>
-          <%= yield %>
+      <%= yield %>
         </div>
       </main>
       
