@@ -26,7 +26,6 @@ Rails.application.routes.draw do
       patch :verify, to: 'verification_requests#verify'
     end
   end
-  get '/search/listings', to: 'listings#search', as: :search_listings_alt
   resources :verification_requests, only: [:index]
   
   resources :matches, only: [:index, :show] do
