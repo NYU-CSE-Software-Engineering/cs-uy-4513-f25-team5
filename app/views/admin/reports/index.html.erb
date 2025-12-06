@@ -1,0 +1,10 @@
+<h1>All Reports</h1>
+
+<% @reports.each do |report| %>
+  <div class="report-row">
+    <p>Reporter: <%= report.reporter.email %></p>
+    <p>Reported User: <%= report.reported_user.email %></p>
+    <p>Type: <%= report.report_type %></p>
+    <p>Description: <%= report.description %></p>
+  </div>
+<% end %>
