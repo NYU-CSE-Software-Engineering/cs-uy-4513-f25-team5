@@ -33,6 +33,7 @@ Rails.application.routes.draw do
   
   namespace :admin do
     resources :reports, only: [:index]
+  end
   
   resources :matches, only: [:index, :show] do
     collection do
