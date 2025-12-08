@@ -85,4 +85,3 @@ Use `bin/rails db:prepare` for day-to-day work; run `bundle exec rails db:setup`
 - [Deployment Link](https://room-mate.app/)
 - [Heroku](https://dashboard.heroku.com/apps/roommate-app)
  
-
