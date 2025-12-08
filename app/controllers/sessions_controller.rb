@@ -1,4 +1,5 @@
 class SessionsController < ApplicationController
+
   def new
   end
 
@@ -6,14 +7,12 @@ class SessionsController < ApplicationController
     user = User.find_by(email: params[:email]) if params[:email].present?
     
     if user && user.authenticate(params[:password])
-      reset_session
       session[:user_id] = user.id
       respond_to do |format|
-        format.html { redirect_to dashboard_path, notice: 'Successfully logged in' }
+        format.html { redirect_to dashboard_path }
         format.json { render json: { user: user }, status: :ok }
       end
     else
-      @submitted_email = params[:email]
       flash.now[:alert] = 'Invalid email or password'
       respond_to do |format|
         format.html { render :new, status: :unprocessable_content }
@@ -23,9 +22,9 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    reset_session
+    session.clear
     respond_to do |format|
-      format.html { redirect_to root_path, notice: 'Successfully logged out' }
+      format.html { redirect_to root_path }
       format.json { head :no_content }
     end
   end

@@ -7,7 +7,6 @@
 require 'simplecov'
 require 'simplecov-console'
 
-
 SimpleCov.command_name 'Cucumber'  # Add this line to identify Cucumber runs
 SimpleCov.minimum_coverage 60
 

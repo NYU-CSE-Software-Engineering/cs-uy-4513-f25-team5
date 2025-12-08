@@ -52,21 +52,18 @@ class User < ApplicationRecord
     display_name.present? || will_save_change_to_display_name?
   end
 
-  def password_strength
-    strong_length = password.length >= 10
-    has_letter = password.match?(/[A-Za-z]/)
-    has_number = password.match?(/\d/)
-
-    return if strong_length && has_letter && has_number
-
-    errors.add(:password, 'must be at least 10 characters and include both letters and numbers')
-  end
-
   def set_default_role
     self.role ||= 'member'
   end
 
   def all_conversations
     Conversation.where("participant_one_id = ? OR participant_two_id = ?", id, id)
+    
+  def password_strength
+    return if password.blank?
+
+    unless password.length >= 10 && password.match?(/[a-zA-Z]/) && password.match?(/\d/)
+      errors.add(:password, 'must be at least 10 characters and include both letters and numbers')
+    end
   end
 end

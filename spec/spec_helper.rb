@@ -2,6 +2,7 @@ require 'simplecov'
 require 'simplecov-console'
 
 SimpleCov.command_name 'RSpec'  # Add this line to identify RSpec runs
+SimpleCov.minimum_coverage 60
 SimpleCov.start 'rails' do
   add_filter '/spec/'  # Exclude spec files themselves
 end

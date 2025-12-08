@@ -1,33 +1,153 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>RoomMate</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= content_for?(:title) ? "#{yield(:title)} · RoomMate" : "RoomMate" %></title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
     tailwind.config = {
-        corePlugins: {
-            // this keeps default formatting for html tags like <h1>
-            // preflight: false 
-        },
         theme: {
           extend: {
-            fontFamily: {
-              sans: ['Inter', 'ui-sans-serif', 'system-ui'], // choose your font here
+            colors: {
+              black: "#000000",
+              white: "#ffffff",
+              yellow: {
+                snap: "#FFFC00"
+              },
+              gray: {
+                50: "#fafafa",
+                100: "#f5f5f5",
+                200: "#e5e5e5",
+                300: "#d4d4d4",
+                400: "#a3a3a3",
+                500: "#737373",
+                600: "#525252",
+                700: "#404040",
+                800: "#262626",
+                900: "#171717",
+                950: "#0a0a0a"
+              }
             },
-          },
-        },
-    }
+            fontFamily: {
+              syne: ['Syne', 'sans-serif']
+            },
+            keyframes: {
+              fadeIn: {
+                "0%": { opacity: 0, transform: "translateY(20px)" },
+                "100%": { opacity: 1, transform: "translateY(0)" }
+              },
+              slideIn: {
+                "0%": { opacity: 0, transform: "translateX(-20px)" },
+                "100%": { opacity: 1, transform: "translateX(0)" }
+              },
+              float: {
+                "0%, 100%": { transform: "translateY(0px)" },
+                "50%": { transform: "translateY(-10px)" }
+              }
+            },
+            animation: {
+              fadeIn: "fadeIn 0.6s ease-out forwards",
+              slideIn: "slideIn 0.6s ease-out forwards",
+              float: "float 6s ease-in-out infinite"
+            }
+          }
+        }
+      };
     </script>
+    
+    <!-- Shared Styles -->
+    <style>
+      /* Animation delays */
+      .stagger-1 { animation-delay: 0.1s; }
+      .stagger-2 { animation-delay: 0.2s; }
+      .stagger-3 { animation-delay: 0.3s; }
+      .stagger-4 { animation-delay: 0.4s; }
+      .stagger-5 { animation-delay: 0.5s; }
+      
+      /* Glass morphism card */
+      .glass-card {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      
+      /* Hover lift effect */
+      .hover-lift {
+        transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+      }
+      
+      .hover-lift:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        border-color: rgba(255, 255, 255, 0.15);
+      }
+      
+      /* Gradient text */
+      .gradient-text {
+        background: linear-gradient(135deg, #fff 0%, #a3a3a3 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #171717;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #404040;
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #525252;
+      }
+      
+      /* Autofill styling for inputs */
+      input:-webkit-autofill,
+      input:-webkit-autofill:hover,
+      input:-webkit-autofill:focus {
+        -webkit-text-fill-color: #fff;
+        -webkit-box-shadow: 0 0 0px 1000px #171717 inset;
+        transition: background-color 5000s ease-in-out 0s;
+      }
+    </style>
+    
+    <%= yield :head %>
   </head>
 
-  <body class="font-sans bg-gray-50">
-    <%= render 'shared/navbar' %>
-    <div class="max-w-1xl mx-auto p-6">
+  <body class="<%= content_for?(:body_class) ? yield(:body_class) : 'min-h-screen bg-black text-white font-syne antialiased' %>">
+    <%= render 'shared/background', animate: content_for?(:animate_background) %>
+    
+    <div class="relative z-10 <%= content_for?(:container_class) ? yield(:container_class) : 'min-h-screen flex flex-col' %>">
+      <% unless content_for?(:hide_header) %>
+        <%= render 'shared/header', variant: (content_for?(:header_variant) ? yield(:header_variant).to_sym : :default), show_nav: !content_for?(:hide_nav) %>
+      <% end %>
+      
+      <main class="<%= content_for?(:main_class) ? yield(:main_class) : 'flex-1 pt-24 pb-4 px-6' %>">
+        <div class="<%= content_for?(:content_class) ? yield(:content_class) : 'max-w-7xl mx-auto' %>">
+          <%= render 'shared/flash_messages' %>
       <%= yield %>
+        </div>
+      </main>
+      
+      <% unless content_for?(:hide_footer) %>
+        <%= render 'shared/footer' %>
+      <% end %>
     </div>
+    
+    <%= yield :scripts %>
   </body>
-
 </html>

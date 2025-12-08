@@ -1,8 +1,9 @@
 # RoomMate – CS-UY 4513 Team 5 (Fall 2025)
 
-[![CI](https://github.com/NYU-CSE-Software-Engineering/cs-uy-4513-f25-team5/actions/workflows/ci.yml/badge.svg)](https://github.com/NYU-CSE-Software-Engineering/cs-uy-4513-f25-team5/actions/workflows/ci.yml)
- 
-RoomMate is a SaaS platform that helps students and newcomers find compatible roommates and share housing costs.
+[![CI](https://github.com/NYU-CSE-Software-Engineering/cs-uy-4513-f25-team5/actions/workflows/ci.yml/badge.svg)](https://github.com/NYU-CSE-Software-Engineering/cs-uy-4513-f25-team5/actions/workflows/ci.yml) [![Deploy to Heroku](https://github.com/NYU-CSE-Software-Engineering/cs-uy-4513-f25-team5/actions/workflows/deploy.yml/badge.svg)](https://github.com/NYU-CSE-Software-Engineering/cs-uy-4513-f25-team5/actions/workflows/deploy.yml)
+
+
+RoomMate ([Room-Mate.app](https://Room-Mate.app/)) is a SaaS platform that helps students and newcomers find compatible roommates and share housing costs.
 
 - Build secure user profiles with lifestyle, budget, and housing preferences
 - Match seekers and listers with a compatibility engine and verified listings
@@ -81,5 +82,7 @@ Use `bin/rails db:prepare` for day-to-day work; run `bundle exec rails db:setup`
 - [Brightspace](https://brightspace.nyu.edu/d2l/le/lessons/479123)
 - [Google Drive](https://drive.google.com/drive/folders/1_f-VSSiocMMotoAsxXHAGuWwao9Dp3jI)
 - [Google Chat Room](https://chat.google.com/room/AAQA1jtdT-k?cls=7)
+- [Deployment Link](https://room-mate.app/)
+- [Heroku](https://dashboard.heroku.com/apps/roommate-app)
  
 
