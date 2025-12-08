@@ -1,41 +1,75 @@
-<p id="notice" class="text-green-600 mb-2"><%= notice %></p>
-<p id="alert" class="text-red-600 mb-2"><%= alert %></p>
+<% content_for :title, "Sign Up" %>
+<% content_for :hide_header, true %>
+<% content_for :hide_footer, true %>
+<% content_for :main_class, "flex-1 flex items-center justify-center px-6 py-12" %>
+<% content_for :content_class, "w-full max-w-5xl" %>
 
-<div class="max-w-md mx-auto bg-white shadow p-6 rounded-lg">
-  <h1 class="text-3xl font-bold text-gray-800 mb-6">Sign Up</h1>
+<div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
 
-  <%= form_with model: @user, url: auth_register_path, local: true, class: "space-y-4" do |form| %>
-    <% if @user.errors.any? %>
-      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-        <ul class="list-disc list-inside">
-          <% @user.errors.full_messages.each do |message| %>
-            <li><%= message %></li>
-          <% end %>
-        </ul>
-      </div>
-    <% end %>
+  <!-- Left Side - Branding -->
+  <div class="opacity-0 animate-fadeIn space-y-8">
+    <a href="<%= root_path %>" class="inline-block">
+      <span class="text-5xl md:text-6xl font-bold tracking-tight">Room<span class="text-[#FFFC00]">Mate</span></span>
+    </a>
+    <p class="text-xl md:text-2xl text-gray-400 leading-loose max-w-md">
+      Find your perfect roommate.
+    </p>
+    <p class="text-lg text-gray-500 leading-relaxed max-w-sm">
+      Create an account to explore listings, manage your profile, and connect with others.
+    </p>
+  </div>
 
-    <div class="flex flex-col">
-      <%= form.label :email, "Email", class: "mb-1 font-semibold text-gray-700" %>
-      <%= form.email_field :email, class: "px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" %>
-    </div>
-
-    <div class="flex flex-col">
-      <%= form.label :password, "Password", class: "mb-1 font-semibold text-gray-700" %>
-      <%= form.password_field :password, class: "px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" %>
-    </div>
-
-    <div class="flex flex-col">
-      <%= form.label :password_confirmation, "Password confirmation", class: "mb-1 font-semibold text-gray-700" %>
-      <%= form.password_field :password_confirmation, class: "px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" %>
-    </div>
-
-    <div>
-      <%= form.submit "Sign Up", class: "w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition" %>
+  <!-- Right Side - Form -->
+  <div class="opacity-0 animate-fadeIn" style="animation-delay: 0.2s;">
+  <% if @user.errors.any? %>
+      <div class="mb-6 px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
+        <ul class="list-disc list-inside space-y-1">
+        <% @user.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
     </div>
   <% end %>
 
-  <p class="mt-4 text-gray-700 text-center">
-    Already have an account? <%= link_to 'Log in', auth_login_path, class: "text-blue-500 hover:underline" %>
-  </p>
+    <div class="glass-card rounded-2xl p-8">
+      <div class="mb-6">
+        <h2 class="text-2xl font-bold mb-2">Create account</h2>
+        <p class="text-gray-400 text-sm">Join RoomMate today</p>
+      </div>
+
+      <%= form_with model: @user, url: auth_register_path, local: true, class: "space-y-5" do |form| %>
+  <div>
+          <%= form.label :email, "Email", class: "block text-sm font-medium text-gray-300 mb-2" %>
+          <%= form.email_field :email, 
+              class: "w-full px-4 py-3 rounded-xl bg-gray-900 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all duration-200",
+              placeholder: "you@example.com" %>
+  </div>
+
+  <div>
+          <%= form.label :password, "Password", class: "block text-sm font-medium text-gray-300 mb-2" %>
+          <%= form.password_field :password,
+              class: "w-full px-4 py-3 rounded-xl bg-gray-900 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all duration-200",
+              placeholder: "••••••••" %>
+  </div>
+
+  <div>
+          <%= form.label :password_confirmation, "Confirm Password", class: "block text-sm font-medium text-gray-300 mb-2" %>
+          <%= form.password_field :password_confirmation,
+              class: "w-full px-4 py-3 rounded-xl bg-gray-900 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all duration-200",
+              placeholder: "••••••••" %>
+  </div>
+
+        <div class="pt-2">
+          <%= form.submit "Sign up", 
+              class: "w-full px-6 py-4 text-base font-semibold rounded-full bg-white text-black hover:bg-gray-200 transition-all duration-200 cursor-pointer" %>
+  </div>
+<% end %>
+
+      <p class="mt-6 text-center text-gray-400 text-sm">
+        Already have an account? 
+        <%= link_to 'Sign in', auth_login_path, class: "text-[#FFFC00] hover:text-yellow-300 font-medium transition-colors" %>
+      </p>
+    </div>
+  </div>
+
 </div>

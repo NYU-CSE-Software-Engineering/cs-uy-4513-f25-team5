@@ -51,7 +51,7 @@ Given('a listing is marked as verified') do
   @verified_listing = Listing.create!(
     title: 'Verified Test Listing',
     owner_email: 'test@example.com',
-    status: 'Verified',
+    status: 'verified',
     verified: true,
     price: 100,
     city: 'NYC'

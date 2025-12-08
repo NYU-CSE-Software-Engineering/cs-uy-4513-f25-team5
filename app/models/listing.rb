@@ -4,7 +4,7 @@ class Listing < ApplicationRecord
   # Status constants
   STATUS_PENDING = 'pending'.freeze
   STATUS_PUBLISHED = 'published'.freeze
-  STATUS_VERIFIED = 'Verified'.freeze
+  STATUS_VERIFIED = 'verified'.freeze
 
 
   validates :title, :price, :city, :status, :owner_email, presence: true

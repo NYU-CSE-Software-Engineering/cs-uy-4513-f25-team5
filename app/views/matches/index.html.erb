@@ -1,37 +1,38 @@
-<p id="notice"><%= notice %></p>
-<p id="alert"><%= alert %></p>
+<p id="notice" class="text-green-600 font-medium mb-2"><%= notice %></p>
+<p id="alert" class="text-red-600 font-medium mb-2"><%= alert %></p>
 
-<h1>Potential Matches</h1>
+<h1 class="text-3xl font-bold mb-6">Potential Matches</h1>
 
-<div class="actions">
-  <%= button_to "Find Matches", generate_matches_path, method: :post, class: "btn btn-primary" %>
+<div class="actions mb-4">
+  <%= button_to "Find Matches", generate_matches_path, method: :post, class: "bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded" %>
 </div>
 
 <% if @no_matches_message %>
-  <div class="no-matches">
-    <p><%= @no_matches_message %></p>
+  <div class="no-matches bg-yellow-100 border-l-4 border-yellow-500 p-4 mb-4">
+    <p class="text-yellow-800"><%= @no_matches_message %></p>
     <% if @suggestions_message %>
-      <p>Update your profile preferences</p>
+      <p class="mt-2 text-yellow-700">Update your profile preferences</p>
     <% end %>
   </div>
 <% else %>
-  <div class="matches-list">
+  <div class="matches-list grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     <% @matches.each do |match| %>
-      <div class="match-card">
-        <h3><%= link_to match.matched_user.display_name, match_path(match) %></h3>
-        <p><strong>Compatibility Score:</strong> <%= match.compatibility_score %>%</p>
+      <div class="match-card border rounded-lg shadow p-4 hover:shadow-lg transition">
+        <h3 class="text-xl font-semibold mb-2">
+          <%= link_to match.matched_user.display_name, match_path(match), class: "text-blue-600 hover:underline" %>
+        </h3>
+        <p class="mb-1"><strong>Compatibility Score:</strong> <%= match.compatibility_score %>%</p>
         <% if match.matched_user.preferred_location.present? %>
-          <p><strong>Location:</strong> <%= match.matched_user.preferred_location %></p>
+          <p class="mb-1"><strong>Location:</strong> <%= match.matched_user.preferred_location %></p>
         <% end %>
         <% if match.matched_user.budget.present? %>
-          <p><strong>Budget:</strong> $<%= match.matched_user.budget %></p>
+          <p class="mb-1"><strong>Budget:</strong> $<%= match.matched_user.budget %></p>
         <% end %>
-        <p>
-          <%= link_to "View Details", match_path(match), class: "btn btn-primary" %>
-          <%= button_to "Like", like_match_path(match), method: :post, class: "btn btn-secondary" %>
-        </p>
+        <div class="mt-4 flex space-x-2">
+          <%= link_to "View Details", match_path(match), class: "bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded" %>
+          <%= button_to "Like", like_match_path(match), method: :post, class: "bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded" %>
+        </div>
       </div>
     <% end %>
   </div>
 <% end %>
-

@@ -7,7 +7,9 @@
 require 'simplecov'
 require 'simplecov-console'
 
+SimpleCov.command_name 'Cucumber'  # Add this line to identify Cucumber runs
 SimpleCov.minimum_coverage 60
+
 SimpleCov.start 'rails' do
   add_filter '/features/'  # Exclude feature files themselves
 end
@@ -16,6 +18,7 @@ SimpleCov.formatters = SimpleCov::Formatter::MultiFormatter.new([
   SimpleCov::Formatter::Console
 ])
 require 'cucumber/rails'
+Rails.application.eager_load!  # this must come AFTER require 'cucumber/rails'
 
 # By default, any exception happening in your Rails application will bubble up
 # to Cucumber so that your scenario will fail. This is a different from how

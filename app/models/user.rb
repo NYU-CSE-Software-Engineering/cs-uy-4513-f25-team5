@@ -3,6 +3,9 @@ class User < ApplicationRecord
 
   has_many :listings, dependent: :destroy
   has_one :avatar, dependent: :destroy
+  has_many :conversations_as_participant_one, class_name: 'Conversation', foreign_key: 'participant_one_id', dependent: :destroy
+  has_many :conversations_as_participant_two, class_name: 'Conversation', foreign_key: 'participant_two_id', dependent: :destroy
+  has_many :messages, dependent: :destroy
   has_many :matches, dependent: :destroy
   has_many :matched_as, class_name: 'Match', foreign_key: 'matched_user_id', dependent: :destroy
 
@@ -49,17 +52,15 @@ class User < ApplicationRecord
     display_name.present? || will_save_change_to_display_name?
   end
 
-  def password_strength
-    strong_length = password.length >= 10
-    has_letter = password.match?(/[A-Za-z]/)
-    has_number = password.match?(/\d/)
-
-    return if strong_length && has_letter && has_number
-
-    errors.add(:password, 'must be at least 10 characters and include both letters and numbers')
-  end
-
   def set_default_role
     self.role ||= 'member'
+  end
+
+  def password_strength
+    return if password.blank?
+
+    unless password.length >= 10 && password.match?(/[a-zA-Z]/) && password.match?(/\d/)
+      errors.add(:password, 'must be at least 10 characters and include both letters and numbers')
+    end
   end
 end

@@ -1,42 +1,41 @@
-<h1>Match Details</h1>
+<h1 class="text-3xl font-bold mb-6">Match Details</h1>
 
-<div class="match-details">
-  <h2><%= @matched_user.display_name %></h2>
+<div class="match-details space-y-6">
+  <h2 class="text-2xl font-semibold text-gray-800"><%= @matched_user.display_name %></h2>
   
-  <div class="compatibility-score">
-    <p><strong>Compatibility:</strong> <%= @match.compatibility_score %>%</p>
+  <div class="compatibility-score bg-blue-100 border-l-4 border-blue-500 p-4 rounded">
+    <p class="text-blue-800 font-medium"><strong>Compatibility:</strong> <%= @match.compatibility_score %>%</p>
   </div>
   
-  <div class="profile-information">
-    <h3>Profile Information</h3>
-    <p><strong>Email:</strong> <%= @matched_user.email %></p>
+  <div class="profile-information bg-gray-50 border rounded-lg p-4 shadow-sm">
+    <h3 class="text-xl font-semibold mb-2 text-gray-700">Profile Information</h3>
+    <p class="mb-1"><strong>Email:</strong> <%= @matched_user.email %></p>
     <% if @matched_user.display_name.present? %>
-      <p><strong>Name:</strong> <%= @matched_user.display_name %></p>
+      <p class="mb-1"><strong>Name:</strong> <%= @matched_user.display_name %></p>
     <% end %>
     <% if @matched_user.bio.present? %>
-      <p><strong>Bio:</strong> <%= @matched_user.bio %></p>
+      <p class="mb-1"><strong>Bio:</strong> <%= @matched_user.bio %></p>
     <% end %>
   </div>
   
-  <div class="lifestyle-preferences">
-    <h3>Lifestyle Preferences</h3>
+  <div class="lifestyle-preferences bg-gray-50 border rounded-lg p-4 shadow-sm">
+    <h3 class="text-xl font-semibold mb-2 text-gray-700">Lifestyle Preferences</h3>
     <% if @matched_user.preferred_location.present? %>
-      <p><strong>Preferred Location:</strong> <%= @matched_user.preferred_location %></p>
+      <p class="mb-1"><strong>Preferred Location:</strong> <%= @matched_user.preferred_location %></p>
     <% end %>
     <% if @matched_user.sleep_schedule.present? %>
-      <p><strong>Sleep Schedule:</strong> <%= @matched_user.sleep_schedule %></p>
+      <p class="mb-1"><strong>Sleep Schedule:</strong> <%= @matched_user.sleep_schedule %></p>
     <% end %>
     <% if @matched_user.pets.present? %>
-      <p><strong>Pets:</strong> <%= @matched_user.pets %></p>
+      <p class="mb-1"><strong>Pets:</strong> <%= @matched_user.pets %></p>
     <% end %>
     <% if @matched_user.budget.present? %>
-      <p><strong>Budget:</strong> $<%= @matched_user.budget %></p>
+      <p class="mb-1"><strong>Budget:</strong> $<%= @matched_user.budget %></p>
     <% end %>
   </div>
   
-  <div class="actions">
-    <%= link_to "Back to Matches", matches_path, class: "btn btn-secondary" %>
-    <%= button_to "Like", like_match_path(@match), method: :post, class: "btn btn-primary" %>
+  <div class="actions flex space-x-2">
+    <%= link_to "Back to Matches", matches_path, class: "bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded" %>
+    <%= button_to "Like", like_match_path(@match), method: :post, class: "bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded" %>
   </div>
 </div>
-

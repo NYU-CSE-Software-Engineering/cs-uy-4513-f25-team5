@@ -35,7 +35,6 @@ class PagesController < ApplicationController
       user_email: current_user&.email
     }
 
-    render layout: false
   end
 
   private
