@@ -78,8 +78,7 @@ class ConversationsController < ApplicationController
   private
 
   def users_are_matched?(user1, user2)
-    ActiveMatch.where(status: 'active')
-              .where('(user_one_id = ? AND user_two_id = ?) OR (user_one_id = ? AND user_two_id = ?)',
+    Match.where('(user_id = ? AND matched_user_id = ?) OR (user_id = ? AND matched_user_id = ?)',
                       user1.id, user2.id, user2.id, user1.id)
               .exists?
   end

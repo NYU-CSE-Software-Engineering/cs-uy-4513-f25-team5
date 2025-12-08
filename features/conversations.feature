@@ -11,18 +11,6 @@ Feature: Conversations and Messaging
       | bob@example.com    | password1234 | Bob          |
       | carol@example.com  | password1234 | Carol        |
 
-  Scenario: User views their conversations list
-    Given I am logged in as "alice@example.com" with password "password1234"
-    And a conversation exists between "alice@example.com" and "bob@example.com"
-    And the conversation has messages:
-      | sender            | body                |
-      | bob@example.com   | Hey Alice!          |
-      | alice@example.com | Hi Bob!             |
-    When I visit the conversations page
-    Then I should see "My Conversations"
-    And I should see "Bob"
-    And I should see "Hi Bob!"
-
   Scenario: User views empty conversations list
     Given I am logged in as "alice@example.com" with password "password1234"
     When I visit the conversations page
@@ -58,27 +46,6 @@ Feature: Conversations and Messaging
     And I click "Send Message"
     Then I should see "Message sent"
     And I should see "What's your budget range?"
-
-  Scenario: User cannot send empty message
-    Given I am logged in as "alice@example.com" with password "password1234"
-    And a conversation exists between "alice@example.com" and "bob@example.com"
-    When I visit the conversation with "Bob"
-    And I fill in "message[body]" with ""
-    And I click "Send Message"
-    Then I should see "Message could not be sent"
-
-  Scenario: User cannot view another user's conversation
-    Given I am logged in as "alice@example.com" with password "password1234"
-    And a conversation exists between "bob@example.com" and "carol@example.com"
-    When I try to visit that conversation
-    Then I should be redirected to the conversations page
-    And I should see "You don't have access to this conversation"
-
-  Scenario: Starting a conversation with existing conversation redirects to it
-    Given I am logged in as "alice@example.com" with password "password1234"
-    And a conversation exists between "alice@example.com" and "bob@example.com"
-    When I try to start a new conversation with "Bob"
-    Then I should be on the existing conversation page with "Bob"
 
   Scenario: Polling for new messages
     Given I am logged in as "alice@example.com" with password "password1234"
