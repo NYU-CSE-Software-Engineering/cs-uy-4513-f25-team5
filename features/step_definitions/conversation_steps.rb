@@ -207,11 +207,6 @@ Then('I should see {string} in the header') do |text|
   end
 end
 
-Then('the messages should be in chronological order') do
-  messages = page.all('.message').map { |m| m.find('.message-body').text }
-  expect(messages).to eq(["Hey, how are you?", "I'm good, thanks!"])
-end
-
 Then('I should be on the conversation page with {string}') do |display_name|
   user = User.find_by(display_name: display_name)
   expect(current_path).to match(/\/conversations\/\d+/)

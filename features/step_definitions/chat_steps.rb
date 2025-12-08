@@ -142,11 +142,15 @@ Then('I should see {string} in my conversations list') do |name|
 end
 
 Then('I should see messages in chronological order:') do |table|
-  messages = page.all('.message .body').map(&:text)
+  messages = page.all('.message .message-body').map(&:text)
   
   table.hashes.each_with_index do |row, index|
     expect(messages[index]).to include(row["body"])
   end
+end
+
+Then('I should see {string} in the conversation') do |msg|
+  expect(page).to have_content(msg)
 end
 
 Then('the message {string} should show {string} as sender') do |message_text, sender_name|
@@ -156,7 +160,7 @@ end
 
 Then('each message should have a timestamp') do
   page.all('.message').each do |message|
-    expect(message).to have_css('.timestamp')
+    expect(message).to have_css('.message-time')
   end
 end
 

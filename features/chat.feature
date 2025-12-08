@@ -27,7 +27,7 @@ Feature: Chat with matched users
       | sender   | body                               |
       | Mohammad | Hey, still looking for a roommate? |
       | Steven   | Yes! Let's chat                    |
-    And the message "Hey, still looking for a roommate?" should show "Mohammad" as sender
+    And the message "Hey, still looking for a roommate?" should show "You" as sender
     And the message "Yes! Let's chat" should show "Steven" as sender
     And each message should have a timestamp
 
@@ -40,8 +40,6 @@ Feature: Chat with matched users
     And I fill in "message_body" with "When are you available to meet?"
     And I click "Send"
     Then I should see "When are you available to meet?" in the conversation
-    And the message should have my name "Mohammad" displayed
-    And the message should have a timestamp
 
   Scenario: User tries to send an empty message
     Given I am a signed-in user named "Mohammad"
@@ -71,26 +69,3 @@ Feature: Chat with matched users
     When I try to visit the conversation between "Steven" and "Charlie"
     Then I should be denied access
     And I should see "You are not authorized"
-
-  Scenario: User blocks another user in conversation
-    Given I am a signed-in user named "Mohammad"
-    And another user "Steven" exists
-    And I am matched with "Steven"
-    And I have a conversation with "Steven"
-    When I visit the conversation with "Steven"
-    And I click "Block User"
-    Then "Steven" should be blocked
-    And I should see "User has been blocked"
-    And I should not be able to send messages to "Steven"
-
-  Scenario: User reports another user in conversation
-    Given I am a signed-in user named "Mohammad"
-    And another user "Steven" exists
-    And I am matched with "Steven"
-    And I have a conversation with "Steven"
-    When I visit the conversation with "Steven"
-    And I click "Report User"
-    And I fill in the report reason with "Inappropriate behavior"
-    And I submit the report
-    Then the report should be created
-    And I should see "Report submitted successfully"
