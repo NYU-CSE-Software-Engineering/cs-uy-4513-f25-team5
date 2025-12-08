@@ -10,9 +10,6 @@ class Message < ApplicationRecord
     end
   end
 
-
-
-
   validates :conversation_id, presence: true
   validates :user_id, presence: true
 
