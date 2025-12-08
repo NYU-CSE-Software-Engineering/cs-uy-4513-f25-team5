@@ -48,7 +48,6 @@ tests-rspec:
 
 tests-cucumber:
   - 'features/**/*'
-  - 'cucumber.yml'
 
 infrastructure:
   - '.github/**/*'

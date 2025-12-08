@@ -52,7 +52,6 @@ git push heroku main
 
 ## Testing
 - TDD & BDD: `bundle exec rspec` & `bundle exec cucumber`
-- Note: cucumber tests are configured via `cucumber.yml`
 
 ## Helpful Links
 - [GitHub](https://github.com/depasqua/cs-uy-4513-f25-team5)
