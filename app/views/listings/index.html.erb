@@ -1,12 +1,27 @@
-<% content_for :title, "My Listings" %>
+<% content_for :title, "Listings" %>
 <% content_for :body_class, "h-screen bg-black text-white font-syne antialiased overflow-hidden" %>
 <% content_for :container_class, "h-screen flex flex-col" %>
 <% content_for :main_class, "flex-1 pt-24 pb-4 px-6 overflow-y-auto" %>
 
-<!-- Header -->
 <div class="mb-12 opacity-0 animate-fadeIn">
-  <h1 class="text-4xl md:text-5xl font-bold tracking-tight mb-4">My Listings</h1>
-  <p class="text-xl text-gray-400">Find your perfect space from our curated listings</p>
+  <h1 class="text-4xl md:text-5xl font-bold tracking-tight mb-4">
+    <% if @is_own_listings %>
+      My Listings
+    <% elsif @user.present? %>
+      <%= @user_handle %>'s Listings
+    <% else %>
+      All Listings
+    <% end %>
+  </h1>
+  <p class="text-xl text-gray-400">
+    <% if @is_own_listings %>
+      Manage your listings
+    <% elsif @user.present? %>
+      View <%= @user_handle %>'s listings
+    <% else %>
+      Find your perfect space from our curated listings
+    <% end %>
+  </p>
 </div>
 
 <% if @listings.any? %>

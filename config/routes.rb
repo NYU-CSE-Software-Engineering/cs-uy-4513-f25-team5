@@ -16,6 +16,8 @@ Rails.application.routes.draw do
 
   get '/dashboard', to: 'dashboards#show', as: :dashboard
 
+  get 'users/:id/listings', to: 'listings#index', as: 'user_listings'
+
   resource :profile, only: [:show, :edit, :update]
 
   resources :listings, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
@@ -26,6 +28,7 @@ Rails.application.routes.draw do
       patch :verify, to: 'verification_requests#verify'
     end
   end
+
   resources :verification_requests, only: [:index]
   
   resources :matches, only: [:index, :show] do
