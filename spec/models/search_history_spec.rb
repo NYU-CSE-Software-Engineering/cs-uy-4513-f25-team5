@@ -13,5 +13,11 @@ RSpec.describe SearchHistory, type: :model do
       history = SearchHistory.new(city: 'New York')
       expect(history).not_to be_valid
     end
+
+    it 'is valid with user and no search parameters' do
+      user = User.create!(email: 'test@example.com', password: 'password123')
+      history = SearchHistory.new(user: user)
+      expect(history).to be_valid
+    end
   end
 end
