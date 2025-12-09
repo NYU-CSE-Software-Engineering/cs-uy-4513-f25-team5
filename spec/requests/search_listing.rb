@@ -61,6 +61,20 @@ RSpec.describe 'Search Listings', type: :request do
           get '/listings/search', params: { city: 'New York', min_price: 1000 }
         }.to change(SearchHistory, :count).by(1)
       end
+
+      it 'does not save empty searches' do
+        expect {
+          get '/listings/search'
+        }.not_to change(SearchHistory, :count)
+      end
+    end
+
+    context 'when user is not logged in' do
+      it 'does not save search history' do
+        expect {
+          get '/listings/search', params: { city: 'New York' }
+        }.not_to change(SearchHistory, :count)
+      end
     end
   end
 end
