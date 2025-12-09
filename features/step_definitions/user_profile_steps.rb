@@ -134,8 +134,11 @@ Then('my profile should be saved with:') do |table|
   user = @user.reload
   expected.each do |field, value|
     actual_value = user.send(field).to_s
-    # Handle case-insensitive comparison for location fields (titleize may change case)
+    # Handle case-insensitive comparison for fields that get normalized
     if field == 'preferred_location'
+      expect(actual_value.downcase).to eq(value.downcase)
+    elsif field == 'sleep_schedule'
+      # Sleep schedule gets normalized (e.g., "Night owl" -> "Night Owl")
       expect(actual_value.downcase).to eq(value.downcase)
     else
       expect(actual_value).to eq(value)
