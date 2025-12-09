@@ -2,14 +2,16 @@ require 'rails_helper'
 
 # Request spec mirroring docs/features/search_listings.md behavior expectations.
 RSpec.describe 'Search Listings', type: :request do
-  let!(:user) { User.create!(email: 'owner@example.com') }
+  let!(:user) { User.create!(email: 'owner@example.com', password: 'password123') }
   let!(:matching_listing) do
     Listing.create!(
       title: 'NYC Loft',
       description: 'Close to campus with skyline views',
       price: 1500,
       city: 'New York',
-      user: user
+      user: user,
+      status: Listing::STATUS_PENDING,
+      owner_email: user.email
     )
   end
   let!(:non_matching_listing) do
@@ -18,7 +20,9 @@ RSpec.describe 'Search Listings', type: :request do
       description: 'Bay views near Golden Gate',
       price: 2800,
       city: 'San Francisco',
-      user: user
+      user: user,
+      status: Listing::STATUS_PENDING,
+      owner_email: user.email
     )
   end
 

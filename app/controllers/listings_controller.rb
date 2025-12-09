@@ -62,6 +62,11 @@ class ListingsController < ApplicationController
     @filters = params.slice(:city, :min_price, :max_price, :keywords).permit!.to_h.symbolize_keys
     @listings = Listing.search(@filters)
 
+    # Save search history for logged-in users with search parameters
+    if current_user && @filters.values.any?(&:present?)
+      current_user.search_histories.create(@filters)
+    end
+
     respond_to do |format|
       format.html { render :search }
       format.json { render json: @listings }
