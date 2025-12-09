@@ -158,6 +158,21 @@ Then('my profile should be saved with:') do |table|
         value
       end
       expect(actual_value).to eq(expected_normalized)
+    elsif field == 'housing_status'
+      # Housing status gets normalized (e.g., "Matched but flexible" -> "Flexible")
+      expected_normalized = case value.downcase
+      when /looking for room|need room|seeking room/
+        'Looking for Room'
+      when /looking for roommate|need roommate|seeking roommate/
+        'Looking for Roommate'
+      when /have room|room available|have space/
+        'Have Room Available'
+      when /flexible|matched but flexible|either/
+        'Flexible'
+      else
+        value
+      end
+      expect(actual_value).to eq(expected_normalized)
     else
       expect(actual_value).to eq(value)
     end
