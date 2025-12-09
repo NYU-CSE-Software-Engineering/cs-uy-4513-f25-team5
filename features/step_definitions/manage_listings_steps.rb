@@ -45,9 +45,10 @@ Then("I should see {string} on the listings page") do |content|
 end
 
 Then("I should see an authorization error message") do
-  expect(page).to have_content("You are not authorized") || 
-              expect(page).to have_content("Access denied") ||
-              expect(page).to have_content("error")
+  has_error = page.has_content?("You are not authorized") || 
+              page.has_content?("Access denied") ||
+              page.has_content?("error")
+  expect(has_error).to be true
 end
 
 Then("I should see a validation error message") do
