@@ -1,4 +1,5 @@
 class ListingsController < ApplicationController
+  before_action :require_login, except: [:index, :show, :search]
   before_action :set_listing, only: [:show, :edit, :update, :destroy]
 
   def index
