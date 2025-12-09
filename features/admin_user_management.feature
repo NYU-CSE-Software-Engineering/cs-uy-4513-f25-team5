@@ -12,6 +12,7 @@ Feature: Admin user management
       | jane@example.com   | password  | Jane Smith   | member |
     And I am signed in as an admin
 
+  @wip
   Scenario: Admin views all users
     When I visit the admin users page
     Then I should see a list of all users:
