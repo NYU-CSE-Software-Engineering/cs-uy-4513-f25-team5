@@ -1,9 +1,7 @@
 <p id="notice" class="text-green-600 font-medium mb-2"><%= notice %></p>
 <p id="alert" class="text-red-600 font-medium mb-2"><%= alert %></p>
-
 <div class="conversations-container">
   <h1>My Conversations</h1>
-
   <% if @conversations.empty? %>
     <div class="empty-state">
       <p>You don't have any conversations yet.</p>
@@ -14,23 +12,21 @@
       <% @conversations.each do |conversation| %>
         <% other_user = conversation.participant_one_id == current_user.id ? conversation.participant_two : conversation.participant_one %>
         <% last_message = conversation.messages.order(created_at: :desc).first %>
-        
         <div class="conversation-card">
           <%= link_to conversation_path(conversation), class: 'conversation-link' do %>
             <div class="conversation-header">
               <div class="user-info">
                 <% if other_user.avatar %>
-        <div class="avatar">
-          <%= image_tag "data:image/png;base64,#{other_user.avatar.image_base64}", 
-                        alt: "#{other_user.display_name}'s avatar", 
-                        class: 'avatar-img' %>
-        </div>
-      <% else %>
-        <div class="avatar-placeholder">
-          <%= other_user.display_name.first.upcase %>
-        </div>
-      <% end %>
-                
+                  <div class="avatar">
+                    <%= image_tag "data:image/png;base64,#{other_user.avatar.image_base64}", 
+                                  alt: "#{other_user.display_name}'s avatar", 
+                                  class: 'avatar-img' %>
+                  </div>
+                <% else %>
+                  <div class="avatar-placeholder">
+                    <%= other_user.display_name.first.upcase %>
+                  </div>
+                <% end %>
                 <div class="user-details">
                   <h3><%= other_user.display_name %></h3>
                   <% if last_message %>
@@ -42,7 +38,6 @@
                   <% end %>
                 </div>
               </div>
-
               <div class="conversation-meta">
                 <% if last_message %>
                   <span class="timestamp">
@@ -59,23 +54,51 @@
 </div>
 
 <style>
+  body {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    min-height: 100vh;
+  }
+
   .conversations-container {
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
+    animation: fadeIn 0.5s ease-in;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   .conversations-container h1 {
     margin-bottom: 30px;
-    color: #333;
+    color: white;
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   }
 
   .empty-state {
     text-align: center;
     padding: 60px 20px;
-    background: #f9f9f9;
-    border-radius: 8px;
-    color: #666;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    color: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  }
+
+  .empty-state p {
+    margin: 10px 0;
+    font-size: 1.1rem;
   }
 
   .conversations-list {
@@ -85,15 +108,31 @@
   }
 
   .conversation-card {
-    background: white;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    transition: box-shadow 0.2s, border-color 0.2s;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    animation: slideIn 0.3s ease-out;
+  }
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
   }
 
   .conversation-card:hover {
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    border-color: #ccc;
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(255, 252, 0, 0.2);
+    border-color: rgba(255, 252, 0, 0.3);
+    background: rgba(255, 255, 255, 0.08);
   }
 
   .conversation-link {
@@ -129,27 +168,31 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    border: 2px solid rgba(255, 252, 0, 0.3);
+    border-radius: 50%;
   }
 
   .avatar-placeholder {
-    background: #4CAF50;
-    color: white;
+    background: linear-gradient(135deg, #FFFC00 0%, #FFD700 100%);
+    color: #1a1a2e;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 20px;
     font-weight: bold;
+    border: 2px solid rgba(255, 252, 0, 0.3);
   }
 
   .user-details h3 {
     margin: 0 0 5px 0;
     font-size: 18px;
-    color: #333;
+    color: white;
+    font-weight: 600;
   }
 
   .last-message {
     margin: 0;
-    color: #666;
+    color: rgba(255, 255, 255, 0.6);
     font-size: 14px;
   }
 
@@ -164,6 +207,7 @@
 
   .timestamp {
     font-size: 12px;
-    color: #999;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 500;
   }
 </style>
