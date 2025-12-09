@@ -8,6 +8,7 @@ class User < ApplicationRecord
   has_many :messages, dependent: :destroy
   has_many :matches, dependent: :destroy
   has_many :matched_as, class_name: 'Match', foreign_key: 'matched_user_id', dependent: :destroy
+  has_many :search_histories, dependent: :destroy
 
   ROLES = %w[admin member].freeze
 
