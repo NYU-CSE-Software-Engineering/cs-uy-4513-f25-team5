@@ -140,6 +140,24 @@ Then('my profile should be saved with:') do |table|
     elsif field == 'sleep_schedule'
       # Sleep schedule gets normalized (e.g., "Night owl" -> "Night Owl")
       expect(actual_value.downcase).to eq(value.downcase)
+    elsif field == 'pets'
+      # Pets field gets normalized (e.g., "Open to cats" -> "Cat", "No pets" -> "None")
+      # Map test values to expected normalized values
+      expected_normalized = case value.downcase
+      when /no|none|don't|dont/
+        'None'
+      when /cat|cats|open to cats/
+        'Cat'
+      when /dog|dogs|open to dogs/
+        'Dog'
+      when /friendly|open|ok/
+        'Pet Friendly'
+      when /other/
+        'Other'
+      else
+        value
+      end
+      expect(actual_value).to eq(expected_normalized)
     else
       expect(actual_value).to eq(value)
     end
