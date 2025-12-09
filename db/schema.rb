@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_11_29_214054) do
+ActiveRecord::Schema[7.1].define(version: 2025_12_09_230537) do
   create_table "active_matches", force: :cascade do |t|
     t.integer "user_one_id", null: false
     t.integer "user_two_id", null: false
@@ -89,6 +89,18 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_29_214054) do
     t.index ["reporter_id"], name: "index_reports_on_reporter_id"
   end
 
+  create_table "search_histories", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "city"
+    t.decimal "min_price"
+    t.decimal "max_price"
+    t.string "keywords"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "created_at"], name: "index_search_histories_on_user_id_and_created_at"
+    t.index ["user_id"], name: "index_search_histories_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email"
     t.string "password_digest"
@@ -116,4 +128,5 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_29_214054) do
   add_foreign_key "messages", "users"
   add_foreign_key "reports", "users", column: "reported_user_id"
   add_foreign_key "reports", "users", column: "reporter_id"
+  add_foreign_key "search_histories", "users"
 end
