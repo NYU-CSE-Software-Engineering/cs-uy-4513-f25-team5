@@ -9,23 +9,23 @@ Feature: Manage existing listings
 
   Scenario: User succesfully edits listing
     When I visit the edit page for "Cozy Studio Apartment"
-    And I fill in "description" with "Recently renovated and near NYU campus."
-    And I fill in "price" with "950"
-    And I press "Save changes"
+    And I fill in "Description" with "Recently renovated and near NYU campus."
+    And I fill in "Price" with "950"
+    And I press "Save Changes"
     Then I should see the message "Listing was successfully updated."
     And I should see "Recently renovated and near NYU campus." on the listings page
     And I should see "950" on the listings page
 
   Scenario: User fails to edit listing with invalid data
     When I visit the edit page for "Cozy Studio Apartment"
-    And I fill in "title" with ""
-    And I fill in "price" with "-1000"
-    And I press "Save changes"
+    And I fill in "Title" with ""
+    And I fill in "Price" with "-1000"
+    And I press "Save Changes"
     Then I should see a validation error message
     And the listing details should remain unchanged
 
   Scenario: User successfully deletes listing
-    When I click "Delete" for "Cozy Studio Apartment"
+    When I click "Delete Listing" for "Cozy Studio Apartment"
     Then I should see the message "Listing was successfully deleted."
     And I should not see "Cozy Studio Apartment" on my listings page
 
