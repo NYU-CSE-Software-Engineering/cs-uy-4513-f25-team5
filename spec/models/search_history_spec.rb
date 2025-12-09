@@ -20,4 +20,14 @@ RSpec.describe SearchHistory, type: :model do
       expect(history).to be_valid
     end
   end
+
+  describe 'scopes' do
+    it 'returns histories in descending order by created_at' do
+      user = User.create!(email: 'test@example.com', password: 'password123')
+      old_history = SearchHistory.create!(user: user, city: 'Boston', created_at: 1.day.ago)
+      new_history = SearchHistory.create!(user: user, city: 'NYC', created_at: Time.current)
+
+      expect(SearchHistory.recent.first).to eq new_history
+    end
+  end
 end
