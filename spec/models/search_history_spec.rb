@@ -30,4 +30,24 @@ RSpec.describe SearchHistory, type: :model do
       expect(SearchHistory.recent.first).to eq new_history
     end
   end
+
+  describe '#to_params' do
+    it 'returns search parameters as a hash' do
+      user = User.create!(email: 'test@example.com', password: 'password123')
+      history = SearchHistory.create!(
+        user: user,
+        city: 'New York',
+        min_price: 1000,
+        max_price: 2000,
+        keywords: 'furnished'
+      )
+
+      expect(history.to_params).to eq({
+        city: 'New York',
+        min_price: 1000,
+        max_price: 2000,
+        keywords: 'furnished'
+      })
+    end
+  end
 end
