@@ -2,7 +2,7 @@
 
 <%= form_with model: @report, url: reports_path, local: true do |f| %>
   <!-- Hidden field for reporter_id -->
-  <% default_reporter_id = @report.reporter_id || (User.find_by(email: "cucumberreporter@example.com")&.id) %>
+  <% default_reporter_id = @report.reporter_id %>
   <%= f.hidden_field :reporter_id, value: default_reporter_id %>
 
   <div>

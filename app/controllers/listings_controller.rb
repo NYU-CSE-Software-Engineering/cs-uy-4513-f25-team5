@@ -1,14 +1,24 @@
 class ListingsController < ApplicationController
   before_action :require_login, except: [:index, :show, :search]
   before_action :set_listing, only: [:show, :edit, :update, :destroy]
+  before_action :authorize_user, only: [:edit, :update, :destroy]
 
   def index
-    @listings = Listing.all
-  end
-
-  def destroy
-    @listing.destroy  # This deletes the record from database
-    redirect_to listings_path, notice: 'Listing was successfully deleted.'
+    if params[:id].present?
+      @user = User.find_by(id: params[:id])
+      
+      if @user.nil?
+        redirect_to listings_path, alert: 'User not found.'
+        return
+      end
+      
+      @listings = @user.listings
+      @is_own_listings = current_user == @user
+      @user_handle = @user.email.split('@').first
+    else
+      @listings = Listing.all
+      @is_own_listings = false
+    end
   end
 
   def show
@@ -66,5 +76,11 @@ class ListingsController < ApplicationController
 
   def listing_params
     params.require(:listing).permit(:title, :description, :price, :city, :owner_email)
+  end
+
+  def authorize_user
+    unless @listing.user == current_user
+      redirect_to listings_path, alert: 'You are not authorized to perform this action.'
+    end
   end
 end

@@ -2,7 +2,7 @@ class Report < ApplicationRecord
   VALID_REPORT_TYPES = ['Harassment', 'Spam', 'Inappropriate Content', 'Other']
 
   belongs_to :reporter, class_name: 'User'
-  belongs_to :reported_user, class_name: 'User', optional: true
+  belongs_to :reported_user, class_name: 'User'
 
   attr_accessor :reported_username
 
