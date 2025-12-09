@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_11_19_203245) do
+ActiveRecord::Schema[7.1].define(version: 2025_11_29_214054) do
   create_table "active_matches", force: :cascade do |t|
     t.integer "user_one_id", null: false
     t.integer "user_two_id", null: false
@@ -56,6 +56,18 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_19_203245) do
     t.index ["user_id"], name: "index_listings_on_user_id"
   end
 
+  create_table "reports", force: :cascade do |t|
+    t.integer "reporter_id", null: false
+    t.integer "reported_user_id", null: false
+    t.string "report_type", null: false
+    t.text "description"
+    t.string "status", default: "pending"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["reported_user_id"], name: "index_reports_on_reported_user_id"
+    t.index ["reporter_id"], name: "index_reports_on_reporter_id"
+  end
+   
   create_table "matches", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "matched_user_id", null: false
@@ -100,6 +112,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_19_203245) do
   add_foreign_key "conversations", "users", column: "participant_one_id"
   add_foreign_key "conversations", "users", column: "participant_two_id"
   add_foreign_key "listings", "users"
+  add_foreign_key "reports", "users", column: "reported_user_id"
+  add_foreign_key "reports", "users", column: "reporter_id"
   add_foreign_key "messages", "conversations"
   add_foreign_key "messages", "users"
 end

@@ -73,7 +73,7 @@ When('I press {string}') do |button|
     click_button button_text
   rescue Capybara::ElementNotFound
     # Try original text if mapped version doesn't work
-    click_button button
+  click_button button
   end
 end
 

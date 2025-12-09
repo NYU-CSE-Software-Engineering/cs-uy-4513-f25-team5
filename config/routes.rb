@@ -26,7 +26,14 @@ Rails.application.routes.draw do
       patch :verify, to: 'verification_requests#verify'
     end
   end
+
   resources :verification_requests, only: [:index]
+
+  resources :reports, only: [:new, :create]
+  
+  namespace :admin do
+    resources :reports, only: [:index]
+  end
   
   resources :matches, only: [:index, :show] do
     collection do

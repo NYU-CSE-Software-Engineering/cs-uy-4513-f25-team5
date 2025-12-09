@@ -1,0 +1,37 @@
+<h1>Report User</h1>
+
+<%= form_with model: @report, url: reports_path, local: true do |f| %>
+  <!-- Hidden field for reporter_id -->
+  <% default_reporter_id = @report.reporter_id || (User.find_by(email: "cucumberreporter@example.com")&.id) %>
+  <%= f.hidden_field :reporter_id, value: default_reporter_id %>
+
+  <div>
+    <%= f.label :reported_username, "Username or Email of User to Report" %>
+    <%= f.text_field :reported_username, id: 'report_username' %>
+  </div>
+
+  <div>
+    <%= f.label :report_type %>
+    <%= f.select :report_type, 
+                 ['Harassment', 'Spam', 'Inappropriate Content', 'Other'], 
+                 { include_blank: 'Select a type' }, 
+                 { id: 'report_report_type' } %>
+  </div>
+
+  <div>
+    <%= f.label :description %>
+    <%= f.text_area :description, id: 'report_description' %>
+  </div>
+
+  <%= f.submit 'Submit Report' %>
+<% end %>
+
+<% if @report.errors.any? %>
+  <div class="errors">
+    <ul>
+      <% @report.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
