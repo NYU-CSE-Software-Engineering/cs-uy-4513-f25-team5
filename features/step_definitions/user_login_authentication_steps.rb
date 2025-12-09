@@ -34,14 +34,21 @@ Given('I am logged in as {string}') do |email|
   visit auth_login_path
   fill_in 'Email', with: email
   fill_in 'Password', with: password
-  click_button 'Log in'
+  click_button 'Sign in'  # Updated to match actual button text
 
   @current_user = User.find_by(email: email)
 end
 
 # Form interaction steps - using standard Capybara methods
 When('I fill in {string} with {string}') do |field, value|
-  fill_in field, with: value
+  # Handle field name variations
+  field_name = case field
+  when 'Password confirmation'
+    'Confirm Password'  # Match actual label
+  else
+    field
+  end
+  fill_in field_name, with: value
 end
 
 When('I press {string}') do |button|

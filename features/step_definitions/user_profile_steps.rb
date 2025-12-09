@@ -1,6 +1,6 @@
 Given('I have a profile with:') do |table|
   attributes = table.rows_hash.transform_values(&:strip)
-  @user ||= User.create!(email: 'test@example.com', password: 'password')
+  @user ||= User.create!(email: 'test@example.com', password: 'password123', password_confirmation: 'password123')
   @user.update!(attributes.transform_keys(&:to_sym))
   @previous_profile_snapshot = attributes.transform_values(&:to_s)
 end
@@ -10,8 +10,13 @@ When('I visit my profile page') do
 end
 
 Then('I should see my profile information:') do |table|
-  table.rows_hash.each_value do |value|
-    expect(page).to have_content(value.strip)
+  table.rows_hash.each do |field, value|
+    # Handle case-insensitive matching for normalized fields
+    if ['preferred_location', 'sleep_schedule', 'pets', 'housing_status'].include?(field.downcase)
+      expect(page).to have_content(/#{Regexp.escape(value.strip)}/i)
+    else
+      expect(page).to have_content(value.strip)
+    end
   end
 end
 
@@ -20,7 +25,13 @@ When(/I (?:update|attempt to update) my profile with:/) do |table|
   visit edit_profile_path
   @previous_profile_snapshot = @user.attributes.slice(*attributes.keys).transform_values(&:to_s)
   attributes.each do |field, value|
-    fill_in field.humanize, with: value
+    field_name = field.humanize
+    # Handle dropdown fields (sleep_schedule, pets, housing_status)
+    if ['sleep_schedule', 'pets', 'housing_status'].include?(field.downcase)
+      select value, from: field_name
+    else
+      fill_in field_name, with: value
+    end
   end
   click_button 'Save Profile'
   @last_submitted_profile = attributes

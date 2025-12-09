@@ -25,7 +25,7 @@
 <% else %>
   <div class="matches-list grid md:grid-cols-2 lg:grid-cols-3 gap-6">
     <% @matches.each_with_index do |match, index| %>
-      <div class="glass-card rounded-2xl p-6 hover-lift opacity-0 animate-fadeIn" style="animation-delay: <%= (index * 0.1) + 0.2 %>s;">
+      <div class="glass-card rounded-2xl p-6 hover-lift opacity-0 animate-fadeIn match-card" style="animation-delay: <%= (index * 0.1) + 0.2 %>s;" data-testid="match-card">
         <h3 class="text-xl font-semibold text-white mb-4">
           <%= link_to match.matched_user.display_name, match_path(match), class: "text-white hover:text-[#FFFC00] transition-colors" %>
         </h3>

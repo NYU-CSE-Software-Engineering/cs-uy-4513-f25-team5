@@ -1,20 +1,25 @@
 Given("I have a listing titled {string}") do |title|
+  @user ||= User.create!(email: 'test@example.com', password: 'password123', password_confirmation: 'password123')
   @listing ||= Listing.create!(
     title: title,
     description: 'Original description',
     price: 800,
     city: 'NYC',
-    user: @user || User.create!(email: 'test@example.com', password: 'password')
+    status: Listing::STATUS_PENDING,
+    owner_email: @user.email,
+    user: @user
   )
 end
 
 Given("another user has a listing titled {string}") do |title|
-  @other_user ||= User.create!(email: "other@example.com", password: "password")
+  @other_user ||= User.create!(email: "other@example.com", password: "password123", password_confirmation: "password123")
   @other_listing ||= Listing.create!(
     title: title,
     description: "Other listing",
     price: 1500,
     city: "Boston",
+    status: Listing::STATUS_PENDING,
+    owner_email: @other_user.email,
     user: @other_user
   )
 end

@@ -1,15 +1,21 @@
 Given('I create the following users:') do |table|
   table.hashes.each do |user_attrs|
-    User.create!(user_attrs)
+    # Ensure password meets validation requirements (10+ chars, letters + numbers)
+    password = user_attrs['password'] || 'password123'
+    if password.length < 10 || !password.match?(/[a-zA-Z]/) || !password.match?(/\d/)
+      password = 'password123' # Default valid password
+    end
+    User.create!(user_attrs.merge('password' => password, 'password_confirmation' => password))
   end
 end
 
 Given('I am signed in as an admin') do
   @current_user = User.find_by(role: 'admin')
-  visit new_user_session_path
+  visit auth_login_path
   fill_in 'Email', with: @current_user.email
-  fill_in 'Password', with: @current_user.password
-  click_button 'Log in'
+  # Use the password that was set during creation
+  fill_in 'Password', with: 'password123'  # Default valid password
+  click_button 'Sign in'  # Updated to match actual button text
 end
 
 Given('I am signed out') do
@@ -18,10 +24,10 @@ end
 
 Given('I am signed in as a regular user with email {string}') do |email|
   @current_user = User.find_by(email: email)
-  visit new_user_session_path
+  visit auth_login_path
   fill_in 'Email', with: @current_user.email
-  fill_in 'Password', with: 'password'
-  click_button 'Log in'
+  fill_in 'Password', with: 'password123'  # Valid password
+  click_button 'Sign in'  # Updated to match actual button text
 end
 
 Given('the user {string} has created a listing titled {string}') do |email, title|
