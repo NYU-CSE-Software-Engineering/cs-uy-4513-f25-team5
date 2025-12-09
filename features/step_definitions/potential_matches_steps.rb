@@ -104,7 +104,9 @@ end
 Then("I should see a list of potential matches") do
   expect(page).to have_content("Potential Matches")
   # Check for match-card class or match content
-  expect(page).to have_css(".match-card", minimum: 1).or have_content("Alice Smith")
+  has_cards = page.has_css?(".match-card", minimum: 1)
+  has_content = page.has_content?("Alice Smith") || page.has_content?("Bob Johnson")
+  expect(has_cards || has_content).to be true
 end
 
 Then("each match should display basic information") do

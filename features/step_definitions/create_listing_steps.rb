@@ -26,6 +26,10 @@ Then('I should see a validation error for {string}') do |field|
   expect(page).to have_content("#{field.capitalize} can't be blank")
 end
 
+Then('I should see a validation error {string}') do |error_message|
+  expect(page).to have_content(error_message)
+end
+
 Given('there is a listing titled {string}') do |title|
   @listing ||= Listing.create!(
     title: title,

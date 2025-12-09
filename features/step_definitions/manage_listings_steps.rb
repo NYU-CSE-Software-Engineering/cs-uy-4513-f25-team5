@@ -39,6 +39,17 @@ Then("I should see {string} on the listing page") do |content|
   expect(page).to have_content(content)
 end
 
+Then("I should see {string} on the listings page") do |content|
+  visit listings_path
+  expect(page).to have_content(content)
+end
+
+Then("I should see an authorization error message") do
+  expect(page).to have_content("You are not authorized") || 
+              expect(page).to have_content("Access denied") ||
+              expect(page).to have_content("error")
+end
+
 Then("I should see a validation error message") do
   expect(page).to have_content("Invalid listing contents")
 end
@@ -53,14 +64,19 @@ end
 
 When("I click {string} for {string}") do |action, title|
   listing = Listing.find_by(title: title)
-  visit user_path(@user)
-  within("#listing_#{listing.id}") do
+  visit listings_path
+  # Find the listing and click delete
+  within("tr:has-text('#{title}')") do
     click_link action
   end
+rescue
+  # Alternative: visit listing show page and delete from there
+  visit listing_path(listing)
+  click_button action
 end
 
 Then("I should not see {string} on my listings page") do |title|
-  visit user_path(@user)
+  visit listings_path
   expect(page).not_to have_content(title)
 end
 

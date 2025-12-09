@@ -45,6 +45,14 @@ When('I fill in {string} with {string}') do |field, value|
   field_name = case field
   when 'Password confirmation'
     'Confirm Password'  # Match actual label
+  when 'description'
+    'Description'  # Capitalize for form labels
+  when 'title'
+    'Title'  # Capitalize for form labels
+  when 'price'
+    'Price'  # Capitalize for form labels
+  when 'city'
+    'City'  # Capitalize for form labels
   else
     field
   end
@@ -52,7 +60,21 @@ When('I fill in {string} with {string}') do |field, value|
 end
 
 When('I press {string}') do |button|
-  click_button button
+  # Map button text variations
+  button_text = case button
+  when 'Log in'
+    'Sign in'  # Actual button text
+  when 'Log out'
+    'Logout'  # Actual button text in navbar
+  else
+    button
+  end
+  begin
+    click_button button_text
+  rescue Capybara::ElementNotFound
+    # Try original text if mapped version doesn't work
+    click_button button
+  end
 end
 
 # Assertion steps - checking page content

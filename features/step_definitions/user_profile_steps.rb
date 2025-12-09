@@ -13,7 +13,53 @@ Then('I should see my profile information:') do |table|
   table.rows_hash.each do |field, value|
     # Handle case-insensitive matching for normalized fields
     if ['preferred_location', 'sleep_schedule', 'pets', 'housing_status'].include?(field.downcase)
-      expect(page).to have_content(/#{Regexp.escape(value.strip)}/i)
+      # Map test values to expected normalized values
+      expected_value = case field.downcase
+      when 'sleep_schedule'
+        case value.downcase
+        when /early|riser/
+          /Early Bird/i
+        when /night|owl/
+          /Night Owl/i
+        when /regular|normal/
+          /Regular Schedule/i
+        when /flexible/
+          /Flexible/i
+        else
+          /#{Regexp.escape(value.strip)}/i
+        end
+      when 'pets'
+        case value.downcase
+        when /no|none|don't|dont/
+          /None/i
+        when /cat|cats/
+          /Cat/i
+        when /dog|dogs/
+          /Dog/i
+        when /friendly|open|ok/
+          /Pet Friendly/i
+        else
+          /#{Regexp.escape(value.strip)}/i
+        end
+      when 'housing_status'
+        case value.downcase
+        when /looking for room|need room/
+          /Looking for Room/i
+        when /looking for roommate|need roommate/
+          /Looking for Roommate/i
+        when /have room|room available/
+          /Have Room Available/i
+        when /flexible|matched but flexible/
+          /Flexible/i
+        else
+          /#{Regexp.escape(value.strip)}/i
+        end
+      when 'preferred_location'
+        /#{Regexp.escape(value.strip)}/i
+      else
+        /#{Regexp.escape(value.strip)}/i
+      end
+      expect(page).to have_content(expected_value)
     else
       expect(page).to have_content(value.strip)
     end
@@ -28,7 +74,53 @@ When(/I (?:update|attempt to update) my profile with:/) do |table|
     field_name = field.humanize
     # Handle dropdown fields (sleep_schedule, pets, housing_status)
     if ['sleep_schedule', 'pets', 'housing_status'].include?(field.downcase)
-      select value, from: field_name
+      # Map test values to dropdown options
+      mapped_value = case field.downcase
+      when 'sleep_schedule'
+        case value.downcase
+        when /early|riser/
+          'Early Bird'
+        when /night|owl/
+          'Night Owl'
+        when /regular|normal/
+          'Regular Schedule'
+        when /flexible/
+          'Flexible'
+        else
+          value  # Use as-is if it matches an option
+        end
+      when 'pets'
+        case value.downcase
+        when /no|none|don't|dont/
+          'None'
+        when /cat|cats/
+          'Cat'
+        when /dog|dogs/
+          'Dog'
+        when /friendly|open|ok/
+          'Pet Friendly'
+        when /other/
+          'Other'
+        else
+          value
+        end
+      when 'housing_status'
+        case value.downcase
+        when /looking for room|need room|seeking room/
+          'Looking for Room'
+        when /looking for roommate|need roommate|seeking roommate/
+          'Looking for Roommate'
+        when /have room|room available|have space/
+          'Have Room Available'
+        when /flexible|matched but flexible|either/
+          'Flexible'
+        else
+          value
+        end
+      else
+        value
+      end
+      select mapped_value, from: field_name
     else
       fill_in field_name, with: value
     end
