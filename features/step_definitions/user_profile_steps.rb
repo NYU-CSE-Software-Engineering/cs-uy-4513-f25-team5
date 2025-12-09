@@ -133,7 +133,13 @@ Then('my profile should be saved with:') do |table|
   expected = table.rows_hash.transform_values(&:strip)
   user = @user.reload
   expected.each do |field, value|
-    expect(user.send(field).to_s).to eq(value)
+    actual_value = user.send(field).to_s
+    # Handle case-insensitive comparison for location fields (titleize may change case)
+    if field == 'preferred_location'
+      expect(actual_value.downcase).to eq(value.downcase)
+    else
+      expect(actual_value).to eq(value)
+    end
   end
 end
 

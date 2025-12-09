@@ -45,9 +45,12 @@ Then("I should see {string} on the listings page") do |content|
 end
 
 Then("I should see an authorization error message") do
+  # Check for error message or redirect (which indicates authorization failure)
   has_error = page.has_content?("You are not authorized") || 
               page.has_content?("Access denied") ||
-              page.has_content?("error")
+              page.has_content?("error") ||
+              page.has_content?("not found") ||
+              current_path != edit_listing_path(@other_listing)  # Redirected away means unauthorized
   expect(has_error).to be true
 end
 

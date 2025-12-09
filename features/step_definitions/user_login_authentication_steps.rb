@@ -66,6 +66,8 @@ When('I press {string}') do |button|
     'Sign in'  # Actual button text
   when 'Log out'
     'Logout'  # Actual button text in navbar
+  when 'Save changes'
+    'Save Changes'  # Actual button text (capital C)
   else
     button
   end
@@ -73,7 +75,7 @@ When('I press {string}') do |button|
     click_button button_text
   rescue Capybara::ElementNotFound
     # Try original text if mapped version doesn't work
-  click_button button
+    click_button button
   end
 end
 

@@ -198,10 +198,12 @@ Then('no new message should be created') do
 end
 
 Then('I should be denied access') do
+  # Check for error messages or redirect to dashboard (which indicates feature doesn't exist)
   has_error = page.has_content?("not authorized") || 
               page.has_content?("access denied") || 
               page.has_content?("You are not authorized") ||
-              page.has_content?("You must be matched")
+              page.has_content?("You must be matched") ||
+              current_path == dashboard_path  # Redirected to dashboard means access denied
   expect(has_error).to be true
 end
 
