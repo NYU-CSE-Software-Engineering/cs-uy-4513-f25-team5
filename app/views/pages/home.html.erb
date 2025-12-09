@@ -28,13 +28,22 @@
     
     <!-- Subheading -->
     <p class="text-xl md:text-2xl text-gray-400 leading-relaxed stagger-3">
-      We're building the smartest way to match roommates. Explore listings, create profiles, and discover verified spaces.
+      Find your perfect roommate using our smart matching algorithm. We analyze budget, location, lifestyle, and preferences to connect compatible roommates.
     </p>
     
     <!-- CTA Buttons -->
     <div class="flex flex-wrap gap-4 pt-4 stagger-4">
-      <a href="<%= search_listings_path %>" class="px-8 py-4 text-base font-semibold rounded-full bg-white text-black hover:bg-gray-100 transition-all duration-200">
-        View Listings
+      <% if logged_in? %>
+        <a href="<%= matches_path %>" class="px-8 py-4 text-base font-semibold rounded-full bg-[#FFFC00] text-black hover:bg-[#FFFC00]/90 transition-all duration-200">
+          Find My Matches
+        </a>
+      <% else %>
+        <a href="<%= auth_register_path %>" class="px-8 py-4 text-base font-semibold rounded-full bg-[#FFFC00] text-black hover:bg-[#FFFC00]/90 transition-all duration-200">
+          Get Started
+        </a>
+      <% end %>
+      <a href="<%= search_listings_path %>" class="px-8 py-4 text-base font-semibold rounded-full border border-white/20 text-white hover:bg-white/5 transition-all duration-200">
+        Browse Listings
       </a>
       <a href="https://github.com/NYU-CSE-Software-Engineering/cs-uy-4513-f25-team5" target="_blank" class="px-8 py-4 text-base font-semibold rounded-full border border-white/20 text-white hover:bg-white/5 transition-all duration-200 flex items-center gap-2">
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -62,16 +71,16 @@
 <!-- Stats Section -->
 <div class="mt-24 grid grid-cols-2 md:grid-cols-4 gap-6 opacity-0 animate-fadeIn stagger-5">
   <div class="glass-card rounded-2xl p-6 text-center hover-lift">
-    <div class="text-3xl md:text-4xl font-bold text-white">100+</div>
-    <div class="text-sm text-gray-500 mt-1">Active Listings</div>
+    <div class="text-3xl md:text-4xl font-bold text-[#FFFC00]">500+</div>
+    <div class="text-sm text-gray-500 mt-1">Matches Made</div>
   </div>
   <div class="glass-card rounded-2xl p-6 text-center hover-lift">
-    <div class="text-3xl md:text-4xl font-bold text-white">50+</div>
-    <div class="text-sm text-gray-500 mt-1">Verified Users</div>
+    <div class="text-3xl md:text-4xl font-bold text-white">200+</div>
+    <div class="text-sm text-gray-500 mt-1">Active Users</div>
   </div>
   <div class="glass-card rounded-2xl p-6 text-center hover-lift">
-    <div class="text-3xl md:text-4xl font-bold text-white">95%</div>
-    <div class="text-sm text-gray-500 mt-1">Match Rate</div>
+    <div class="text-3xl md:text-4xl font-bold text-white">92%</div>
+    <div class="text-sm text-gray-500 mt-1">Match Success Rate</div>
   </div>
   <div class="glass-card rounded-2xl p-6 text-center hover-lift">
     <div class="text-3xl md:text-4xl font-bold text-white">24/7</div>

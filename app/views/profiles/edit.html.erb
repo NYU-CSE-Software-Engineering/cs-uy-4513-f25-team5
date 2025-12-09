@@ -155,9 +155,17 @@
 
         <div>
           <%= form.label :sleep_schedule, 'Sleep schedule', class: "block text-sm font-medium text-gray-300 mb-2" %>
-          <%= form.text_field :sleep_schedule, 
-              class: "w-full px-4 py-3 rounded-xl bg-white/10 border-0 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all duration-200",
-              placeholder: "e.g. Early bird, Night owl" %>
+          <%= form.select :sleep_schedule, 
+              options_for_select([
+                ['Select sleep schedule...', ''],
+                ['Early Bird', 'Early Bird'],
+                ['Night Owl', 'Night Owl'],
+                ['Regular Schedule', 'Regular Schedule'],
+                ['Flexible', 'Flexible']
+              ], @user.sleep_schedule),
+              {},
+              class: "w-full px-4 py-3 rounded-xl bg-white/10 border-0 text-white focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all duration-200" %>
+          <p class="text-xs text-gray-500 mt-1">We'll match you with compatible sleep schedules</p>
         </div>
       </div>
 
@@ -165,16 +173,33 @@
       <div class="grid md:grid-cols-3 gap-5">
         <div>
           <%= form.label :pets, 'Pets', class: "block text-sm font-medium text-gray-300 mb-2" %>
-          <%= form.text_field :pets, 
-              class: "w-full px-4 py-3 rounded-xl bg-white/10 border-0 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all duration-200",
-              placeholder: "e.g. Cat, Dog, None" %>
+          <%= form.select :pets, 
+              options_for_select([
+                ['Select pet preference...', ''],
+                ['None', 'None'],
+                ['Cat', 'Cat'],
+                ['Dog', 'Dog'],
+                ['Other', 'Other'],
+                ['Pet Friendly', 'Pet Friendly']
+              ], @user.pets),
+              {},
+              class: "w-full px-4 py-3 rounded-xl bg-white/10 border-0 text-white focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all duration-200" %>
+          <p class="text-xs text-gray-500 mt-1">Select your pet situation</p>
         </div>
 
         <div>
           <%= form.label :housing_status, 'Housing status', class: "block text-sm font-medium text-gray-300 mb-2" %>
-          <%= form.text_field :housing_status, 
-              class: "w-full px-4 py-3 rounded-xl bg-white/10 border-0 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all duration-200",
-              placeholder: "e.g. Looking for room" %>
+          <%= form.select :housing_status, 
+              options_for_select([
+                ['Select housing status...', ''],
+                ['Looking for Room', 'Looking for Room'],
+                ['Looking for Roommate', 'Looking for Roommate'],
+                ['Have Room Available', 'Have Room Available'],
+                ['Flexible', 'Flexible']
+              ], @user.housing_status),
+              {},
+              class: "w-full px-4 py-3 rounded-xl bg-white/10 border-0 text-white focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all duration-200" %>
+          <p class="text-xs text-gray-500 mt-1">Help us match you better</p>
         </div>
 
         <div>
