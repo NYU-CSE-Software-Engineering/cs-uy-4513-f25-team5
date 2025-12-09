@@ -16,6 +16,8 @@ Rails.application.routes.draw do
 
   get '/dashboard', to: 'dashboards#show', as: :dashboard
 
+  get '/search/history', to: 'search_histories#index', as: :search_history
+
   get 'users/:id/listings', to: 'listings#index', as: 'user_listings'
 
   resource :profile, only: [:show, :edit, :update]
