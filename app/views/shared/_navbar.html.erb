@@ -11,6 +11,9 @@
     </li>
 
     <% if logged_in? %>
+      <li>
+        <%= link_to 'Search History', search_history_path, class: "hover:text-mint font-semibold transition-colors" %>
+      </li>
       <% if current_user.admin? %>
         <li>
           <%= link_to 'Verify Listings', verification_requests_path, class: "hover:text-mint font-semibold transition-colors" %>
