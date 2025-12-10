@@ -49,5 +49,19 @@ RSpec.describe SearchHistory, type: :model do
         keywords: 'furnished'
       })
     end
+
+    it 'excludes blank values from params' do
+      user = User.create!(email: 'test2@example.com', password: 'password123')
+      history = SearchHistory.create!(user: user, city: 'Boston', min_price: nil, max_price: nil, keywords: '')
+
+      expect(history.to_params).to eq({ city: 'Boston' })
+    end
+
+    it 'returns empty hash when all params are blank' do
+      user = User.create!(email: 'test3@example.com', password: 'password123')
+      history = SearchHistory.create!(user: user)
+
+      expect(history.to_params).to eq({})
+    end
   end
 end
