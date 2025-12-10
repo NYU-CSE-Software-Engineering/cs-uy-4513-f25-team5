@@ -33,6 +33,13 @@ RSpec.describe 'Search Histories', type: :request do
         get '/search/history'
         expect(response.body.index('Chicago')).to be < response.body.index('Boston')
       end
+
+      it 'limits to 20 most recent searches' do
+        25.times { |i| user.search_histories.create!(city: "City#{i}") }
+        get '/search/history'
+        expect(response.body).to include('City24')  # newest
+        expect(response.body).not_to include('City0')  # oldest (beyond limit)
+      end
     end
   end
 end
