@@ -7,7 +7,7 @@
 
 # Navigation steps
 Given('I am on the search listings page') do
-  visit search_listings_path
+  visit listings_path
 end
 
 # Data setup steps
@@ -26,6 +26,10 @@ Given('there are listings with the following details:') do |table|
     )
   end
 end
+
+# Form interaction steps - using standard Capybara methods
+# When('I fill in {string} with {string}') - already defined in user_login_authentication_steps.rb
+# When('I press {string}') - already defined in user_login_authentication_steps.rb
 
 # Path helper methods
 def search_listings_path
