@@ -1,37 +1,65 @@
-<h1>Report User</h1>
+<% content_for :title, "Report User" %>
+<% content_for :content_class, "max-w-2xl mx-auto" %>
 
-<%= form_with model: @report, url: reports_path, local: true do |f| %>
-  <!-- Hidden field for reporter_id -->
-  <% default_reporter_id = @report.reporter_id %>
-  <%= f.hidden_field :reporter_id, value: default_reporter_id %>
+<!-- Header -->
+<div class="mb-6 opacity-0 animate-fadeIn">
+  <a href="<%= dashboard_path %>" class="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors text-sm mb-4">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+    </svg>
+    Back
+  </a>
+  <h1 class="text-3xl md:text-4xl font-bold tracking-tight mb-2">Report User</h1>
+  <p class="text-gray-400">Help us maintain a safe community</p>
+</div>
 
-  <div>
-    <%= f.label :reported_username, "Username or Email of User to Report" %>
-    <%= f.text_field :reported_username, id: 'report_username' %>
-  </div>
+<!-- Form -->
+<div class="glass-card rounded-2xl p-6 opacity-0 animate-fadeIn" style="animation-delay: 0.1s;">
+  <%= form_with model: @report, url: reports_path, local: true, class: "space-y-5" do |f| %>
+    <% if @report.errors.any? %>
+      <div class="px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400">
+        <h3 class="font-semibold mb-2"><%= pluralize(@report.errors.count, "error") %> prohibited this report from being submitted:</h3>
+        <ul class="list-disc list-inside text-sm space-y-1">
+          <% @report.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
 
-  <div>
-    <%= f.label :report_type %>
-    <%= f.select :report_type, 
-                 ['Harassment', 'Spam', 'Inappropriate Content', 'Other'], 
-                 { include_blank: 'Select a type' }, 
-                 { id: 'report_report_type' } %>
-  </div>
+    <!-- Hidden field for reporter_id -->
+    <% default_reporter_id = @report.reporter_id %>
+    <%= f.hidden_field :reporter_id, value: default_reporter_id %>
 
-  <div>
-    <%= f.label :description %>
-    <%= f.text_area :description, id: 'report_description' %>
-  </div>
+    <div>
+      <%= f.label :reported_username, "Username or Email of User to Report", class: "block text-sm font-medium text-gray-300 mb-2" %>
+      <%= f.text_field :reported_username, 
+          id: 'report_username',
+          class: "w-full px-4 py-2.5 rounded-xl bg-gray-900 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#FFFC00]/50 focus:border-transparent transition-all duration-200",
+          placeholder: "username or email@example.com" %>
+    </div>
 
-  <%= f.submit 'Submit Report' %>
-<% end %>
+    <div>
+      <%= f.label :report_type, "Report Type", class: "block text-sm font-medium text-gray-300 mb-2" %>
+      <%= f.select :report_type, 
+                   ['Harassment', 'Spam', 'Inappropriate Content', 'Other'], 
+                   { include_blank: 'Select a type' }, 
+                   { id: 'report_report_type',
+                     class: "w-full px-4 py-2.5 rounded-xl bg-gray-900 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-[#FFFC00]/50 focus:border-transparent transition-all duration-200" } %>
+    </div>
 
-<% if @report.errors.any? %>
-  <div class="errors">
-    <ul>
-      <% @report.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-    </ul>
-  </div>
-<% end %>
+    <div>
+      <%= f.label :description, "Description", class: "block text-sm font-medium text-gray-300 mb-2" %>
+      <%= f.text_area :description, 
+          id: 'report_description',
+          rows: 4,
+          class: "w-full px-4 py-2.5 rounded-xl bg-gray-900 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#FFFC00]/50 focus:border-transparent transition-all duration-200 resize-none",
+          placeholder: "Please provide details about why you're reporting this user..." %>
+    </div>
+
+    <div class="pt-2">
+      <%= f.submit 'Submit Report', 
+          class: "w-full px-6 py-3 text-base font-semibold rounded-full bg-white text-black hover:bg-gray-200 transition-all duration-200 cursor-pointer" %>
+    </div>
+  <% end %>
+</div>
