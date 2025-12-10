@@ -38,3 +38,8 @@ jobs:
           heroku_email: ${{ env.HEROKU_EMAIL }}
           branch: main
           dontautocreate: true
+
+      - name: Run database migrations
+        run: heroku run --exit-code -a "$HEROKU_APP_NAME" bundle exec rails db:migrate
+        env:
+          HEROKU_API_KEY: ${{ secrets.STEVEN_HEROKU_USER_TOKEN }}
