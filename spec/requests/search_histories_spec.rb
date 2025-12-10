@@ -26,6 +26,13 @@ RSpec.describe 'Search Histories', type: :request do
         get '/search/history'
         expect(response.body).to include('New York')
       end
+
+      it 'displays search histories in reverse chronological order' do
+        user.search_histories.create!(city: 'Boston', created_at: 1.day.ago)
+        user.search_histories.create!(city: 'Chicago', created_at: Time.current)
+        get '/search/history'
+        expect(response.body.index('Chicago')).to be < response.body.index('Boston')
+      end
     end
   end
 end
