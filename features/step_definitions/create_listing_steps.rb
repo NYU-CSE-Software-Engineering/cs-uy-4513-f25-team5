@@ -22,12 +22,12 @@ Then('the listing should not be saved') do
   expect(Listing.count).to eq(0)
 end
 
-Then('I should see a validation error {string}') do |message|
-  expect(page).to have_content(message)
-end
-
 Then('I should see a validation error for {string}') do |field|
   expect(page).to have_content("#{field.capitalize} can't be blank")
+end
+
+Then('I should see a validation error {string}') do |message|
+  expect(page).to have_content(message)
 end
 
 Given('there is a listing titled {string}') do |title|
