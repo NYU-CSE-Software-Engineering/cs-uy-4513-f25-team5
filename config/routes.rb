@@ -39,8 +39,5 @@ Rails.application.routes.draw do
     collection do
       post :generate, to: 'matches#generate'
     end
-    member do
-      post :like, to: 'matches#like'
-    end
   end
 end

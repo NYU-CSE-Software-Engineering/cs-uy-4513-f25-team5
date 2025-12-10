@@ -31,11 +31,6 @@
         </h3>
         
         <div class="mb-4">
-          <div class="flex items-center gap-2 mb-3">
-            <span class="text-sm text-gray-400">Compatibility Score</span>
-            <span class="text-2xl font-bold text-[#FFFC00]"><%= match.compatibility_score %>%</span>
-          </div>
-          
         <% if match.matched_user.preferred_location.present? %>
             <p class="text-gray-300 mb-2">
               <span class="text-gray-400">Location:</span> 
@@ -51,10 +46,8 @@
         <% end %>
         </div>
         
-        <div class="mt-6 flex gap-3">
-          <%= link_to "View Details", match_path(match), class: "flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-xl text-center transition-colors" %>
-          <%= button_to "Like", like_match_path(match), method: :post, 
-              class: "flex-1 bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-xl transition-colors" %>
+        <div class="mt-6">
+          <%= link_to "View Details", match_path(match), class: "block w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-xl text-center transition-colors" %>
         </div>
       </div>
     <% end %>

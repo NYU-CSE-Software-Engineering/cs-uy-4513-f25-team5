@@ -61,11 +61,25 @@ class MatchingService
   def self.regenerate_matches_for(user)
     return unless user.present?
     
-    # Delete existing matches for this user
+    # Delete existing matches for this user (both directions)
     Match.where(user_id: user.id).destroy_all
+    Match.where(matched_user_id: user.id).destroy_all
     
-    # Generate new matches
+    # Regenerate matches for this user
     generate_matches_for(user)
+    
+    # Regenerate matches for all other users who might match with this user
+    User.where.not(id: user.id).find_each do |other_user|
+      # Recalculate and update/create match if it meets threshold
+      score = Match.calculate_compatibility_score(other_user, user)
+      
+      if score >= MINIMUM_COMPATIBILITY_SCORE
+        Match.find_or_initialize_by(user_id: other_user.id, matched_user_id: user.id).tap do |match|
+          match.compatibility_score = score
+          match.save
+        end
+      end
+    end
   end
 end
 

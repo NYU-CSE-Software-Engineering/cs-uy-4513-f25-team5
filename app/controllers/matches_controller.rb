@@ -1,5 +1,5 @@
 class MatchesController < ApplicationController
-  before_action :require_login, only: [:index, :show, :like, :generate]
+  before_action :require_login, only: [:index, :show, :generate]
 
   def index
     @matches = Match.potential_for(current_user).includes(:matched_user)
@@ -29,19 +29,6 @@ class MatchesController < ApplicationController
     end
     
     @matched_user = @match.matched_user
-  end
-
-  def like
-    @match = Match.find(params[:id])
-    
-    unless @match.user_id == current_user.id
-      redirect_to matches_path, alert: "You can only like your own matches"
-      return
-    end
-    
-    # In a real app, you might have a Favorite or LikedMatch model
-    # For now, we'll just redirect with a success message
-    redirect_to matches_path, notice: "Match saved to favorites!"
   end
 
 end

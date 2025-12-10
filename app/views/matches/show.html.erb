@@ -1,41 +1,44 @@
-<h1 class="text-3xl font-bold mb-6">Match Details</h1>
+<% content_for :body_class, "h-screen bg-black text-white font-syne antialiased overflow-hidden" %>
+<% content_for :container_class, "h-screen flex flex-col" %>
+<% content_for :main_class, "flex-1 pt-24 pb-4 px-6 overflow-y-auto" %>
 
-<div class="match-details space-y-6">
-  <h2 class="text-2xl font-semibold text-gray-800"><%= @matched_user.display_name %></h2>
-  
-  <div class="compatibility-score bg-blue-100 border-l-4 border-blue-500 p-4 rounded">
-    <p class="text-blue-800 font-medium"><strong>Compatibility:</strong> <%= @match.compatibility_score %>%</p>
-  </div>
-  
-  <div class="profile-information bg-gray-50 border rounded-lg p-4 shadow-sm">
-    <h3 class="text-xl font-semibold mb-2 text-gray-700">Profile Information</h3>
-    <p class="mb-1"><strong>Email:</strong> <%= @matched_user.email %></p>
-    <% if @matched_user.display_name.present? %>
-      <p class="mb-1"><strong>Name:</strong> <%= @matched_user.display_name %></p>
-    <% end %>
-    <% if @matched_user.bio.present? %>
-      <p class="mb-1"><strong>Bio:</strong> <%= @matched_user.bio %></p>
-    <% end %>
-  </div>
-  
-  <div class="lifestyle-preferences bg-gray-50 border rounded-lg p-4 shadow-sm">
-    <h3 class="text-xl font-semibold mb-2 text-gray-700">Lifestyle Preferences</h3>
-    <% if @matched_user.preferred_location.present? %>
-      <p class="mb-1"><strong>Preferred Location:</strong> <%= @matched_user.preferred_location %></p>
-    <% end %>
-    <% if @matched_user.sleep_schedule.present? %>
-      <p class="mb-1"><strong>Sleep Schedule:</strong> <%= @matched_user.sleep_schedule %></p>
-    <% end %>
-    <% if @matched_user.pets.present? %>
-      <p class="mb-1"><strong>Pets:</strong> <%= @matched_user.pets %></p>
-    <% end %>
-    <% if @matched_user.budget.present? %>
-      <p class="mb-1"><strong>Budget:</strong> $<%= @matched_user.budget %></p>
-    <% end %>
-  </div>
-  
-  <div class="actions flex space-x-2">
-    <%= link_to "Back to Matches", matches_path, class: "bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded" %>
-    <%= button_to "Like", like_match_path(@match), method: :post, class: "bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded" %>
+<div class="max-w-4xl mx-auto">
+  <h1 class="text-4xl font-bold mb-8 text-white">Match Details</h1>
+
+  <div class="match-details space-y-6">
+    <div class="glass-card rounded-2xl p-8">
+      <h2 class="text-3xl font-semibold text-white mb-6"><%= @matched_user.display_name %></h2>
+      
+      <div class="profile-information space-y-4 mb-8">
+        <h3 class="text-xl font-semibold mb-4 text-gray-200">Profile Information</h3>
+        <p class="text-gray-300"><strong class="text-gray-200">Email:</strong> <%= @matched_user.email %></p>
+        <% if @matched_user.display_name.present? %>
+          <p class="text-gray-300"><strong class="text-gray-200">Name:</strong> <%= @matched_user.display_name %></p>
+        <% end %>
+        <% if @matched_user.bio.present? %>
+          <p class="text-gray-300"><strong class="text-gray-200">Bio:</strong> <%= @matched_user.bio %></p>
+        <% end %>
+      </div>
+      
+      <div class="lifestyle-preferences space-y-4">
+        <h3 class="text-xl font-semibold mb-4 text-gray-200">Lifestyle Preferences</h3>
+        <% if @matched_user.preferred_location.present? %>
+          <p class="text-gray-300"><strong class="text-gray-200">Preferred Location:</strong> <%= @matched_user.preferred_location %></p>
+        <% end %>
+        <% if @matched_user.sleep_schedule.present? %>
+          <p class="text-gray-300"><strong class="text-gray-200">Sleep Schedule:</strong> <%= @matched_user.sleep_schedule %></p>
+        <% end %>
+        <% if @matched_user.pets.present? %>
+          <p class="text-gray-300"><strong class="text-gray-200">Pets:</strong> <%= @matched_user.pets %></p>
+        <% end %>
+        <% if @matched_user.budget.present? %>
+          <p class="text-gray-300"><strong class="text-gray-200">Budget:</strong> $<%= @matched_user.budget %></p>
+        <% end %>
+      </div>
+    </div>
+    
+    <div class="actions">
+      <%= link_to "← Back to Matches", matches_path, class: "bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 px-6 rounded-xl transition-colors inline-block" %>
+    </div>
   </div>
 </div>
