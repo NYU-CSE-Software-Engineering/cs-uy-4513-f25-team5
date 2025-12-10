@@ -1,10 +1,22 @@
 When(/I (?:create|attempt to create) a listing with:/) do |table|  
   visit new_listing_path
   data = table.rows_hash
-  fill_in 'Title', with: data['title']
-  fill_in 'Description', with: data['description']
-  fill_in 'Price', with: data['price']
-  fill_in 'City', with: data['city']
+  
+  fill_in 'Title', with: data['title'] || ''
+  fill_in 'Description', with: data['description'] || ''
+  
+  # For number fields, handle empty values properly
+  # When price is empty, ensure the field is truly empty (browsers may convert empty number fields to 0)
+  price_value = data['price'].to_s.strip
+  if price_value.empty?
+    # Clear the field using JavaScript to ensure it's truly empty
+    price_field = find_field('Price')
+    page.execute_script("arguments[0].value = ''; arguments[0].dispatchEvent(new Event('input', { bubbles: true }));", price_field.native)
+  else
+    fill_in 'Price', with: price_value
+  end
+  
+  fill_in 'City', with: data['city'] || ''
   click_button 'Create Listing'
 end
 
