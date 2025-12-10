@@ -40,6 +40,16 @@ RSpec.describe 'Search Histories', type: :request do
         expect(response.body).to include('City24')  # newest
         expect(response.body).not_to include('City0')  # oldest (beyond limit)
       end
+
+      it 'only shows current user search histories' do
+        other_user = User.create!(email: 'other@example.com', password: 'password123')
+        other_user.search_histories.create!(city: 'Secret City')
+        user.search_histories.create!(city: 'My City')
+
+        get '/search/history'
+        expect(response.body).to include('My City')
+        expect(response.body).not_to include('Secret City')
+      end
     end
   end
 end
