@@ -99,6 +99,12 @@ class Listing < ApplicationRecord
     end
 
     images.each do |image|
+      # Guard against missing blob (e.g., failed upload) to avoid hard errors
+      unless image.blob
+        errors.add(:images, "failed to upload. Please try again.")
+        next
+      end
+
       unless ALLOWED_IMAGE_TYPES.include?(image.content_type)
         errors.add(:images, "must be JPEG, PNG, WebP, or GIF")
       end
