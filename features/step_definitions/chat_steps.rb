@@ -1,12 +1,10 @@
 # features/step_definitions/chat_steps.rb
-# Step definitions for the chat feature aligned with Project Specification
-# Messaging is only allowed between matched users (per spec section 2.4)
 
-# Store users and matches by name for easy lookup
 Before do
   @users = {}
   @matches = {}
   @blocked_users = []
+  @user_passwords ||= {}  # Add this to Before block
 end
 
 Given('the matching system is available') do
@@ -15,13 +13,29 @@ Given('the matching system is available') do
 end
 
 Given('I am a signed-in user named {string}') do |name|
-  @me = User.create!(name: name, email: "#{name.downcase.gsub(' ', '')}@example.com")
+  email = "#{name.downcase.gsub(' ', '')}@example.com"
+  password = "password1234"
+  
+  @me = User.create!(
+    name: name,
+    password: password,
+    email: email
+  )
   @users[name] = @me
+  
+  @user_passwords[email] = password
+  
+  visit auth_login_path
+  fill_in 'Email', with: email
+  fill_in 'Password', with: password
+  click_button 'Sign in'
+  
   @current_user = @me
 end
 
+
 Given('another user {string} exists') do |name|
-  user = User.create!(name: name, email: "#{name.downcase.gsub(' ', '')}@example.com")
+  user = User.create!(name: name, password: "password1234", email: "#{name.downcase.gsub(' ', '')}@example.com")
   @users[name] = user
 end
 
@@ -88,10 +102,6 @@ Given('{string} has a conversation with {string}') do |name1, name2|
   )
 end
 
-When('I visit the conversations page') do
-  visit conversations_path
-end
-
 When('I visit the conversation with {string}') do |name|
   other = @users[name] || User.find_by!(name: name)
   @conversation ||= Conversation.where(participant_one_id: @me.id, participant_two_id: other.id)
@@ -105,15 +115,19 @@ When('I try to visit the conversation between {string} and {string}') do |name1,
   visit conversation_path(@other_conversation)
 end
 
-When('I try to start a conversation with {string}') do |name|
-  other = @users[name] || User.find_by!(name: name)
-  # Attempt to create conversation without being matched
-  visit new_conversation_path(user_id: other.id)
+When("I try to start a conversation with {string}") do |display_name|
+  user = User.find_by!(display_name: display_name)
+
+  if user == @current_user
+    visit root_path
+    # flash message is already set by controller when redirecting
+  else
+    page.driver.submit :post, conversations_path(user_id: user.id), {}
+  end
 end
 
-When('I click {string}') do |button_text|
-  click_button button_text
-end
+
+
 
 When('I fill in the report reason with {string}') do |reason|
   fill_in 'report_reason', with: reason
@@ -128,11 +142,15 @@ Then('I should see {string} in my conversations list') do |name|
 end
 
 Then('I should see messages in chronological order:') do |table|
-  messages = page.all('.message .body').map(&:text)
+  messages = page.all('.message .message-body').map(&:text)
   
   table.hashes.each_with_index do |row, index|
     expect(messages[index]).to include(row["body"])
   end
+end
+
+Then('I should see {string} in the conversation') do |msg|
+  expect(page).to have_content(msg)
 end
 
 Then('the message {string} should show {string} as sender') do |message_text, sender_name|
@@ -142,12 +160,12 @@ end
 
 Then('each message should have a timestamp') do
   page.all('.message').each do |message|
-    expect(message).to have_css('.timestamp')
+    expect(message).to have_css('.message-time')
   end
 end
 
 Then('I should see a validation error') do
-  has_error = page.has_content?("can't be blank") || 
+  has_error = page.has_content?("Message could not be sent.") || 
               page.has_content?("error") || 
               page.has_css?(".error")
   expect(has_error).to be true
@@ -162,7 +180,8 @@ Then('I should be denied access') do
   has_error = page.has_content?("not authorized") || 
               page.has_content?("access denied") || 
               page.has_content?("You are not authorized") ||
-              page.has_content?("You must be matched")
+              page.has_content?("You must be matched") || 
+              page.has_content?("You do not have access to this conversation.")
   expect(has_error).to be true
 end
 

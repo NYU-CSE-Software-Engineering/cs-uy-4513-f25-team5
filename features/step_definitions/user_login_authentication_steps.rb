@@ -21,10 +21,21 @@ When('I am on the dashboard page') do
 end
 
 # User creation steps
+# features/step_definitions/user_login_authentication_steps.rb
+
 Given('a user exists with email {string} and password {string}') do |email, password|
   @user_passwords ||= {}
   @user_passwords[email] = password
-  User.create!(email: email, password: password, password_confirmation: password)
+  
+  # Extract display_name from email
+  display_name = email.split('@').first.capitalize
+  
+  User.create!(
+    email: email, 
+    password: password, 
+    password_confirmation: password,
+    display_name: display_name  # ADD THIS LINE
+  )
 end
 
 Given('I am logged in as {string}') do |email|
@@ -34,7 +45,7 @@ Given('I am logged in as {string}') do |email|
   visit auth_login_path
   fill_in 'Email', with: email
   fill_in 'Password', with: password
-  click_button 'Log in'
+  click_button 'Sign in'
 
   @current_user = User.find_by(email: email)
 end

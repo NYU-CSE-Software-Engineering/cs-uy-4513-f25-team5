@@ -56,6 +56,10 @@ class User < ApplicationRecord
     self.role ||= 'member'
   end
 
+  def all_conversations
+    Conversation.where("participant_one_id = ? OR participant_two_id = ?", id, id)
+  end
+
   def password_strength
     return if password.blank?
 

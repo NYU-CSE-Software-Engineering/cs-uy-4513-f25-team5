@@ -49,7 +49,7 @@ RSpec.describe Conversation, type: :model do
     end
 
     it 'does not allow duplicate conversations between the same two users' do
-      pending "get back to this..."
+      # pending "get back to this..."
       Conversation.create!(
         participant_one_id: user1.id,
         participant_two_id: user2.id

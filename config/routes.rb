@@ -16,6 +16,8 @@ Rails.application.routes.draw do
 
   get '/dashboard', to: 'dashboards#show', as: :dashboard
 
+  get 'users/:id/listings', to: 'listings#index', as: 'user_listings'
+
   resource :profile, only: [:show, :edit, :update]
 
   resources :listings, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
@@ -28,7 +30,14 @@ Rails.application.routes.draw do
       patch 'images/:image_id/set_primary', to: 'listings#set_primary_image', as: :set_primary_image
     end
   end
+
   resources :verification_requests, only: [:index]
+
+  resources :reports, only: [:new, :create]
+  
+  namespace :admin do
+    resources :reports, only: [:index]
+  end
   
   resources :matches, only: [:index, :show] do
     collection do
@@ -37,5 +46,12 @@ Rails.application.routes.draw do
     member do
       post :like, to: 'matches#like'
     end
+  end
+
+  resources :conversations, only: [:index, :show, :create] do
+    member do
+      get :poll  # Add this line
+    end
+    resources :messages, only: [:create]
   end
 end

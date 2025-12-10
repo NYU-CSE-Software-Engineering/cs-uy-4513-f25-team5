@@ -1,8 +1,24 @@
 class ListingsController < ApplicationController
-  before_action :set_listing, only: [:show, :edit, :update, :destroy, :remove_image, :set_primary_image]
+  before_action :require_login, except: [:index, :show, :search]
+  before_action :set_listing, only: [:show, :edit, :update, :destroy]
+  before_action :authorize_user, only: [:edit, :update, :destroy]
 
   def index
-    @listings = Listing.all
+    if params[:id].present?
+      @user = User.find_by(id: params[:id])
+      
+      if @user.nil?
+        redirect_to listings_path, alert: 'User not found.'
+        return
+      end
+      
+      @listings = @user.listings
+      @is_own_listings = current_user == @user
+      @user_handle = @user.email.split('@').first
+    else
+      @listings = Listing.all
+      @is_own_listings = false
+    end
   end
 
   def show
@@ -26,7 +42,7 @@ class ListingsController < ApplicationController
       end
       redirect_to @listing, notice: 'Listing was successfully created.'
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 
@@ -41,7 +57,7 @@ class ListingsController < ApplicationController
       end
       redirect_to @listing, notice: 'Listing was successfully updated.'
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 
@@ -99,5 +115,11 @@ class ListingsController < ApplicationController
 
   def listing_params
     params.require(:listing).permit(:title, :description, :price, :city, :owner_email, images: [])
+  end
+
+  def authorize_user
+    unless @listing.user == current_user
+      redirect_to listings_path, alert: 'You are not authorized to perform this action.'
+    end
   end
 end

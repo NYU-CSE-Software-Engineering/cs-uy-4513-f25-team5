@@ -1,52 +1,27 @@
-<% content_for :title, "My Listings" %>
+<% content_for :title, "Listings" %>
 <% content_for :body_class, "h-screen bg-black text-white font-syne antialiased overflow-hidden" %>
 <% content_for :container_class, "h-screen flex flex-col" %>
 <% content_for :main_class, "flex-1 pt-24 pb-4 px-6 overflow-y-auto" %>
 
-<style>
-  .listing-thumbnail {
-    aspect-ratio: 16/10;
-    overflow: hidden;
-    border-radius: 0.75rem;
-    margin: -1.5rem -1.5rem 1rem -1.5rem;
-    background: rgba(255, 255, 255, 0.05);
-  }
-  .listing-thumbnail img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s ease;
-  }
-  .listing-card:hover .listing-thumbnail img {
-    transform: scale(1.05);
-  }
-  .listing-thumbnail-placeholder {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
-  }
-  .listing-image-count {
-    position: absolute;
-    bottom: 0.5rem;
-    right: 0.5rem;
-    background: rgba(0, 0, 0, 0.7);
-    color: white;
-    font-size: 0.75rem;
-    padding: 0.25rem 0.5rem;
-    border-radius: 9999px;
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-  }
-</style>
-
-<!-- Header -->
 <div class="mb-12 opacity-0 animate-fadeIn">
-  <h1 class="text-4xl md:text-5xl font-bold tracking-tight mb-4">My Listings</h1>
-  <p class="text-xl text-gray-400">Find your perfect space from our curated listings</p>
+  <h1 class="text-4xl md:text-5xl font-bold tracking-tight mb-4">
+    <% if @is_own_listings %>
+      My Listings
+    <% elsif @user.present? %>
+      <%= @user_handle %>'s Listings
+    <% else %>
+      All Listings
+    <% end %>
+  </h1>
+  <p class="text-xl text-gray-400">
+    <% if @is_own_listings %>
+      Manage your listings
+    <% elsif @user.present? %>
+      View <%= @user_handle %>'s listings
+    <% else %>
+      Find your perfect space from our curated listings
+    <% end %>
+  </p>
 </div>
 
 <% if @listings.any? %>

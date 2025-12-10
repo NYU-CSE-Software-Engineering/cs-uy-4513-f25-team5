@@ -27,10 +27,6 @@ Given('there are listings with the following details:') do |table|
   end
 end
 
-# Form interaction steps - using standard Capybara methods
-# When('I fill in {string} with {string}') - already defined in user_login_authentication_steps.rb
-# When('I press {string}') - already defined in user_login_authentication_steps.rb
-
 # Path helper methods
 def search_listings_path
   Rails.application.routes.url_helpers.search_listings_path

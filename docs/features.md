@@ -9,3 +9,4 @@
 * [Potential Matches (Drastansh Nadola)](./features/potential_matches.md)
 * [Search Listings (Tianyi)](./features/search_listings.md)
 * [Verify Listings (Team)](./features/verify_listings.md)
+* [Create Report (Terry Li)](./features/create_report.md)

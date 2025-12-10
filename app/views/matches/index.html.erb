@@ -1,12 +1,9 @@
 <p id="notice" class="text-green-600 font-medium mb-2"><%= notice %></p>
 <p id="alert" class="text-red-600 font-medium mb-2"><%= alert %></p>
-
 <h1 class="text-3xl font-bold mb-6">Potential Matches</h1>
-
 <div class="actions mb-4">
   <%= button_to "Find Matches", generate_matches_path, method: :post, class: "bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded" %>
 </div>
-
 <% if @no_matches_message %>
   <div class="no-matches bg-yellow-100 border-l-4 border-yellow-500 p-4 mb-4">
     <p class="text-yellow-800"><%= @no_matches_message %></p>
@@ -28,9 +25,12 @@
         <% if match.matched_user.budget.present? %>
           <p class="mb-1"><strong>Budget:</strong> $<%= match.matched_user.budget %></p>
         <% end %>
-        <div class="mt-4 flex space-x-2">
-          <%= link_to "View Details", match_path(match), class: "bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded" %>
-          <%= button_to "Like", like_match_path(match), method: :post, class: "bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded" %>
+        <div class="mt-4 flex flex-col space-y-2">
+          <div class="flex space-x-2">
+            <%= link_to "View Details", match_path(match), class: "bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded text-center" %>
+            <%= button_to "Like", like_match_path(match), method: :post, class: "bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded" %>
+          </div>
+          <%= button_to "Start Conversation", conversations_path(user_id: match.matched_user.id), method: :post, class: "bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded w-full" %>
         </div>
       </div>
     <% end %>
