@@ -20,6 +20,12 @@ RSpec.describe 'Search Histories', type: :request do
         get '/search/history'
         expect(response).to have_http_status(:success)
       end
+
+      it 'displays user search histories' do
+        user.search_histories.create!(city: 'New York')
+        get '/search/history'
+        expect(response.body).to include('New York')
+      end
     end
   end
 end
