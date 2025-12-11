@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_12_11_015340) do
+ActiveRecord::Schema[7.1].define(version: 2025_12_08_163458) do
   create_table "active_matches", force: :cascade do |t|
     t.integer "user_one_id", null: false
     t.integer "user_two_id", null: false
@@ -69,16 +69,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_11_015340) do
     t.index ["participant_two_id"], name: "index_conversations_on_participant_two_id"
   end
 
-  create_table "liked_listings", force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.integer "listing_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["listing_id"], name: "index_liked_listings_on_listing_id"
-    t.index ["user_id", "listing_id"], name: "index_liked_listings_on_user_id_and_listing_id", unique: true
-    t.index ["user_id"], name: "index_liked_listings_on_user_id"
-  end
-
   create_table "listings", force: :cascade do |t|
     t.string "title"
     t.text "description"
@@ -92,6 +82,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_11_015340) do
     t.boolean "verification_requested", default: false
     t.boolean "verified", default: false
     t.string "primary_image_id"
+    t.text "image_base64"
+    t.string "filename"
     t.index ["user_id"], name: "index_listings_on_user_id"
   end
 
@@ -152,8 +144,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_11_015340) do
   add_foreign_key "avatars", "users"
   add_foreign_key "conversations", "users", column: "participant_one_id"
   add_foreign_key "conversations", "users", column: "participant_two_id"
-  add_foreign_key "liked_listings", "listings"
-  add_foreign_key "liked_listings", "users"
   add_foreign_key "listings", "users"
   add_foreign_key "messages", "conversations"
   add_foreign_key "messages", "users"

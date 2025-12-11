@@ -12,7 +12,7 @@ Feature: User login and authentication
     And I fill in "Password" with "securepass123"
     And I fill in "Confirm Password" with "securepass123"
     And I press "Sign up"
-    Then I should be on the dashboard page
+    Then I should be on the listings page
     And I should see "Welcome! You have successfully signed up."
     And the user "newuser@example.com" should exist in the database
 
@@ -59,7 +59,7 @@ Feature: User login and authentication
     When I fill in "Email" with "user@example.com"
     And I fill in "Password" with "mypassword1"
     And I press "Sign in"
-    Then I should be on the dashboard page
+    Then I should be on the listings page
     And I should see "Successfully logged in"
 
   Scenario: User fails to log in with incorrect password

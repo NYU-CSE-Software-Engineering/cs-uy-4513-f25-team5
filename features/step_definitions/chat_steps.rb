@@ -120,12 +120,9 @@ When('I try to visit the conversation between {string} and {string}') do |name1,
   # TODO: Create conversation show page
 end
 
-When('I try to start a conversation with {string}') do |name|
-  other = @users[name] || User.find_by!(name: name)
-  # Attempt to create conversation without being matched
-  # New conversation path doesn't exist yet
-  visit dashboard_path
-  # TODO: Create new conversation page
+When("I try to start a conversation with {string}") do |display_name|
+  user = User.find_by!(display_name: display_name)
+  page.driver.submit :post, conversations_path(user_id: user.id), {}
 end
 
 When('I fill in the report reason with {string}') do |reason|

@@ -10,7 +10,7 @@ class UsersController < ApplicationController
     if @user.save
       session[:user_id] = @user.id
       respond_to do |format|
-        format.html { redirect_to dashboard_path, notice: 'Welcome! You have successfully signed up.' }
+        format.html { redirect_to listings_path, notice: 'Welcome! You have successfully signed up.' }
         format.json { render json: { user: @user.slice(:id, :email, :display_name) }, status: :created }
       end
     else

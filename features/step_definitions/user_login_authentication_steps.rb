@@ -126,6 +126,10 @@ Then('I should be on the dashboard page') do
   expect(current_path).to eq(dashboard_path)
 end
 
+Then('I should be on the listings page') do
+  expect(current_path).to eq(listings_path)
+end
+
 Then('I should be on the signup page') do
   expect(current_path).to eq(auth_register_path)
 end
