@@ -69,4 +69,5 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./coverage
           publish_branch: gh-pages
+          destination_dir: docs
           force_orphan: true
