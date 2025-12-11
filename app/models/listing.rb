@@ -1,6 +1,8 @@
 class Listing < ApplicationRecord
   belongs_to :user, optional: true
   has_many_attached :images
+  has_many :liked_listings, dependent: :destroy
+  has_many :users_who_liked, through: :liked_listings, source: :user
 
   # Status constants
   STATUS_PENDING = 'pending'.freeze

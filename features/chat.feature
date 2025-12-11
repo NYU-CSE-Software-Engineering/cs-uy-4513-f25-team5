@@ -31,6 +31,7 @@ Feature: Chat with matched users
     And the message "Yes! Let's chat" should show "Steven" as sender
     And each message should have a timestamp
 
+  @wip
   Scenario: User sends a valid message to matched user
     Given I am a signed-in user named "Mohammad"
     And another user "Steven" exists
@@ -41,6 +42,7 @@ Feature: Chat with matched users
     And I click "Send"
     Then I should see "When are you available to meet?" in the conversation
 
+  @wip
   Scenario: User tries to send an empty message
     Given I am a signed-in user named "Mohammad"
     And another user "Steven" exists

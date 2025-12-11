@@ -39,6 +39,9 @@ gem "bootsnap", require: false
 gem "image_processing", "~> 1.2"
 gem "aws-sdk-s3", "~> 1.156"
 
+# Pagination
+gem "kaminari"
+
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin Ajax possible
 # gem "rack-cors"
 

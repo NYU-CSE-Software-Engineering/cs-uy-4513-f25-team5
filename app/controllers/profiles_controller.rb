@@ -12,10 +12,19 @@ class ProfilesController < ApplicationController
     return handle_avatar_removal if removing_avatar?
 
     uploaded_avatar = avatar_upload
+    profile_was_updated = false
 
     if @user.update(user_params)
       attach_avatar(uploaded_avatar) if uploaded_avatar
-      redirect_to profile_path, notice: 'Profile updated successfully'
+      profile_was_updated = true
+      
+      # Auto-regenerate matches when profile is updated
+      # Only if key matching fields were changed
+      if profile_fields_changed_for_matching?
+        MatchingService.regenerate_matches_for(@user)
+      end
+      
+      redirect_to profile_path, notice: 'Profile updated successfully. Your matches have been refreshed!'
     else
       flash.now[:alert] = 'Display errors before continuing.'
       render :edit, status: :unprocessable_content
@@ -62,5 +71,14 @@ class ProfilesController < ApplicationController
   def handle_avatar_removal
     @user.avatar&.destroy
     redirect_to edit_profile_path, notice: 'Profile picture removed.'
+  end
+
+  def profile_fields_changed_for_matching?
+    # Check if any fields that affect matching were changed
+    @user.previous_changes.key?('budget') ||
+    @user.previous_changes.key?('preferred_location') ||
+    @user.previous_changes.key?('sleep_schedule') ||
+    @user.previous_changes.key?('pets') ||
+    @user.previous_changes.key?('housing_status')
   end
 end

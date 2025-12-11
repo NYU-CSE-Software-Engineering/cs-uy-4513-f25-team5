@@ -1,0 +1,97 @@
+<% content_for :body_class, "h-screen bg-black text-white font-syne antialiased overflow-hidden" %>
+<% content_for :container_class, "h-screen flex flex-col" %>
+<% content_for :main_class, "flex-1 pt-24 pb-4 px-6 overflow-y-auto" %>
+
+<div class="max-w-7xl mx-auto">
+  <!-- Header -->
+  <div class="mb-10 opacity-0 animate-fadeIn">
+    <h1 class="text-4xl md:text-5xl font-bold tracking-tight mb-4">
+      What Your <span class="text-[#FFFC00]">Matches Liked</span>
+    </h1>
+    <p class="text-xl text-gray-400">See what listings your matched roommates are interested in!</p>
+  </div>
+
+  <% if @liked_listings.any? %>
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <% @liked_listings.each_with_index do |liked_listing, index| %>
+        <% listing = liked_listing.listing %>
+        <% next unless listing.present? %>
+        
+        <div class="glass-card rounded-2xl p-6 hover-lift opacity-0 animate-fadeIn" style="animation-delay: <%= (index * 0.1) + 0.2 %>s;" data-testid="liked-listing-card">
+          <% if listing.images.attached? && listing.ordered_images.any? %>
+            <div class="mb-4 rounded-xl overflow-hidden aspect-video">
+              <%= image_tag listing.ordered_images.first, class: "w-full h-full object-cover" %>
+            </div>
+          <% end %>
+          
+          <div class="flex items-center gap-2 mb-3">
+            <% if liked_listing.user.avatar.present? %>
+              <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
+                <%= image_tag liked_listing.user.avatar.data_uri, alt: liked_listing.user.display_name, class: "w-full h-full object-cover" %>
+              </div>
+            <% else %>
+              <div class="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center flex-shrink-0">
+                <span class="text-xs font-semibold text-gray-300"><%= liked_listing.user.display_name.first.upcase %></span>
+              </div>
+            <% end %>
+            <span class="text-sm text-gray-400">Liked by <%= liked_listing.user.display_name %></span>
+            
+            <% if @current_user_liked_ids.include?(listing.id) %>
+              <span class="ml-auto text-xs bg-red-500/20 text-red-400 px-2 py-1 rounded-full">
+                You like this too!
+              </span>
+            <% end %>
+          </div>
+          
+          <h3 class="text-xl font-semibold text-white mb-3">
+            <%= link_to listing.title, listing_path(listing), class: "text-white hover:text-[#FFFC00] transition-colors" %>
+          </h3>
+          
+          <div class="mb-4 space-y-2">
+            <% if listing.city.present? %>
+              <p class="text-gray-300 text-sm">
+                <span class="text-gray-400">📍 Location:</span> 
+                <span class="text-white"><%= listing.city %></span>
+              </p>
+            <% end %>
+            
+            <% if listing.price.present? %>
+              <p class="text-gray-300 text-sm">
+                <span class="text-gray-400">💰 Price:</span> 
+                <span class="text-white">$<%= listing.price %>/month</span>
+              </p>
+            <% end %>
+            
+            <% if listing.verified? %>
+              <span class="inline-flex items-center gap-1 px-2 py-1 text-xs font-semibold rounded-full bg-green-500/20 text-green-400">
+                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                </svg>
+                Verified
+              </span>
+            <% end %>
+          </div>
+          
+          <div class="flex items-center gap-3 mt-6">
+            <%= render 'listings/like_button', listing: listing %>
+            <%= link_to "View Details", listing_path(listing), class: "flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-xl text-center transition-colors" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Pagination -->
+    <% if @liked_listings.respond_to?(:total_pages) && @liked_listings.total_pages > 1 %>
+      <div class="mt-8 flex justify-center">
+        <%= paginate @liked_listings, theme: 'twitter-bootstrap-4' %>
+      </div>
+    <% end %>
+  <% else %>
+    <div class="glass-card rounded-2xl p-8 text-center opacity-0 animate-fadeIn border-yellow-500/20 bg-yellow-500/10" style="animation-delay: 0.2s;">
+      <p class="text-yellow-400 font-medium mb-2">Your matches haven't liked any listings yet</p>
+      <p class="text-yellow-300/80 text-sm mb-4">Come back later to see what they're interested in!</p>
+      <p class="text-gray-400 mt-4">Meanwhile, <%= link_to "explore listings yourself", explore_path, class: "text-[#FFFC00] hover:underline" %>.</p>
+    </div>
+  <% end %>
+</div>
+

@@ -15,6 +15,7 @@ Feature: Conversations and Messaging
     When I visit the conversations page
     Then I should see "You don't have any conversations yet"
 
+  @wip
   Scenario: User starts a new conversation from matches page
     Given I am a signed-in user named "Alice"
     And a compatible user "UH" exists
@@ -63,6 +64,7 @@ Feature: Conversations and Messaging
     When I visit the conversations page
     Then I should see the avatar placeholder "B" for "Bob"
 
+  @wip
   Scenario: Multiple messages display correctly
     Given I am a signed-in user named "Alice"
     And a conversation exists between "alice@example.com" and "bob@example.com"

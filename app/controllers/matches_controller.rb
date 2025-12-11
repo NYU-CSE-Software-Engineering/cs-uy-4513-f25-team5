@@ -1,5 +1,5 @@
 class MatchesController < ApplicationController
-  before_action :require_login, only: [:index, :show, :like, :generate]
+  before_action :require_login, only: [:index, :show, :generate, :liked_by_matches]
 
   def index
     @matches = Match.potential_for(current_user).includes(:matched_user)
@@ -29,19 +29,22 @@ class MatchesController < ApplicationController
     end
     
     @matched_user = @match.matched_user
+    # Get listings liked by this matched user
+    @liked_listings = @matched_user.liked_listings.includes(:listing).order(created_at: :desc).limit(5)
   end
 
-  def like
-    @match = Match.find(params[:id])
+  def liked_by_matches
+    # Get all users that the current user is matched with
+    matched_user_ids = Match.where(user_id: current_user.id).pluck(:matched_user_id)
     
-    unless @match.user_id == current_user.id
-      redirect_to matches_path, alert: "You can only like your own matches"
-      return
-    end
+    # Get all listings liked by those matched users
+    @liked_listings = LikedListing.where(user_id: matched_user_ids)
+                                  .includes(:listing, :user)
+                                  .order(created_at: :desc)
+                                  .page(params[:page]).per(12)
     
-    # In a real app, you might have a Favorite or LikedMatch model
-    # For now, we'll just redirect with a success message
-    redirect_to matches_path, notice: "Match saved to favorites!"
+    # Track which listings the current user has also liked
+    @current_user_liked_ids = current_user.liked_listings.pluck(:listing_id)
   end
 
 end

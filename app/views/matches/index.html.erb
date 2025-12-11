@@ -1,36 +1,53 @@
-<p id="notice" class="text-green-600 font-medium mb-2"><%= notice %></p>
-<p id="alert" class="text-red-600 font-medium mb-2"><%= alert %></p>
-<h1 class="text-3xl font-bold mb-6">Potential Matches</h1>
-<div class="actions mb-4">
-  <%= button_to "Find Matches", generate_matches_path, method: :post, class: "bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded" %>
+<% content_for :title, "Potential Matches" %>
+<% content_for :body_class, "h-screen bg-black text-white font-syne antialiased overflow-hidden" %>
+<% content_for :container_class, "h-screen flex flex-col" %>
+<% content_for :main_class, "flex-1 pt-24 pb-4 px-6 overflow-y-auto" %>
+
+<!-- Header -->
+<div class="mb-10 opacity-0 animate-fadeIn">
+  <h1 class="text-4xl md:text-5xl font-bold tracking-tight mb-4">Potential Matches</h1>
+  <p class="text-xl text-gray-400">Find compatible roommates based on your preferences</p>
+</div>
+
+<!-- Find Matches Button -->
+<div class="mb-8 opacity-0 animate-fadeIn" style="animation-delay: 0.1s;">
+  <%= button_to "Find Matches", generate_matches_path, method: :post, 
+      class: "bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-xl transition-colors shadow-lg hover:shadow-xl" %>
 </div>
 <% if @no_matches_message %>
-  <div class="no-matches bg-yellow-100 border-l-4 border-yellow-500 p-4 mb-4">
-    <p class="text-yellow-800"><%= @no_matches_message %></p>
+  <div class="glass-card rounded-2xl p-6 mb-6 opacity-0 animate-fadeIn border-yellow-500/20 bg-yellow-500/10" style="animation-delay: 0.2s;">
+    <p class="text-yellow-400 font-medium mb-2"><%= @no_matches_message %></p>
     <% if @suggestions_message %>
-      <p class="mt-2 text-yellow-700">Update your profile preferences</p>
+      <p class="text-yellow-300/80 text-sm">Update your profile preferences to find better matches</p>
     <% end %>
   </div>
 <% else %>
-  <div class="matches-list grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    <% @matches.each do |match| %>
-      <div class="match-card border rounded-lg shadow p-4 hover:shadow-lg transition">
-        <h3 class="text-xl font-semibold mb-2">
-          <%= link_to match.matched_user.display_name, match_path(match), class: "text-blue-600 hover:underline" %>
+  <div class="matches-list grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <% @matches.each_with_index do |match, index| %>
+      <div class="glass-card rounded-2xl p-6 hover-lift opacity-0 animate-fadeIn match-card" style="animation-delay: <%= (index * 0.1) + 0.2 %>s;" data-testid="match-card">
+        <h3 class="text-xl font-semibold text-white mb-4">
+          <%= link_to match.matched_user.display_name, match_path(match), class: "text-white hover:text-[#FFFC00] transition-colors" %>
         </h3>
-        <p class="mb-1"><strong>Compatibility Score:</strong> <%= match.compatibility_score %>%</p>
+        
+        <div class="mb-4">
         <% if match.matched_user.preferred_location.present? %>
-          <p class="mb-1"><strong>Location:</strong> <%= match.matched_user.preferred_location %></p>
+            <p class="text-gray-300 mb-2">
+              <span class="text-gray-400">Location:</span> 
+              <span class="text-white"><%= match.matched_user.preferred_location %></span>
+            </p>
         <% end %>
+          
         <% if match.matched_user.budget.present? %>
-          <p class="mb-1"><strong>Budget:</strong> $<%= match.matched_user.budget %></p>
+            <p class="text-gray-300 mb-2">
+              <span class="text-gray-400">Budget:</span> 
+              <span class="text-white">$<%= match.matched_user.budget %></span>
+            </p>
         <% end %>
-        <div class="mt-4 flex flex-col space-y-2">
-          <div class="flex space-x-2">
-            <%= link_to "View Details", match_path(match), class: "bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded text-center" %>
-            <%= button_to "Like", like_match_path(match), method: :post, class: "bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded" %>
-          </div>
-          <%= button_to "Start Conversation", conversations_path(user_id: match.matched_user.id), method: :post, class: "bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded w-full" %>
+        </div>
+        
+        <div class="mt-6 flex flex-col space-y-2">
+          <%= link_to "View Details", match_path(match), class: "block w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-xl text-center transition-colors" %>
+          <%= button_to "Start Conversation", conversations_path(user_id: match.matched_user.id), method: :post, class: "bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-xl w-full transition-colors" %>
         </div>
       </div>
     <% end %>
