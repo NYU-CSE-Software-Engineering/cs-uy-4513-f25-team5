@@ -86,7 +86,9 @@ Given('I visit the admin reports page as an admin') do
 end
 
 Then("I should see a list of all submitted reports") do
-  expect(page).to have_css(".report-row", minimum: 1)
+  expect(page).to have_css(".glass-card", minimum: 1)
+  expect(page).to have_content("Reporter:")
+  expect(page).to have_content("Reported User:")
 end
 
 Then("each report should display the reporter, reported user, and report type") do

@@ -9,12 +9,14 @@
 #   end
 
 # clear existing data
+Report.destroy_all if defined?(Report)
 User.destroy_all
 Listing.destroy_all
 
 # users
 user1 = User.create!(email: "kevin@example.com", password: "password123", password_confirmation: "password123")
 user2 = User.create!(email: "alex@example.com", password: "password123", password_confirmation: "password123")
+# admin = User.create!(email: "admin@example.com", password: "adminpassword123", password_confirmation: "adminpassword123", role: "admin")
 
 # listings
 Listing.create!(
