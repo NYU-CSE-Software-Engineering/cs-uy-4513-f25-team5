@@ -8,9 +8,13 @@ class ListingsController < ApplicationController
     
     # Check if this is a "My Listings" page (from user_listings_path)
     if params[:id].present?
-      @user = User.find(params[:id])
-      @listings = @user.listings
-      @is_my_listings = true
+      if current_user && current_user.id == params[:id].to_i
+        @user = current_user
+        @listings = current_user.listings
+        @is_my_listings = true
+      else
+        redirect_to listings_path, alert: 'You are not authorized to view these listings.' and return
+      end
     elsif @filters.values.any?(&:present?)
       @listings = Listing.search(@filters)
       @is_my_listings = false
