@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'stringio'
 
 RSpec.describe "Listings", type: :request do
   let(:user) do
@@ -23,18 +24,16 @@ RSpec.describe "Listings", type: :request do
     allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
   end
 
-
-  let(:other_listing) do
-    Listing.create!(
-      title: 'Luxury Loft Midtown',
-      description: 'High-end apartment',
-      price: 2500,
-      city: 'New York',
-      status: Listing::STATUS_PENDING,
-      owner_email: other_user.email,
-      user: other_user
+  def attach_image_to(listing, filename: 'photo.png', content_type: 'image/png', content: 'image-data')
+    blob = ActiveStorage::Blob.create_and_upload!(
+      io: StringIO.new(content),
+      filename: filename,
+      content_type: content_type
     )
+    listing.images.attach(blob)
+    listing.images.last
   end
+
 
   # ========================================
   # CREATE LISTING FEATURE
@@ -380,6 +379,16 @@ RSpec.describe "Listings", type: :request do
 
   end
 
+  describe "GET /listings/:id/edit as non-owner" do
+    it "redirects unauthorized users" do
+      get edit_listing_path(other_listing)
+
+      expect(response).to redirect_to(listings_path)
+      follow_redirect!
+      expect(response.body).to include('You are not authorized to perform this action.')
+    end
+  end
+
   describe "DELETE /listings/:id" do
     context "when deleting own listing" do
       it "deletes the listing from the database" do
@@ -427,6 +436,86 @@ RSpec.describe "Listings", type: :request do
       get listings_path
       
       expect(response.body).not_to include(deleted_title)
+    end
+  end
+
+  describe "GET /users/:id/listings" do
+    it "shows only listings for the specified user" do
+      listing
+      other_listing
+
+      get user_listings_path(user)
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include(listing.title)
+      expect(response.body).not_to include(other_listing.title)
+    end
+  end
+
+  describe "GET /listings/search.json" do
+    it "returns filtered listings as JSON" do
+      listing
+      other_listing
+      Listing.create!(
+        title: 'Outside city',
+        description: 'Should not be returned',
+        price: 500,
+        city: 'Boston',
+        status: Listing::STATUS_PENDING,
+        owner_email: other_user.email,
+        user: other_user
+      )
+
+      get search_listings_path, params: { city: 'New York' }, as: :json
+
+      expect(response).to have_http_status(:ok)
+      body = JSON.parse(response.body)
+      cities = body.map { |row| row['city'] }
+      expect(cities).to all(match(/new york/i))
+      expect(cities).not_to include('Boston')
+    end
+  end
+
+  describe "DELETE /listings/:id/images/:image_id" do
+    let!(:image) { attach_image_to(listing) }
+
+    it "removes the image and clears the primary pointer" do
+      listing.update!(primary_image_id: image.id)
+
+      expect {
+        delete remove_image_listing_path(listing, image_id: image.id)
+      }.to change { listing.reload.images.attached? }.from(true).to(false)
+
+      expect(response).to redirect_to(edit_listing_path(listing))
+      expect(flash[:notice]).to eq('Image was successfully removed.')
+      expect(listing.reload.primary_image_id).to be_nil
+    end
+
+    it "gracefully handles missing images" do
+      delete remove_image_listing_path(listing, image_id: 'missing')
+
+      expect(response).to redirect_to(edit_listing_path(listing))
+      follow_redirect!
+      expect(response.body).to include('Image not found.')
+    end
+  end
+
+  describe "PATCH /listings/:id/images/:image_id/set_primary" do
+    let!(:image) { attach_image_to(listing) }
+
+    it "sets the primary image" do
+      patch set_primary_image_listing_path(listing, image_id: image.id)
+
+      expect(response).to redirect_to(edit_listing_path(listing))
+      expect(listing.reload.primary_image_id).to eq(image.id.to_s)
+    end
+
+    it "handles missing images" do
+      patch set_primary_image_listing_path(listing, image_id: 'missing')
+
+      expect(response).to redirect_to(edit_listing_path(listing))
+      follow_redirect!
+      expect(response.body).to include('Image not found.')
     end
   end
 end

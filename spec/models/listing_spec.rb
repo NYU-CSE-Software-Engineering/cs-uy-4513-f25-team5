@@ -1,4 +1,6 @@
 require 'rails_helper'
+require 'securerandom'
+require 'stringio'
 
 RSpec.describe Listing, type: :model do
   describe '.search' do
@@ -202,6 +204,115 @@ RSpec.describe Listing, type: :model do
         user: user
       )
       expect(listing).to be_valid
+    end
+  end
+
+  describe '#mark_as_verified!' do
+    let(:user) { User.create!(email: 'verify@example.com', password: 'password123') }
+    let(:listing) do
+      Listing.create!(
+        title: 'Needs verification',
+        description: 'Waiting to be verified',
+        price: 750,
+        city: 'Chicago',
+        status: Listing::STATUS_PENDING,
+        owner_email: user.email,
+        user: user,
+        verified: false
+      )
+    end
+
+    it 'updates status and verified flag' do
+      listing.mark_as_verified!
+
+      expect(listing.status).to eq(Listing::STATUS_VERIFIED)
+      expect(listing.verified).to be(true)
+    end
+  end
+
+  describe 'image helpers' do
+    let(:user) { User.create!(email: 'images@example.com', password: 'password123') }
+    let(:listing) do
+      Listing.create!(
+        title: 'With images',
+        description: 'Listing with attachments',
+        price: 1200,
+        city: 'New York',
+        status: Listing::STATUS_PENDING,
+        owner_email: user.email,
+        user: user
+      )
+    end
+
+    def attach_blob(record, filename: 'test.png', content_type: 'image/png', content: 'image-data')
+      blob = ActiveStorage::Blob.create_and_upload!(
+        io: StringIO.new(content),
+        filename: filename,
+        content_type: content_type
+      )
+      record.images.attach(blob)
+      record.images.last
+    end
+
+    it 'returns nil when no images are attached' do
+      expect(listing.primary_image).to be_nil
+      expect(listing.ordered_images).to eq([])
+    end
+
+    it 'returns the designated primary image and orders accordingly' do
+      first_image = attach_blob(listing, filename: 'first.png')
+      primary = attach_blob(listing, filename: 'primary.png')
+
+      listing.set_primary_image!(primary.id)
+
+      expect(listing.primary_image.id).to eq(primary.id)
+      expect(listing.ordered_images.map(&:id)).to eq([primary.id, first_image.id])
+    end
+
+    it 'falls back to the first image when no primary is set' do
+      first_image = attach_blob(listing, filename: 'first.png')
+      attach_blob(listing, filename: 'second.png')
+
+      expect(listing.primary_image.id).to eq(first_image.id)
+      expect(listing.ordered_images.first.id).to eq(first_image.id)
+    end
+
+    it 'tracks whether an image is primary' do
+      image = attach_blob(listing)
+
+      listing.set_primary_image!(image.id)
+
+      expect(listing.primary_image?(image)).to be(true)
+    end
+
+    it 'calculates remaining image slots' do
+      3.times { attach_blob(listing, filename: SecureRandom.hex(4)) }
+
+      expect(listing.remaining_image_slots).to eq(Listing::MAX_IMAGES - 3)
+    end
+
+    it 'validates against too many images' do
+      (Listing::MAX_IMAGES + 1).times do |idx|
+        attach_blob(listing, filename: "img-#{idx}.png")
+      end
+
+      expect(listing).not_to be_valid
+      expect(listing.errors[:images]).to include("cannot exceed #{Listing::MAX_IMAGES} images")
+    end
+
+    it 'validates image content type' do
+      attach_blob(listing, filename: 'bad.txt', content_type: 'text/plain')
+
+      expect(listing).not_to be_valid
+      expect(listing.errors[:images]).to include("must be JPEG, PNG, WebP, or GIF")
+    end
+
+    it 'validates image size' do
+      large_content = 'a' * (Listing::MAX_IMAGE_SIZE + 1)
+      attach_blob(listing, filename: 'large.png', content: large_content)
+
+      expect(listing).not_to be_valid
+      expect(listing.errors[:images]).to include("must be less than #{Listing::MAX_IMAGE_SIZE / 1.megabyte}MB each")
     end
   end
 end

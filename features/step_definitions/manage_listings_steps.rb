@@ -68,3 +68,12 @@ end
 Then("I should see an authorization error message") do
   expect(page).to have_content("You are not authorized to perform this action.")
 end
+
+When("I visit my listings page") do
+  visit user_listings_path(@current_user)
+end
+
+Then("I should see {string} on my listings page") do |title|
+  visit user_listings_path(@current_user)
+  expect(page).to have_content(title)
+end
