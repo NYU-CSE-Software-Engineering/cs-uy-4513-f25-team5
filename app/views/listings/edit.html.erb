@@ -1,8 +1,92 @@
 <% content_for :title, "Edit Listing" %>
 <% content_for :body_class, "h-screen bg-black text-white font-syne antialiased overflow-hidden" %>
 <% content_for :container_class, "h-screen flex flex-col" %>
-<% content_for :main_class, "flex-1 py-8 px-6 flex items-center justify-center" %>
-<% content_for :content_class, "w-full max-w-4xl" %>
+<% content_for :main_class, "flex-1 py-8 px-6 overflow-y-auto" %>
+<% content_for :content_class, "w-full max-w-4xl mx-auto" %>
+
+<style>
+  .image-upload-zone {
+    border: 2px dashed rgba(255, 255, 255, 0.2);
+    transition: all 0.2s ease;
+  }
+  .image-upload-zone:hover,
+  .image-upload-zone.dragover {
+    border-color: rgba(255, 252, 0, 0.5);
+    background-color: rgba(255, 252, 0, 0.05);
+  }
+  .existing-image-item {
+    position: relative;
+    aspect-ratio: 1;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.05);
+  }
+  .existing-image-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .image-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 50%);
+    opacity: 0;
+    transition: opacity 0.2s;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0.5rem;
+  }
+  .existing-image-item:hover .image-overlay {
+    opacity: 1;
+  }
+  .primary-badge {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    background: linear-gradient(135deg, #FFFC00, #FFD700);
+    color: black;
+    font-size: 0.625rem;
+    font-weight: 700;
+    padding: 0.25rem 0.5rem;
+    border-radius: 9999px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .image-preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 0.75rem;
+  }
+  .image-preview-item {
+    position: relative;
+    aspect-ratio: 1;
+    border-radius: 0.75rem;
+    overflow: hidden;
+  }
+  .image-preview-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .image-preview-remove {
+    position: absolute;
+    top: 0.25rem;
+    right: 0.25rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .image-preview-remove:hover {
+    background: rgba(239, 68, 68, 0.9);
+  }
+</style>
 
 <!-- Header -->
 <div class="mb-6 opacity-0 animate-fadeIn flex items-center gap-4">
@@ -14,26 +98,81 @@
   <h1 class="text-4xl font-bold tracking-tight">Edit Listing</h1>
 </div>
 
-  <% if @listing.errors.any? %>
-  <div class="mb-6 px-5 py-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 opacity-0 animate-fadeIn">
-    <p class="font-semibold mb-2"><%= pluralize(@listing.errors.count, "error") %> prohibited this listing from being saved:</p>
-    <ul class="list-disc list-inside text-sm space-y-1">
-        <% @listing.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
+<% if @listing.errors.any? %>
+<div class="mb-6 px-5 py-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 opacity-0 animate-fadeIn">
+  <p class="font-semibold mb-2"><%= pluralize(@listing.errors.count, "error") %> prohibited this listing from being saved:</p>
+  <ul class="list-disc list-inside text-sm space-y-1">
+    <% @listing.errors.full_messages.each do |message| %>
+      <li><%= message %></li>
+    <% end %>
+  </ul>
+</div>
+<% end %>
 
-<!-- Form -->
+<!-- Flash Messages -->
+<% if flash[:notice] %>
+<div class="mb-6 px-5 py-4 rounded-xl bg-green-500/10 border border-green-500/20 text-green-400 opacity-0 animate-fadeIn">
+  <%= flash[:notice] %>
+</div>
+<% end %>
+<% if flash[:alert] %>
+<div class="mb-6 px-5 py-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 opacity-0 animate-fadeIn">
+  <%= flash[:alert] %>
+</div>
+<% end %>
+
+<!-- Existing Images Section (Outside form to avoid nested forms) -->
+<% if @listing.images.attached? %>
+<div class="glass-card rounded-2xl p-8 mb-6 opacity-0 animate-fadeIn" style="animation-delay: 0.05s;">
+  <div class="flex items-center justify-between mb-4">
+    <div>
+      <h3 class="text-lg font-semibold text-white">Manage Images</h3>
+      <p class="text-xs text-gray-500">
+        <%= @listing.images.count %>/<%= Listing::MAX_IMAGES %> images uploaded. Click on an image to set it as primary or remove it.
+      </p>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+    <% @listing.ordered_images.each do |image| %>
+      <div class="existing-image-item">
+        <%= image_tag url_for(image), alt: "Listing image" %>
+        <% if @listing.primary_image?(image) %>
+          <span class="primary-badge">Primary</span>
+        <% end %>
+        <div class="image-overlay">
+          <div class="flex gap-1">
+            <% unless @listing.primary_image?(image) %>
+              <%= button_to set_primary_image_listing_path(@listing, image_id: image.id), 
+                  method: :patch,
+                  class: "flex-1 px-2 py-1 text-xs font-medium rounded bg-[#FFFC00] text-black hover:bg-[#E6E300] transition-colors",
+                  data: { turbo: false } do %>
+                Set Primary
+              <% end %>
+            <% end %>
+            <%= button_to remove_image_listing_path(@listing, image_id: image.id), 
+                method: :delete,
+                data: { turbo_confirm: "Remove this image?", turbo: false },
+                class: "flex-1 px-2 py-1 text-xs font-medium rounded bg-red-500/80 text-white hover:bg-red-600 transition-colors" do %>
+              Remove
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+<% end %>
+
+<!-- Main Edit Form -->
 <div class="glass-card rounded-2xl p-8 opacity-0 animate-fadeIn" style="animation-delay: 0.1s;">
-  <%= form_with(model: @listing, local: true, class: "space-y-6") do |form| %>
+  <%= form_with(model: @listing, local: true, html: { multipart: true }, class: "space-y-6") do |form| %>
     <div>
       <%= form.label :title, "Title", class: "block text-sm font-medium text-gray-300 mb-2" %>
       <%= form.text_field :title, 
           class: "w-full px-5 py-3 rounded-xl bg-white/10 border-0 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all duration-200",
           placeholder: "e.g. Cozy Studio in Downtown" %>
-  </div>
+    </div>
 
     <div>
       <%= form.label :description, "Description", class: "block text-sm font-medium text-gray-300 mb-2" %>
@@ -41,7 +180,7 @@
           rows: 4,
           class: "w-full px-5 py-3 rounded-xl bg-white/10 border-0 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all duration-200 resize-none",
           placeholder: "Describe your space, amenities, and ideal roommate..." %>
-  </div>
+    </div>
 
     <div class="grid grid-cols-3 gap-6">
       <div>
@@ -50,14 +189,14 @@
             step: 0.01,
             class: "w-full px-5 py-3 rounded-xl bg-white/10 border-0 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all duration-200",
             placeholder: "1500" %>
-  </div>
+      </div>
 
       <div>
         <%= form.label :city, "City", class: "block text-sm font-medium text-gray-300 mb-2" %>
         <%= form.text_field :city, 
             class: "w-full px-5 py-3 rounded-xl bg-white/10 border-0 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all duration-200",
             placeholder: "New York" %>
-  </div>
+      </div>
 
       <div>
         <%= form.label :owner_email, "Contact Email", class: "block text-sm font-medium text-gray-300 mb-2" %>
@@ -65,13 +204,139 @@
             class: "w-full px-5 py-3 rounded-xl bg-white/10 border-0 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all duration-200",
             placeholder: "you@example.com" %>
       </div>
-  </div>
+    </div>
+
+    <!-- Add More Images Section -->
+    <% if @listing.remaining_image_slots > 0 %>
+    <div class="pt-4 border-t border-white/10">
+      <div class="mb-4">
+        <h3 class="text-lg font-semibold text-white">Add More Images</h3>
+        <p class="text-xs text-gray-500"><%= @listing.remaining_image_slots %> slots remaining</p>
+      </div>
+      
+      <div id="image-upload-zone" class="image-upload-zone rounded-xl p-6 text-center cursor-pointer">
+        <input type="file" 
+               id="image-input" 
+               name="listing[images][]" 
+               multiple 
+               accept="image/jpeg,image/jpg,image/png,image/webp,image/gif"
+               class="hidden">
+        <div class="pointer-events-none">
+          <svg class="w-8 h-8 mx-auto text-gray-500 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"/>
+          </svg>
+          <p class="text-gray-400 text-sm">Click to add images or drag and drop</p>
+          <p class="text-gray-500 text-xs mt-1">JPEG, PNG, WebP, GIF - max 5MB each</p>
+        </div>
+      </div>
+      
+      <!-- New Image Preview Grid -->
+      <div id="image-preview-container" class="image-preview-grid mt-4 hidden"></div>
+    </div>
+    <% end %>
 
     <div class="pt-4 flex gap-4">
       <%= form.submit "Save Changes", 
           class: "flex-1 px-8 py-3.5 text-base font-semibold rounded-full bg-white text-black hover:bg-gray-200 transition-all duration-200 cursor-pointer" %>
       <%= link_to 'Cancel', listing_path(@listing), 
           class: "px-8 py-3.5 text-base font-semibold rounded-full border border-white/20 text-white hover:bg-white/5 transition-all duration-200 text-center" %>
-  </div>
-<% end %>
+    </div>
+  <% end %>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const uploadZone = document.getElementById('image-upload-zone');
+  const imageInput = document.getElementById('image-input');
+  const previewContainer = document.getElementById('image-preview-container');
+  
+  if (!uploadZone || !imageInput) return;
+  
+  const maxNewImages = <%= @listing.remaining_image_slots %>;
+  let selectedFiles = new DataTransfer();
+  
+  // Click to upload
+  uploadZone.addEventListener('click', () => imageInput.click());
+  
+  // Drag and drop
+  uploadZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadZone.classList.add('dragover');
+  });
+  
+  uploadZone.addEventListener('dragleave', () => {
+    uploadZone.classList.remove('dragover');
+  });
+  
+  uploadZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadZone.classList.remove('dragover');
+    handleFiles(e.dataTransfer.files);
+  });
+  
+  // File input change
+  imageInput.addEventListener('change', (e) => {
+    handleFiles(e.target.files);
+  });
+  
+  function handleFiles(files) {
+    const currentCount = selectedFiles.files.length;
+    const availableSlots = maxNewImages - currentCount;
+    
+    if (availableSlots <= 0) {
+      alert(`You can only add ${maxNewImages} more images`);
+      return;
+    }
+    
+    const filesToAdd = Array.from(files).slice(0, availableSlots);
+    
+    filesToAdd.forEach(file => {
+      if (file.type.startsWith('image/')) {
+        selectedFiles.items.add(file);
+        addPreview(file, selectedFiles.files.length - 1);
+      }
+    });
+    
+    imageInput.files = selectedFiles.files;
+  }
+  
+  function addPreview(file, index) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const div = document.createElement('div');
+      div.className = 'image-preview-item';
+      div.dataset.index = index;
+      div.innerHTML = `
+        <img src="${e.target.result}" alt="Preview">
+        <button type="button" class="image-preview-remove" onclick="removeNewImage(${index})">
+          <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      `;
+      previewContainer.appendChild(div);
+      previewContainer.classList.remove('hidden');
+    };
+    reader.readAsDataURL(file);
+  }
+  
+  window.removeNewImage = function(index) {
+    const newFiles = new DataTransfer();
+    Array.from(selectedFiles.files).forEach((file, i) => {
+      if (i !== index) {
+        newFiles.items.add(file);
+      }
+    });
+    selectedFiles = newFiles;
+    imageInput.files = selectedFiles.files;
+    
+    // Rebuild previews
+    previewContainer.innerHTML = '';
+    Array.from(selectedFiles.files).forEach((file, i) => addPreview(file, i));
+    
+    if (selectedFiles.files.length === 0) {
+      previewContainer.classList.add('hidden');
+    }
+  };
+});
+</script>

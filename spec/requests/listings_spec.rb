@@ -125,7 +125,7 @@ RSpec.describe "Listings", type: :request do
       it "renders the new template with unprocessable entity status" do
         post listings_path, params: invalid_attributes
         
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
 
       it "displays validation error for title" do
@@ -314,7 +314,7 @@ RSpec.describe "Listings", type: :request do
       it "renders the edit template with unprocessable entity status" do
         patch listing_path(listing), params: invalid_params
         
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
 
       it "displays validation errors" do

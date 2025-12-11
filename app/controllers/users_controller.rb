@@ -25,7 +25,6 @@ class UsersController < ApplicationController
 
   def user_params
     user_params = params.require(:user).permit(:email, :password, :password_confirmation)
-    user_params.require(:password) # Ensure password is present
     user_params
   end
 end

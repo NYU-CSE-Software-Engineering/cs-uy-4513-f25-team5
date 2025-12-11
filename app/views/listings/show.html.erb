@@ -1,6 +1,127 @@
 <% content_for :title, @listing.title %>
 <% content_for :content_class, "max-w-4xl mx-auto" %>
 
+<style>
+  .image-gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+  @media (min-width: 640px) {
+    .image-gallery-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .gallery-image-item {
+    position: relative;
+    aspect-ratio: 4/3;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.05);
+  }
+  .gallery-image-item:first-child {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+  @media (min-width: 640px) {
+    .gallery-image-item:first-child {
+      grid-column: span 2;
+      grid-row: span 2;
+    }
+  }
+  .gallery-image-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+  .gallery-image-item:hover img {
+    transform: scale(1.05);
+  }
+  .gallery-primary-badge {
+    position: absolute;
+    bottom: 0.5rem;
+    left: 0.5rem;
+    background: linear-gradient(135deg, #FFFC00, #FFD700);
+    color: black;
+    font-size: 0.625rem;
+    font-weight: 700;
+    padding: 0.25rem 0.5rem;
+    border-radius: 9999px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  /* Lightbox styles */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 50;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+  .lightbox.active {
+    display: flex;
+  }
+  .lightbox-image {
+    max-width: 90vw;
+    max-height: 90vh;
+    object-fit: contain;
+    border-radius: 0.5rem;
+  }
+  .lightbox-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .lightbox-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+  .lightbox-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .lightbox-nav:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+  .lightbox-prev {
+    left: 1rem;
+  }
+  .lightbox-next {
+    right: 1rem;
+  }
+  .lightbox-counter {
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    font-size: 0.875rem;
+  }
+</style>
+
 <!-- Back button -->
 <div class="mb-6 opacity-0 animate-fadeIn">
   <a href="<%= listings_path %>" class="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors text-sm">
@@ -49,6 +170,23 @@
     <span class="text-lg"><%= @listing.city %></span>
   </div>
 
+  <% if @listing.images.attached? %>
+  <!-- Image Gallery -->
+  <div class="mb-8">
+    <h2 class="text-lg font-semibold text-white mb-4">Photos</h2>
+    <div class="image-gallery-grid">
+      <% @listing.ordered_images.each_with_index do |image, index| %>
+        <div class="gallery-image-item" onclick="openLightbox(<%= index %>)">
+          <%= image_tag url_for(image), alt: "#{@listing.title} - Photo #{index + 1}" %>
+          <% if index == 0 && @listing.primary_image_id.present? %>
+            <span class="gallery-primary-badge">Primary</span>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  <% end %>
+
   <!-- Description -->
   <div class="mb-8">
     <h2 class="text-lg font-semibold text-white mb-3">Description</h2>
@@ -92,3 +230,88 @@
 <% end %>
   </div>
 </div>
+
+<% if @listing.images.attached? %>
+<!-- Lightbox -->
+<div id="lightbox" class="lightbox" onclick="closeLightbox(event)">
+  <button class="lightbox-close" onclick="closeLightbox(event)">
+    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+    </svg>
+  </button>
+  <button class="lightbox-nav lightbox-prev" onclick="prevImage(event)">
+    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+    </svg>
+  </button>
+  <img id="lightbox-image" class="lightbox-image" src="" alt="Listing image">
+  <button class="lightbox-nav lightbox-next" onclick="nextImage(event)">
+    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+    </svg>
+  </button>
+  <div class="lightbox-counter">
+    <span id="lightbox-current">1</span> / <span id="lightbox-total"><%= @listing.images.count %></span>
+  </div>
+</div>
+
+<script>
+  const imageUrls = [
+    <% @listing.ordered_images.each do |image| %>
+      "<%= url_for(image) %>",
+    <% end %>
+  ];
+  
+  let currentIndex = 0;
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImage = document.getElementById('lightbox-image');
+  const lightboxCurrent = document.getElementById('lightbox-current');
+  
+  function openLightbox(index) {
+    currentIndex = index;
+    updateLightboxImage();
+    lightbox.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  
+  function closeLightbox(event) {
+    if (event.target === lightbox || event.currentTarget.classList.contains('lightbox-close')) {
+      lightbox.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  }
+  
+  function prevImage(event) {
+    event.stopPropagation();
+    currentIndex = (currentIndex - 1 + imageUrls.length) % imageUrls.length;
+    updateLightboxImage();
+  }
+  
+  function nextImage(event) {
+    event.stopPropagation();
+    currentIndex = (currentIndex + 1) % imageUrls.length;
+    updateLightboxImage();
+  }
+  
+  function updateLightboxImage() {
+    lightboxImage.src = imageUrls[currentIndex];
+    lightboxCurrent.textContent = currentIndex + 1;
+  }
+  
+  // Keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    if (!lightbox.classList.contains('active')) return;
+    
+    if (e.key === 'Escape') {
+      lightbox.classList.remove('active');
+      document.body.style.overflow = '';
+    } else if (e.key === 'ArrowLeft') {
+      currentIndex = (currentIndex - 1 + imageUrls.length) % imageUrls.length;
+      updateLightboxImage();
+    } else if (e.key === 'ArrowRight') {
+      currentIndex = (currentIndex + 1) % imageUrls.length;
+      updateLightboxImage();
+    }
+  });
+</script>
+<% end %>

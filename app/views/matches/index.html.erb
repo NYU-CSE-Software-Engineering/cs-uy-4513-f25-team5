@@ -14,7 +14,6 @@
   <%= button_to "Find Matches", generate_matches_path, method: :post, 
       class: "bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-xl transition-colors shadow-lg hover:shadow-xl" %>
 </div>
-
 <% if @no_matches_message %>
   <div class="glass-card rounded-2xl p-6 mb-6 opacity-0 animate-fadeIn border-yellow-500/20 bg-yellow-500/10" style="animation-delay: 0.2s;">
     <p class="text-yellow-400 font-medium mb-2"><%= @no_matches_message %></p>
