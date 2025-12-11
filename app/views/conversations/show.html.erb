@@ -37,7 +37,7 @@
             <span class="message-sender">
               <%= message.user_id == current_user.id ? 'You' : message.user.display_name %>
             </span>
-            <span class="message-time">
+            <span class="message-time" data-timestamp="<%= message.created_at.iso8601 %>">
               <%= message.created_at.strftime("%b %d, %I:%M %p") %>
             </span>
           </div>
@@ -356,16 +356,36 @@
       }
     }
 
+    function formatTimestamp(isoTime) {
+      const date = new Date(isoTime);
+      return date.toLocaleString([], {
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+      });
+    }
+
+    function formatMessageTimestamps(root = document) {
+      root.querySelectorAll('[data-timestamp]').forEach(function(element) {
+        const isoTime = element.getAttribute('data-timestamp');
+        if (!isoTime) return;
+        element.textContent = formatTimestamp(isoTime);
+      });
+    }
+
     // Create message HTML
     function createMessageHTML(message) {
       const isSent = message.is_current_user;
       const messageClass = isSent ? 'message-sent' : 'message-received';
-      
+      const isoTime = new Date(message.created_at).toISOString();
+      const formattedTime = formatTimestamp(isoTime);
       return `
         <div class="message ${messageClass}" data-message-id="${message.id}">
           <div class="message-header">
             <span class="message-sender">${isSent ? 'You' : message.user_name}</span>
-            <span class="message-time">${message.created_at}</span>
+            <span class="message-time" data-timestamp="${isoTime}">${formattedTime}</span>
           </div>
           <div class="message-body">
             ${message.body.replace(/\n/g, '<br>')}
@@ -396,6 +416,7 @@
               }
             });
 
+            formatMessageTimestamps(messagesContainer);
             scrollToBottom();
           }
           
@@ -407,6 +428,7 @@
     // Initialize
     document.addEventListener('DOMContentLoaded', function() {
       scrollToBottom();
+      formatMessageTimestamps();
       
       // Start polling every 2 seconds
       pollInterval = setInterval(pollMessages, 2000);
@@ -418,5 +440,6 @@
         clearInterval(pollInterval);
       }
     });
+
   })();
 </script>

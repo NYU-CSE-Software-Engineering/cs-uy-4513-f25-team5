@@ -105,7 +105,7 @@ class ConversationsController < ApplicationController
     {
       id: message.id,
       body: message.body,
-      created_at: message.created_at.strftime("%b %d, %I:%M %p"),
+      created_at: message.created_at.iso8601,
       user_id: message.user_id,
       user_name: message.user.display_name,
       is_current_user: message.user_id == current_user.id

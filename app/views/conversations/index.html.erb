@@ -40,7 +40,7 @@
               </div>
               <div class="conversation-meta">
                 <% if last_message %>
-                  <span class="timestamp">
+                  <span class="timestamp" data-timestamp="<%= last_message.created_at.iso8601 %>">
                     <%= time_ago_in_words(last_message.created_at) %> ago
                   </span>
                 <% end %>
@@ -211,3 +211,24 @@
     font-weight: 500;
   }
 </style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Update all timestamps to "time ago" format
+    document.querySelectorAll('.timestamp[data-timestamp]').forEach(function(element) {
+      const isoTime = element.getAttribute('data-timestamp');
+      const date = new Date(isoTime);
+      const now = new Date();
+      const diffMs = now - date;
+      const diffMins = Math.floor(diffMs / 60000);
+      
+      let timeAgo;
+      if (diffMins < 1) timeAgo = 'just now';
+      else if (diffMins < 60) timeAgo = `${diffMins} minute${diffMins > 1 ? 's' : ''} ago`;
+      else if (diffMins < 1440) timeAgo = `${Math.floor(diffMins / 60)} hour${Math.floor(diffMins / 60) > 1 ? 's' : ''} ago`;
+      else timeAgo = date.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
+      
+      element.textContent = timeAgo;
+    });
+  });
+</script>
