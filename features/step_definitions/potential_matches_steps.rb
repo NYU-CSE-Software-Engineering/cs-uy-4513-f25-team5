@@ -91,12 +91,6 @@ When("I click on a potential match") do
   first(:link, "View Details").click
 end
 
-When("I click the {string} button on a match") do |button_text|
-  # Like feature removed per reviewer feedback
-  # Skip this step as the Like button no longer exists in the UI
-  pending("Like feature removed per reviewer feedback")
-end
-
 When("I try to visit the matches page") do
   visit matches_path
 end
@@ -151,15 +145,6 @@ end
 
 Then("I should see suggestions to update my profile") do
   expect(page).to have_content("Update your profile preferences")
-end
-
-Then("I should see a confirmation message") do
-  expect(page).to have_content("Match saved to favorites!")
-end
-
-Then("the match should be saved to my favorites") do
-  # In real implementation, this would verify the match was saved
-  expect(page).to have_content("saved to favorites")
 end
 
 Then("I should be redirected to the login page") do
