@@ -86,10 +86,10 @@ Feature: Conversations and Messaging
   Scenario: Starting a conversation with a non-existent user
     Given I am a signed-in user named "Alice"
     When I try to start a conversation with a non-existent user with id 9999
-    Then I should be redirected to the home page
+    Then I should be redirected to the listings page
     And I should see "User not found"
 
   Scenario: Starting a conversation with yourself
     Given I am a signed-in user named "Alice"
     When I try to start a conversation with "Alice"
-    Then I should be redirected to the home page
+    Then I should be redirected to the listings page

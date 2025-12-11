@@ -21,9 +21,9 @@ RSpec.describe "Users", type: :request do
         }
       end
 
-      it "creates a new user and redirects to dashboard (HTML)" do
+      it "creates a new user and redirects to listings (HTML)" do
         post auth_register_path, params: valid_params
-        expect(response).to redirect_to(dashboard_path)
+        expect(response).to redirect_to(listings_path)
         follow_redirect!
         expect(response.body).to include("Welcome! You have successfully signed up.")
       end

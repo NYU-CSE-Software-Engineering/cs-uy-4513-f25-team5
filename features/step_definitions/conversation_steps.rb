@@ -297,6 +297,11 @@ Then('I should be redirected to the home page') do
     expect([root_path, dashboard_path]).to include(current_path)
 end
 
+# Redirected to listings page
+Then('I should be redirected to the listings page') do
+    expect(current_path).to eq(listings_path)
+end
+
 # Create a user by display name
 Given('a user {string} exists') do |display_name|
   User.create!(

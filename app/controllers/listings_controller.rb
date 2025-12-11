@@ -1,23 +1,22 @@
 class ListingsController < ApplicationController
   before_action :require_login, except: [:index, :show, :search]
-  before_action :set_listing, only: [:show, :edit, :update, :destroy, :remove_image, :set_primary_image]
-  before_action :authorize_user, only: [:edit, :update, :destroy, :remove_image, :set_primary_image]
+  before_action :set_listing, only: [:show, :edit, :update, :destroy]
+  before_action :authorize_user, only: [:edit, :update, :destroy]
 
   def index
+    @filters = params.slice(:city, :min_price, :max_price, :keywords).permit!.to_h.symbolize_keys
+    
+    # Check if this is a "My Listings" page (from user_listings_path)
     if params[:id].present?
-      @user = User.find_by(id: params[:id])
-      
-      if @user.nil?
-        redirect_to listings_path, alert: 'User not found.'
-        return
-      end
-      
+      @user = User.find(params[:id])
       @listings = @user.listings
-      @is_own_listings = current_user == @user
-      @user_handle = @user.email.split('@').first
+      @is_my_listings = true
+    elsif @filters.values.any?(&:present?)
+      @listings = Listing.search(@filters)
+      @is_my_listings = false
     else
       @listings = Listing.all
-      @is_own_listings = false
+      @is_my_listings = false
     end
   end
 
@@ -36,13 +35,9 @@ class ListingsController < ApplicationController
     @listing.status = Listing::STATUS_PENDING
 
     if @listing.save
-      # Set first image as primary if images were uploaded
-      if @listing.images.attached? && @listing.primary_image_id.blank?
-        @listing.update(primary_image_id: @listing.images.first.id.to_s)
-      end
       redirect_to @listing, notice: 'Listing was successfully created.'
     else
-      render :new, status: :unprocessable_content
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -51,13 +46,9 @@ class ListingsController < ApplicationController
 
   def update
     if @listing.update(listing_params)
-      # Set first image as primary if images exist but no primary is set
-      if @listing.images.attached? && @listing.primary_image_id.blank?
-        @listing.update(primary_image_id: @listing.images.first.id.to_s)
-      end
       redirect_to @listing, notice: 'Listing was successfully updated.'
     else
-      render :edit, status: :unprocessable_content
+      render :edit, status: :unprocessable_entity
     end
   end
 
@@ -66,43 +57,12 @@ class ListingsController < ApplicationController
     redirect_to listings_path, notice: 'Listing was successfully deleted.'
   end
 
-  def remove_image
-    image = @listing.images.find { |img| img.id.to_s == params[:image_id].to_s }
-    
-    if image
-      was_primary = @listing.primary_image_id == image.id.to_s
-      image.purge
-      
-      # If we removed the primary image, set a new one
-      if was_primary && @listing.images.attached?
-        @listing.update(primary_image_id: @listing.images.first.id.to_s)
-      elsif was_primary
-        @listing.update(primary_image_id: nil)
-      end
-      
-      redirect_to edit_listing_path(@listing), notice: 'Image was successfully removed.'
-    else
-      redirect_to edit_listing_path(@listing), alert: 'Image not found.'
-    end
-  end
-
-  def set_primary_image
-    image = @listing.images.find { |img| img.id.to_s == params[:image_id].to_s }
-    
-    if image
-      @listing.set_primary_image!(image.id)
-      redirect_to edit_listing_path(@listing), notice: 'Primary image was updated.'
-    else
-      redirect_to edit_listing_path(@listing), alert: 'Image not found.'
-    end
-  end
-
   def search
     @filters = params.slice(:city, :min_price, :max_price, :keywords).permit!.to_h.symbolize_keys
     @listings = Listing.search(@filters)
 
     respond_to do |format|
-      format.html { render :search }
+      format.html { redirect_to listings_path(params: @filters) }
       format.json { render json: @listings }
     end
   end
@@ -114,10 +74,7 @@ class ListingsController < ApplicationController
   end
 
   def listing_params
-    permitted = params.require(:listing).permit(:title, :description, :price, :city, :owner_email, images: [])
-    # Convert empty price string to nil to trigger proper validation
-    permitted[:price] = nil if permitted[:price].to_s.strip.empty?
-    permitted
+    params.require(:listing).permit(:title, :description, :price, :city, :owner_email)
   end
 
   def authorize_user

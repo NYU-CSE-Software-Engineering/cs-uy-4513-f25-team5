@@ -9,7 +9,7 @@ class SessionsController < ApplicationController
     if user && user.authenticate(params[:password])
       session[:user_id] = user.id
       respond_to do |format|
-        format.html { redirect_to dashboard_path, notice: 'Successfully logged in' }
+        format.html { redirect_to listings_path, notice: 'Successfully logged in' }
         format.json { render json: { user: user }, status: :ok }
       end
     else

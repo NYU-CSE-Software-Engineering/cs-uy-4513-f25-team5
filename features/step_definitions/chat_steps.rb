@@ -117,13 +117,7 @@ end
 
 When("I try to start a conversation with {string}") do |display_name|
   user = User.find_by!(display_name: display_name)
-
-  if user == @current_user
-    visit root_path
-    # flash message is already set by controller when redirecting
-  else
-    page.driver.submit :post, conversations_path(user_id: user.id), {}
-  end
+  page.driver.submit :post, conversations_path(user_id: user.id), {}
 end
 
 
