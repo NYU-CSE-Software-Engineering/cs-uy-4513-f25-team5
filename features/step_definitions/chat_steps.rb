@@ -103,13 +103,6 @@ Given('{string} has a conversation with {string}') do |name1, name2|
   )
 end
 
-When('I visit the conversations page') do
-  # Conversations page doesn't exist yet - visit dashboard instead
-  # User should be signed in from the "Given I am a signed-in user" step
-  visit dashboard_path
-  # TODO: Create conversations page
-end
-
 When('I visit the conversation with {string}') do |name|
   other = @users[name] || User.find_by!(name: name)
   @conversation ||= Conversation.where(participant_one_id: @me.id, participant_two_id: other.id)
@@ -133,19 +126,6 @@ When('I try to start a conversation with {string}') do |name|
   # New conversation path doesn't exist yet
   visit dashboard_path
   # TODO: Create new conversation page
-end
-
-When('I click {string}') do |button_text|
-  if current_path == dashboard_path
-    # Feature not implemented - skip action if we're on dashboard (fallback)
-  else
-    begin
-      click_button button_text
-    rescue Capybara::ElementNotFound
-      # Try clicking as a link if button not found
-      click_link button_text
-    end
-  end
 end
 
 When('I fill in the report reason with {string}') do |reason|

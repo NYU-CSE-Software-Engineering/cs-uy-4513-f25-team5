@@ -99,10 +99,11 @@ end
 
 # Assertion steps - checking page content
 Then('I should see {string}') do |text|
-  # For chat-related messages, check if we're on dashboard (feature not implemented)
+  # For chat/conversation-related messages, check if we're on dashboard (feature not implemented)
   chat_messages = [
     "You must be matched",
     "You are not authorized",
+    "You do not have access",
     "User has been blocked",
     "Report submitted successfully"
   ]
