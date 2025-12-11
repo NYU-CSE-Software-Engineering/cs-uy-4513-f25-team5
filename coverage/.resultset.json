@@ -1140,7 +1140,7 @@
   },
   "Cucumber": {
     "coverage": {
-      "/home/kevin/dev/classes/swe-class/group-project/cs-uy-4513-f25-team5/app/channels/application_cable/channel.rb": {
+      "/Users/terryli/Desktop/2025 Fall/CS 4513/cs-uy-4513-f25-team5/app/channels/application_cable/channel.rb": {
         "lines": [
           1,
           1,
@@ -1148,7 +1148,7 @@
           null
         ]
       },
-      "/home/kevin/dev/classes/swe-class/group-project/cs-uy-4513-f25-team5/app/channels/application_cable/connection.rb": {
+      "/Users/terryli/Desktop/2025 Fall/CS 4513/cs-uy-4513-f25-team5/app/channels/application_cable/connection.rb": {
         "lines": [
           1,
           1,
@@ -1156,7 +1156,7 @@
           null
         ]
       },
-      "/home/kevin/dev/classes/swe-class/group-project/cs-uy-4513-f25-team5/app/controllers/application_controller.rb": {
+      "/Users/terryli/Desktop/2025 Fall/CS 4513/cs-uy-4513-f25-team5/app/controllers/application_controller.rb": {
         "lines": [
           1,
           1,
@@ -1181,7 +1181,7 @@
           null
         ]
       },
-      "/home/kevin/dev/classes/swe-class/group-project/cs-uy-4513-f25-team5/app/controllers/conversations_controller.rb": {
+      "/Users/terryli/Desktop/2025 Fall/CS 4513/cs-uy-4513-f25-team5/app/controllers/conversations_controller.rb": {
         "lines": [
           1,
           1,
@@ -1305,7 +1305,7 @@
           null
         ]
       },
-      "/home/kevin/dev/classes/swe-class/group-project/cs-uy-4513-f25-team5/app/controllers/dashboards_controller.rb": {
+      "/Users/terryli/Desktop/2025 Fall/CS 4513/cs-uy-4513-f25-team5/app/controllers/dashboards_controller.rb": {
         "lines": [
           1,
           1,
@@ -1316,7 +1316,7 @@
           null
         ]
       },
-      "/home/kevin/dev/classes/swe-class/group-project/cs-uy-4513-f25-team5/app/controllers/listings_controller.rb": {
+      "/Users/terryli/Desktop/2025 Fall/CS 4513/cs-uy-4513-f25-team5/app/controllers/listings_controller.rb": {
         "lines": [
           1,
           1,
@@ -1406,7 +1406,7 @@
           null
         ]
       },
-      "/home/kevin/dev/classes/swe-class/group-project/cs-uy-4513-f25-team5/app/controllers/matches_controller.rb": {
+      "/Users/terryli/Desktop/2025 Fall/CS 4513/cs-uy-4513-f25-team5/app/controllers/matches_controller.rb": {
         "lines": [
           1,
           1,
@@ -1458,7 +1458,7 @@
           null
         ]
       },
-      "/home/kevin/dev/classes/swe-class/group-project/cs-uy-4513-f25-team5/app/controllers/messages_controller.rb": {
+      "/Users/terryli/Desktop/2025 Fall/CS 4513/cs-uy-4513-f25-team5/app/controllers/messages_controller.rb": {
         "lines": [
           1,
           1,
@@ -1507,7 +1507,7 @@
           null
         ]
       },
-      "/home/kevin/dev/classes/swe-class/group-project/cs-uy-4513-f25-team5/app/controllers/pages_controller.rb": {
+      "/Users/terryli/Desktop/2025 Fall/CS 4513/cs-uy-4513-f25-team5/app/controllers/pages_controller.rb": {
         "lines": [
           1,
           null,
@@ -1561,7 +1561,7 @@
           null
         ]
       },
-      "/home/kevin/dev/classes/swe-class/group-project/cs-uy-4513-f25-team5/app/controllers/profiles_controller.rb": {
+      "/Users/terryli/Desktop/2025 Fall/CS 4513/cs-uy-4513-f25-team5/app/controllers/profiles_controller.rb": {
         "lines": [
           1,
           null,
@@ -1608,6 +1608,9 @@
           null,
           1,
           4,
+          4,
+          null,
+          1,
           null,
           null,
           1,
@@ -1628,7 +1631,7 @@
           null
         ]
       },
-      "/home/kevin/dev/classes/swe-class/group-project/cs-uy-4513-f25-team5/app/controllers/reports_controller.rb": {
+      "/Users/terryli/Desktop/2025 Fall/CS 4513/cs-uy-4513-f25-team5/app/controllers/reports_controller.rb": {
         "lines": [
           1,
           1,
@@ -1655,7 +1658,7 @@
           null
         ]
       },
-      "/home/kevin/dev/classes/swe-class/group-project/cs-uy-4513-f25-team5/app/controllers/sessions_controller.rb": {
+      "/Users/terryli/Desktop/2025 Fall/CS 4513/cs-uy-4513-f25-team5/app/controllers/sessions_controller.rb": {
         "lines": [
           1,
           null,
@@ -1691,7 +1694,7 @@
           null
         ]
       },
-      "/home/kevin/dev/classes/swe-class/group-project/cs-uy-4513-f25-team5/app/controllers/users_controller.rb": {
+      "/Users/terryli/Desktop/2025 Fall/CS 4513/cs-uy-4513-f25-team5/app/controllers/users_controller.rb": {
         "lines": [
           1,
           null,
@@ -1726,7 +1729,7 @@
           null
         ]
       },
-      "/home/kevin/dev/classes/swe-class/group-project/cs-uy-4513-f25-team5/app/controllers/verification_requests_controller.rb": {
+      "/Users/terryli/Desktop/2025 Fall/CS 4513/cs-uy-4513-f25-team5/app/controllers/verification_requests_controller.rb": {
         "lines": [
           1,
           1,
@@ -1749,7 +1752,7 @@
           null
         ]
       },
-      "/home/kevin/dev/classes/swe-class/group-project/cs-uy-4513-f25-team5/app/controllers/admin/reports_controller.rb": {
+      "/Users/terryli/Desktop/2025 Fall/CS 4513/cs-uy-4513-f25-team5/app/controllers/admin/reports_controller.rb": {
         "lines": [
           1,
           1,
@@ -1766,7 +1769,7 @@
           null
         ]
       },
-      "/home/kevin/dev/classes/swe-class/group-project/cs-uy-4513-f25-team5/app/jobs/application_job.rb": {
+      "/Users/terryli/Desktop/2025 Fall/CS 4513/cs-uy-4513-f25-team5/app/jobs/application_job.rb": {
         "lines": [
           1,
           null,
@@ -1777,7 +1780,7 @@
           null
         ]
       },
-      "/home/kevin/dev/classes/swe-class/group-project/cs-uy-4513-f25-team5/app/mailers/application_mailer.rb": {
+      "/Users/terryli/Desktop/2025 Fall/CS 4513/cs-uy-4513-f25-team5/app/mailers/application_mailer.rb": {
         "lines": [
           1,
           1,
@@ -1785,7 +1788,7 @@
           null
         ]
       },
-      "/home/kevin/dev/classes/swe-class/group-project/cs-uy-4513-f25-team5/app/models/active_match.rb": {
+      "/Users/terryli/Desktop/2025 Fall/CS 4513/cs-uy-4513-f25-team5/app/models/active_match.rb": {
         "lines": [
           1,
           1,
@@ -1796,14 +1799,14 @@
           null
         ]
       },
-      "/home/kevin/dev/classes/swe-class/group-project/cs-uy-4513-f25-team5/app/models/application_record.rb": {
+      "/Users/terryli/Desktop/2025 Fall/CS 4513/cs-uy-4513-f25-team5/app/models/application_record.rb": {
         "lines": [
           1,
           1,
           null
         ]
       },
-      "/home/kevin/dev/classes/swe-class/group-project/cs-uy-4513-f25-team5/app/models/avatar.rb": {
+      "/Users/terryli/Desktop/2025 Fall/CS 4513/cs-uy-4513-f25-team5/app/models/avatar.rb": {
         "lines": [
           1,
           1,
@@ -1816,7 +1819,7 @@
           null
         ]
       },
-      "/home/kevin/dev/classes/swe-class/group-project/cs-uy-4513-f25-team5/app/models/conversation.rb": {
+      "/Users/terryli/Desktop/2025 Fall/CS 4513/cs-uy-4513-f25-team5/app/models/conversation.rb": {
         "lines": [
           1,
           1,
@@ -1862,7 +1865,7 @@
           null
         ]
       },
-      "/home/kevin/dev/classes/swe-class/group-project/cs-uy-4513-f25-team5/app/models/listing.rb": {
+      "/Users/terryli/Desktop/2025 Fall/CS 4513/cs-uy-4513-f25-team5/app/models/listing.rb": {
         "lines": [
           1,
           1,
@@ -1977,7 +1980,7 @@
           null
         ]
       },
-      "/home/kevin/dev/classes/swe-class/group-project/cs-uy-4513-f25-team5/app/models/match.rb": {
+      "/Users/terryli/Desktop/2025 Fall/CS 4513/cs-uy-4513-f25-team5/app/models/match.rb": {
         "lines": [
           1,
           1,
@@ -2047,7 +2050,7 @@
           null
         ]
       },
-      "/home/kevin/dev/classes/swe-class/group-project/cs-uy-4513-f25-team5/app/models/message.rb": {
+      "/Users/terryli/Desktop/2025 Fall/CS 4513/cs-uy-4513-f25-team5/app/models/message.rb": {
         "lines": [
           1,
           1,
@@ -2084,7 +2087,7 @@
           null
         ]
       },
-      "/home/kevin/dev/classes/swe-class/group-project/cs-uy-4513-f25-team5/app/models/report.rb": {
+      "/Users/terryli/Desktop/2025 Fall/CS 4513/cs-uy-4513-f25-team5/app/models/report.rb": {
         "lines": [
           1,
           1,
@@ -2125,7 +2128,7 @@
           null
         ]
       },
-      "/home/kevin/dev/classes/swe-class/group-project/cs-uy-4513-f25-team5/app/models/user.rb": {
+      "/Users/terryli/Desktop/2025 Fall/CS 4513/cs-uy-4513-f25-team5/app/models/user.rb": {
         "lines": [
           1,
           1,
@@ -2140,6 +2143,7 @@
           null,
           1,
           null,
+          1,
           1,
           1,
           null,
@@ -2186,6 +2190,16 @@
           null,
           null,
           1,
+          177,
+          null,
+          45,
+          44,
+          null,
+          1,
+          null,
+          null,
+          null,
+          1,
           0,
           null,
           null,
@@ -2199,7 +2213,7 @@
           null
         ]
       },
-      "/home/kevin/dev/classes/swe-class/group-project/cs-uy-4513-f25-team5/app/services/matching_service.rb": {
+      "/Users/terryli/Desktop/2025 Fall/CS 4513/cs-uy-4513-f25-team5/app/services/matching_service.rb": {
         "lines": [
           null,
           null,
@@ -2275,6 +2289,6 @@
         ]
       }
     },
-    "timestamp": 1765421194
+    "timestamp": 1765423553
   }
 }
