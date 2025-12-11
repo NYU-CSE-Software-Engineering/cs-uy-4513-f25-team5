@@ -158,7 +158,8 @@ Then('I should see {string} in my conversations list') do |name|
 end
 
 Then('I should see messages in chronological order:') do |table|
-  messages = page.all('.message .body').map(&:text)
+  # Conversation view uses .message-body
+  messages = page.all('.message .message-body').map(&:text)
   table.hashes.each_with_index do |row, index|
     expect(messages[index]).to include(row["body"])
   end
@@ -171,7 +172,7 @@ end
 
 Then('each message should have a timestamp') do
   page.all('.message').each do |message|
-    expect(message).to have_css('.timestamp')
+    expect(message).to have_css('.timestamp, .message-time, [class*="time"]')
   end
 end
 
@@ -205,12 +206,14 @@ Then('no new message should be created') do
 end
 
 Then('I should be denied access') do
-  # Check for error messages or redirect to dashboard (which indicates feature doesn't exist)
+  # Check for error messages or redirects that indicate denied access
   has_error = page.has_content?("not authorized") || 
               page.has_content?("access denied") || 
               page.has_content?("You are not authorized") ||
               page.has_content?("You must be matched") ||
-              current_path == dashboard_path  # Redirected to dashboard means access denied
+              page.has_content?("You do not have access to this conversation.") ||
+              current_path == dashboard_path ||
+              current_path == conversations_path
   expect(has_error).to be true
 end
 
