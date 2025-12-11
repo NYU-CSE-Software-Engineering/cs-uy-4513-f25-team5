@@ -1,10 +1,50 @@
-<h1>All Reports</h1>
+<% content_for :title, "Reports" %>
+<% content_for :body_class, "h-screen bg-black text-white font-syne antialiased overflow-hidden" %>
+<% content_for :container_class, "h-screen flex flex-col" %>
+<% content_for :main_class, "flex-1 pt-24 pb-4 px-6 overflow-y-auto" %>
 
-<% @reports.each do |report| %>
-  <div class="report-row">
-    <p>Reporter: <%= report.reporter.email %></p>
-    <p>Reported User: <%= report.reported_user.email %></p>
-    <p>Type: <%= report.report_type %></p>
-    <p>Description: <%= report.description %></p>
+<div class="mb-12 opacity-0 animate-fadeIn">
+  <h1 class="text-4xl md:text-5xl font-bold tracking-tight mb-4">All Reports</h1>
+  <p class="text-xl text-gray-400">
+    View all user reports submitted through the platform
+  </p>
+</div>
+
+<% if @reports.any? %>
+  <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <% @reports.each_with_index do |report, index| %>
+      <div class="glass-card rounded-2xl p-6 opacity-0 animate-fadeIn" style="animation-delay: <%= index * 0.1 %>s;">
+        <!-- Reporter -->
+        <p class="text-gray-400 text-sm mb-1">Reporter:</p>
+        <p class="text-white font-semibold mb-3"><%= report.reporter.email %></p>
+
+        <!-- Reported User -->
+        <p class="text-gray-400 text-sm mb-1">Reported User:</p>
+        <p class="text-white font-semibold mb-3"><%= report.reported_user.email %></p>
+
+        <!-- Report Type -->
+        <p class="text-gray-400 text-sm mb-1">Type:</p>
+        <p class="text-white font-semibold mb-3"><%= report.report_type %></p>
+
+        <!-- Description -->
+        <% if report.description.present? %>
+          <p class="text-gray-500 text-sm line-clamp-3"><%= report.description %></p>
+        <% else %>
+          <p class="text-gray-500 text-sm italic">No description provided.</p>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <!-- Empty State -->
+  <div class="glass-card rounded-2xl p-12 text-center opacity-0 animate-fadeIn">
+    <div class="w-16 h-16 mx-auto mb-6 rounded-full bg-white/5 flex items-center justify-center">
+      <!-- Exclamation mark icon -->
+      <svg class="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M12 2a10 10 0 110 20 10 10 0 010-20z"/>
+      </svg>
+    </div>
+    <h3 class="text-xl font-semibold text-white mb-2">No reports yet</h3>
+    <p class="text-gray-400 mb-6">Reports will appear here once users submit them</p>
   </div>
 <% end %>

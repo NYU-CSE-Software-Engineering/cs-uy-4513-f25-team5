@@ -8,7 +8,7 @@ class Report < ApplicationRecord
 
   validates :report_type, presence: true, inclusion: { in: VALID_REPORT_TYPES }
   validates :reporter, presence: true
-  validates :reported_username, presence: true
+  validates :reported_username, presence: { message: "can't be blank" }
 
   before_validation :set_reported_user
   validate :reported_user_exists
@@ -25,13 +25,13 @@ class Report < ApplicationRecord
 
   def reported_user_exists
     if reported_username.present? && reported_user.nil?
-      errors.add(:reported_username, "User does not exist")
+      errors.add(:base, "User does not exist")
     end
   end
 
   def cannot_report_self
     if reporter.present? && reported_user.present? && reporter.id == reported_user.id
-      errors.add(:reported_username, "Cannot report yourself")
+      errors.add(:base, "You cannot report yourself")
     end
   end
 end
