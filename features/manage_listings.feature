@@ -33,3 +33,9 @@ Feature: Manage existing listings
     Given another user has a listing titled "Luxury Loft Midtown"
     When I visit the edit page for "Luxury Loft Midtown"
     Then I should see an authorization error message
+
+  Scenario: User views only their own listings on the My Listings page
+    Given another user has a listing titled "Luxury Loft Midtown"
+    When I visit my listings page
+    Then I should see "Cozy Studio Apartment" on my listings page
+    And I should not see "Luxury Loft Midtown" on my listings page
