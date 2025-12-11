@@ -14,6 +14,7 @@ class User < ApplicationRecord
   ROLES = %w[admin member].freeze
 
   before_validation :set_default_role
+  before_validation :set_default_display_name, on: :create
   validates :role, inclusion: { in: ROLES }
 
   validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
@@ -82,6 +83,16 @@ class User < ApplicationRecord
 
   def set_default_role
     self.role ||= 'member'
+  end
+
+  def set_default_display_name
+    return if display_name.present?
+
+    if email.present? && email.include?('@')
+      self.display_name = email.to_s.split('@').first.presence || 'User'
+    else
+      self.display_name = 'User'
+    end
   end
 
   def all_conversations

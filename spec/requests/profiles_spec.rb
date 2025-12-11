@@ -80,6 +80,35 @@ RSpec.describe 'Profiles', type: :request do
       expect(user.avatar.image_base64).to be_present
     end
 
+    it 'replaces an existing avatar when a new file is uploaded' do
+      user.create_avatar!(image_base64: 'old-data', filename: 'old.png')
+
+      new_file = fixture_file_upload(
+        Rails.root.join('features', 'screenshots', 'user_profile_management_1.png'),
+        'image/png'
+      )
+
+      patch profile_path, params: valid_params.deep_merge(user: { avatar: new_file })
+
+      expect(response).to redirect_to(profile_path)
+      user.reload
+      expect(user.avatar).to be_present
+      expect(user.avatar.filename).to eq('user_profile_management_1.png')
+      expect(user.avatar.image_base64).not_to eq('old-data')
+    end
+
+    it 'keeps the existing avatar when updating profile without a new upload' do
+      user.create_avatar!(image_base64: 'existing', filename: 'existing.png')
+
+      patch profile_path, params: valid_params
+
+      expect(response).to redirect_to(profile_path)
+      user.reload
+      expect(user.avatar).to be_present
+      expect(user.avatar.filename).to eq('existing.png')
+      expect(user.avatar.image_base64).to eq('existing')
+    end
+
     it 'removes the avatar when requested' do
       user.create_avatar!(image_base64: 'stub', filename: 'old.png')
 

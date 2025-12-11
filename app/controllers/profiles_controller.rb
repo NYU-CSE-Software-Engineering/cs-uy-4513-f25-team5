@@ -51,7 +51,10 @@ class ProfilesController < ApplicationController
   end
 
   def avatar_upload
-    params.dig(:user, :avatar)
+    file = params.dig(:user, :avatar)
+    return nil unless file.respond_to?(:size) && file.size.positive?
+
+    file
   end
 
   def attach_avatar(file)

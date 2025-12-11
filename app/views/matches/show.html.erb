@@ -7,7 +7,15 @@
 
   <div class="match-details space-y-6">
     <div class="glass-card rounded-2xl p-8">
-      <h2 class="text-3xl font-semibold text-white mb-6"><%= @matched_user.display_name %></h2>
+      <h2 class="text-3xl font-semibold text-white mb-4"><%= @matched_user.display_name %></h2>
+
+      <% if @match&.compatibility_score.present? %>
+        <div class="compatibility-score bg-white/5 border border-white/10 rounded-xl p-4 mb-6">
+          <p class="text-[#FFFC00] font-semibold text-lg">
+            Compatibility: <%= @match.compatibility_score %>%
+          </p>
+        </div>
+      <% end %>
       
       <div class="profile-information space-y-4 mb-8">
         <h3 class="text-xl font-semibold mb-4 text-gray-200">Profile Information</h3>

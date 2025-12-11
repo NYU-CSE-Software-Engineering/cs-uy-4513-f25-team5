@@ -35,6 +35,8 @@ module CsUy4513F25Team5
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+    config.time_zone = "America/New_York"
+    config.active_record.default_timezone = :utc
 
     # Enable full-stack Rails so views, cookies, sessions, and flashes work for BDD flows.
     config.api_only = false

@@ -29,7 +29,7 @@ class Listing < ApplicationRecord
     scope = all
 
     city = filters[:city]
-    scope = scope.where('LOWER(city) = ?', city.downcase) if city.present?
+    scope = scope.where("LOWER(city) LIKE ?", "%#{city}%") if city.present?
 
     min_price = filters[:min_price]
     max_price = filters[:max_price]

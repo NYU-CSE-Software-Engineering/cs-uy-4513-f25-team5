@@ -7,6 +7,8 @@
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const avatarInput = document.querySelector('#user_avatar');
+    const avatarPreview = document.querySelector('#avatar-preview');
+    const avatarPlaceholder = document.querySelector('#avatar-placeholder');
 
     if (!avatarInput) return;
 
@@ -33,6 +35,16 @@
           const offsetY = (128 - height) / 2;
 
           ctx.drawImage(image, offsetX, offsetY, width, height);
+
+          // Show preview immediately using the resized image
+          const previewUrl = canvas.toDataURL('image/png');
+          if (avatarPreview) {
+            avatarPreview.src = previewUrl;
+            avatarPreview.classList.remove('hidden');
+          }
+          if (avatarPlaceholder) {
+            avatarPlaceholder.classList.add('hidden');
+          }
 
           canvas.toBlob(blob => {
             if (!blob) return;
@@ -85,16 +97,18 @@
     <!-- Left: Avatar Section -->
     <div class="rounded-2xl p-6 opacity-0 animate-fadeIn flex flex-col items-center justify-center text-center h-full bg-white/[0.08] backdrop-blur-sm border border-white/[0.08]" style="animation-delay: 0.1s;">
       <div class="mb-4">
-        <% if @user.avatar.present? %>
-          <img src="<%= @user.avatar.data_uri %>" alt="Profile picture" 
-               class="w-32 h-32 rounded-full object-cover border-2 border-white/10" />
-        <% else %>
-          <div class="w-32 h-32 rounded-full bg-white/5 border-2 border-white/10 flex items-center justify-center" data-testid="profile-picture-placeholder">
-            <svg class="w-12 h-12 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-            </svg>
-          </div>
-        <% end %>
+        <img id="avatar-preview"
+             src="<%= @user.avatar&.data_uri %>"
+             alt="Profile picture"
+             class="w-32 h-32 rounded-full object-cover border-2 border-white/10 <%= 'hidden' unless @user.avatar.present? %>" />
+
+        <div id="avatar-placeholder"
+             class="w-32 h-32 rounded-full bg-white/5 border-2 border-white/10 flex items-center justify-center <%= 'hidden' if @user.avatar.present? %>"
+             data-testid="profile-picture-placeholder">
+          <svg class="w-12 h-12 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+          </svg>
+        </div>
       </div>
       
       <div class="flex flex-col items-center gap-2">
@@ -110,12 +124,16 @@
         
         <!-- Remove button with delete icon -->
         <% if @user.avatar.present? %>
-          <%= button_to profile_path, method: :patch, 
-              params: { remove_avatar: '1' },
-              form: { data: { turbo: false } },
-              class: "px-4 py-2 rounded-full flex items-center gap-2 hover:opacity-80 transition-opacity duration-200",
-              style: "background-color: oklch(75% 0.183 55.934);",
-              title: "Remove photo" do %>
+          <%= button_tag type: :submit,
+                         name: 'remove_avatar',
+                         value: '1',
+                         formaction: profile_path,
+                         formmethod: :patch,
+                         formnovalidate: true,
+                         data: { turbo: false },
+                         class: "px-4 py-2 rounded-full flex items-center gap-2 hover:opacity-80 transition-opacity duration-200",
+                         style: "background-color: oklch(75% 0.183 55.934);",
+                         title: "Remove photo" do %>
             <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
             </svg>

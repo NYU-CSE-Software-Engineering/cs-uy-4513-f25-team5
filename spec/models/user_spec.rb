@@ -24,6 +24,36 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe 'display name defaults' do
+    it 'defaults display_name from email on create' do
+      user = described_class.create!(email: 'newuser@example.com', password: 'password123')
+
+      expect(user.display_name).to eq('newuser')
+    end
+
+    it 'does not override an existing display_name' do
+      user = described_class.create!(
+        email: 'custom@example.com',
+        password: 'password123',
+        display_name: 'Custom Name'
+      )
+
+      expect(user.display_name).to eq('Custom Name')
+    end
+
+    it 'handles blank or malformed emails without raising and falls back to User' do
+      user = described_class.new(email: '', password: 'password123')
+
+      expect { user.valid? }.not_to raise_error
+      expect(user.display_name).to eq('User')
+
+      malformed = described_class.new(email: 'invalid-email', password: 'password123')
+
+      expect { malformed.valid? }.not_to raise_error
+      expect(malformed.display_name).to eq('User')
+    end
+  end
+
   describe 'associations' do
     it 'destroys associated listings when the user is destroyed' do
       user = described_class.create!(email: 'owner@example.com', password: 'password123')

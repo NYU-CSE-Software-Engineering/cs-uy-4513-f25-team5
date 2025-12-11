@@ -7,7 +7,6 @@ capybara-*.html
 /db/*.sqlite3-shm
 /db/*.sqlite3-wal
 /public/system
-/coverage/
 /spec/tmp
 *.orig
 rerun.txt
@@ -91,6 +90,9 @@ yarn-debug.log*
 .DS_Store
 temp/
 course/
+
+# Ignore coverage report
+coverage/
 
 # ** block LLM files **
 **/AGENTS.md

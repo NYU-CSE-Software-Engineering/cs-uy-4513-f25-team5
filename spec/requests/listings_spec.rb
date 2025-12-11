@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'stringio'
 
 RSpec.describe "Listings", type: :request do
   let(:user) do
@@ -23,18 +24,23 @@ RSpec.describe "Listings", type: :request do
     allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
   end
 
-
-  let(:other_listing) do
-    Listing.create!(
-      title: 'Luxury Loft Midtown',
-      description: 'High-end apartment',
-      price: 2500,
-      city: 'New York',
-      status: Listing::STATUS_PENDING,
-      owner_email: other_user.email,
-      user: other_user
+  def attach_image_to(listing, filename: 'photo.png', content_type: 'image/png', content: 'image-data')
+    blob = ActiveStorage::Blob.create_and_upload!(
+      io: StringIO.new(content),
+      filename: filename,
+      content_type: content_type
     )
+    listing.images.attach(blob)
+    listing.images.last
   end
+
+  def build_upload(content:, content_type:, filename: 'upload.png')
+    file = Tempfile.new(['upload', File.extname(filename)])
+    file.write(content)
+    file.rewind
+    Rack::Test::UploadedFile.new(file.path, content_type)
+  end
+
 
   # ========================================
   # CREATE LISTING FEATURE
@@ -302,6 +308,86 @@ RSpec.describe "Listings", type: :request do
       end
     end
 
+    context "when adding additional images" do
+      it "appends new images without removing existing ones" do
+        existing_image = attach_image_to(listing, filename: 'existing.png')
+        new_image = fixture_file_upload(
+          Rails.root.join('features', 'screenshots', 'user_profile_management_1.png'),
+          'image/png'
+        )
+
+        patch listing_path(listing), params: { listing: { images: [new_image] } }
+
+        listing.reload
+        filenames = listing.images.map { |img| img.filename.to_s }
+
+        expect(filenames).to include(existing_image.filename.to_s)
+        expect(filenames).to include(new_image.original_filename)
+        expect(listing.images.count).to eq(2)
+      end
+    end
+
+    context "when already at the image limit" do
+      before do
+        Listing::MAX_IMAGES.times do |idx|
+          attach_image_to(listing, filename: "img-#{idx}.png")
+        end
+      end
+
+      it "rejects new images and does not persist attachments" do
+        extra_image = build_upload(content: 'extra', content_type: 'image/png', filename: 'extra.png')
+
+        expect {
+          patch listing_path(listing), params: { listing: { images: [extra_image] } }
+        }.not_to change { listing.reload.images.count }
+
+        expect(response).to have_http_status(:unprocessable_content)
+        expect(response.body).to include("cannot exceed #{Listing::MAX_IMAGES} images")
+      end
+    end
+
+    context "when adding invalid image types" do
+      it "does not persist invalid attachments" do
+        bad_image = build_upload(content: 'text-data', content_type: 'text/plain', filename: 'bad.txt')
+
+        expect {
+          patch listing_path(listing), params: { listing: { images: [bad_image] } }
+        }.not_to change { listing.reload.images.count }
+
+        expect(response).to have_http_status(:unprocessable_content)
+        expect(response.body).to include("must be JPEG, PNG, WebP, or GIF")
+      end
+    end
+
+    context "when adding oversized images" do
+      it "rejects images exceeding size limit" do
+        large_content = 'a' * (Listing::MAX_IMAGE_SIZE + 1)
+        large_image = build_upload(content: large_content, content_type: 'image/png', filename: 'large.png')
+
+        expect {
+          patch listing_path(listing), params: { listing: { images: [large_image] } }
+        }.not_to change { listing.reload.images.count }
+
+        expect(response).to have_http_status(:unprocessable_content)
+        expect(response.body).to include("must be less than #{Listing::MAX_IMAGE_SIZE / 1.megabyte}MB each")
+      end
+    end
+
+    context "when other validations fail with new images" do
+      it "rolls back image attachments on validation errors" do
+        existing_image = attach_image_to(listing, filename: 'existing.png')
+        new_image = build_upload(content: 'new', content_type: 'image/png', filename: 'new.png')
+
+        expect {
+          patch listing_path(listing), params: { listing: { title: '', images: [new_image] } }
+        }.not_to change { listing.reload.images.count }
+
+        expect(listing.images.first.filename.to_s).to eq(existing_image.filename.to_s)
+        expect(response).to have_http_status(:unprocessable_content)
+        expect(response.body).to include("can&#39;t be blank")
+      end
+    end
+
     context "with invalid parameters (blank title)" do
       let(:invalid_params) do
         {
@@ -380,6 +466,16 @@ RSpec.describe "Listings", type: :request do
 
   end
 
+  describe "GET /listings/:id/edit as non-owner" do
+    it "redirects unauthorized users" do
+      get edit_listing_path(other_listing)
+
+      expect(response).to redirect_to(listings_path)
+      follow_redirect!
+      expect(response.body).to include('You are not authorized to perform this action.')
+    end
+  end
+
   describe "DELETE /listings/:id" do
     context "when deleting own listing" do
       it "deletes the listing from the database" do
@@ -427,6 +523,86 @@ RSpec.describe "Listings", type: :request do
       get listings_path
       
       expect(response.body).not_to include(deleted_title)
+    end
+  end
+
+  describe "GET /users/:id/listings" do
+    it "shows only listings for the specified user" do
+      listing
+      other_listing
+
+      get user_listings_path(user)
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include(listing.title)
+      expect(response.body).not_to include(other_listing.title)
+    end
+  end
+
+  describe "GET /listings/search.json" do
+    it "returns filtered listings as JSON" do
+      listing
+      other_listing
+      Listing.create!(
+        title: 'Outside city',
+        description: 'Should not be returned',
+        price: 500,
+        city: 'Boston',
+        status: Listing::STATUS_PENDING,
+        owner_email: other_user.email,
+        user: other_user
+      )
+
+      get search_listings_path, params: { city: 'New York' }, as: :json
+
+      expect(response).to have_http_status(:ok)
+      body = JSON.parse(response.body)
+      cities = body.map { |row| row['city'] }
+      expect(cities).to all(match(/new york/i))
+      expect(cities).not_to include('Boston')
+    end
+  end
+
+  describe "DELETE /listings/:id/images/:image_id" do
+    let!(:image) { attach_image_to(listing) }
+
+    it "removes the image and clears the primary pointer" do
+      listing.update!(primary_image_id: image.id)
+
+      expect {
+        delete remove_image_listing_path(listing, image_id: image.id)
+      }.to change { listing.reload.images.attached? }.from(true).to(false)
+
+      expect(response).to redirect_to(edit_listing_path(listing))
+      expect(flash[:notice]).to eq('Image was successfully removed.')
+      expect(listing.reload.primary_image_id).to be_nil
+    end
+
+    it "gracefully handles missing images" do
+      delete remove_image_listing_path(listing, image_id: 'missing')
+
+      expect(response).to redirect_to(edit_listing_path(listing))
+      follow_redirect!
+      expect(response.body).to include('Image not found.')
+    end
+  end
+
+  describe "PATCH /listings/:id/images/:image_id/set_primary" do
+    let!(:image) { attach_image_to(listing) }
+
+    it "sets the primary image" do
+      patch set_primary_image_listing_path(listing, image_id: image.id)
+
+      expect(response).to redirect_to(edit_listing_path(listing))
+      expect(listing.reload.primary_image_id).to eq(image.id.to_s)
+    end
+
+    it "handles missing images" do
+      patch set_primary_image_listing_path(listing, image_id: 'missing')
+
+      expect(response).to redirect_to(edit_listing_path(listing))
+      follow_redirect!
+      expect(response.body).to include('Image not found.')
     end
   end
 end

@@ -1,11 +1,6 @@
 <div class="conversation-container">
   <% other_user = @conversation.participant_one_id == current_user.id ? @conversation.participant_two : @conversation.participant_one %>
   
-  <% flash.each do |type, msg| %>
-  <div class="flash-message <%= type %>">
-    <%= msg %>
-  </div>
-<% end %>
 
 
 
