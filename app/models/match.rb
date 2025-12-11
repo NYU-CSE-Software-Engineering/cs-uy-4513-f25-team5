@@ -12,7 +12,7 @@ class Match < ApplicationRecord
   before_validation :calculate_compatibility_score, if: -> { compatibility_score.nil? }
 
   def self.calculate_compatibility_score(user1, user2)
-    score = 40.0 # Base score (reduced to accommodate new factor)
+    score = 40.0 # Base score
 
     # Budget compatibility (25% weight)
     if user1.budget.present? && user2.budget.present?
@@ -24,10 +24,10 @@ class Match < ApplicationRecord
       end
     end
 
-    # Location compatibility (20% weight)
+    # Location compatibility (15% weight)
     if user1.preferred_location.present? && user2.preferred_location.present?
       if user1.preferred_location.downcase == user2.preferred_location.downcase
-        score += 20
+        score += 15
       end
     end
 
@@ -46,16 +46,14 @@ class Match < ApplicationRecord
     end
 
     # Common liked listings compatibility (15% weight)
-    user1_liked_ids = user1.liked_listings.pluck(:listing_id)
-    user2_liked_ids = user2.liked_listings.pluck(:listing_id)
-    
-    if user1_liked_ids.any? && user2_liked_ids.any?
-      common_likes = (user1_liked_ids & user2_liked_ids).size
-      total_likes = (user1_liked_ids + user2_liked_ids).uniq.size
-      
-      if total_likes > 0
-        common_ratio = common_likes.to_f / total_likes
-        score += common_ratio * 15
+    user1_liked = user1.liked_listings.pluck(:listing_id)
+    user2_liked = user2.liked_listings.pluck(:listing_id)
+    if user1_liked.any? && user2_liked.any?
+      common_listings = (user1_liked & user2_liked).size
+      total_unique_listings = (user1_liked | user2_liked).size
+      if total_unique_listings > 0
+        listing_similarity = common_listings.to_f / total_unique_listings
+        score += listing_similarity * 15
       end
     end
 

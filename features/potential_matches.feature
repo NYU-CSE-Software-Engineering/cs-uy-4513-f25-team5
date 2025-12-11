@@ -29,13 +29,6 @@ Feature: Viewing Potential Matches
     Then I should see "No matches found" message
     And I should see suggestions to update my profile
 
-  Scenario: Like a potential match
-    Given there are potential matches available
-    When I visit the matches page
-    And I click the "Like" button on a match
-    Then I should see a confirmation message
-    And the match should be saved to my favorites
-
   Scenario: Access matches without login
     Given I am not logged in
     When I try to visit the matches page

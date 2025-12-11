@@ -1,5 +1,5 @@
 class MatchesController < ApplicationController
-  before_action :require_login, only: [:index, :show, :like, :generate]
+  before_action :require_login, only: [:index, :show, :generate, :liked_by_matches]
 
   def index
     @matches = Match.potential_for(current_user).includes(:matched_user)
@@ -29,37 +29,22 @@ class MatchesController < ApplicationController
     end
     
     @matched_user = @match.matched_user
+    # Get listings liked by this matched user
+    @liked_listings = @matched_user.liked_listings.includes(:listing).order(created_at: :desc).limit(5)
   end
 
-  def like
-    @match = Match.find(params[:id])
+  def liked_by_matches
+    # Get all users that the current user is matched with
+    matched_user_ids = Match.where(user_id: current_user.id).pluck(:matched_user_id)
     
-    unless @match.user_id == current_user.id
-      redirect_to matches_path, alert: "You can only like your own matches"
-      return
-    end
+    # Get all listings liked by those matched users
+    @liked_listings = LikedListing.where(user_id: matched_user_ids)
+                                  .includes(:listing, :user)
+                                  .order(created_at: :desc)
+                                  .page(params[:page]).per(12)
     
-    # In a real app, you might have a Favorite or LikedMatch model
-    # For now, we'll just redirect with a success message
-    redirect_to matches_path, notice: "Match saved to favorites!"
-  end
-
-  def liked_listings
-    # Get all matched users
-    matched_user_ids = current_user.matches.pluck(:matched_user_id)
-    
-    # Get listings liked by matched users with the user who liked them
-    @liked_listings = Listing.joins(:liked_listings)
-                             .where(liked_listings: { user_id: matched_user_ids })
-                             .includes(:liked_listings, :user)
-                             .distinct
-    
-    # Create a hash to store which matched users liked each listing
-    @listings_with_likers = {}
-    @liked_listings.each do |listing|
-      likers = listing.liked_by_users.where(id: matched_user_ids)
-      @listings_with_likers[listing.id] = likers
-    end
+    # Track which listings the current user has also liked
+    @current_user_liked_ids = current_user.liked_listings.pluck(:listing_id)
   end
 
 end

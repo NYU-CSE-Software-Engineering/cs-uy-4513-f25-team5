@@ -6,9 +6,8 @@ class CreateLikedListings < ActiveRecord::Migration[7.1]
 
       t.timestamps
     end
-
-    # Add unique index to prevent duplicate likes
+    
+    # Ensure a user can only like a listing once
     add_index :liked_listings, [:user_id, :listing_id], unique: true
   end
 end
-

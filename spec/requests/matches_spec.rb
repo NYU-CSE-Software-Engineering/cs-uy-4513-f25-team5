@@ -185,36 +185,5 @@ RSpec.describe "Matches", type: :request do
     end
   end
 
-  describe 'POST /matches/:id/like' do
-    let(:match) do
-      Match.create!(user: user, matched_user: matched_user1, compatibility_score: 85)
-    end
-
-    context 'when user is authenticated' do
-      it 'saves the match to favorites' do
-        post like_match_path(match)
-        expect(response).to redirect_to(matches_path)
-      end
-
-      it 'displays a confirmation message' do
-        post like_match_path(match)
-        follow_redirect!
-        expect(response.body).to include('saved to favorites')
-      end
-    end
-
-    context 'when user is not authenticated' do
-      before do
-        # Clear session to simulate not being logged in
-        post '/auth/logout' rescue nil
-        session.clear
-      end
-
-      it 'redirects to login page' do
-        post like_match_path(match)
-        expect(response).to redirect_to('/auth/login')
-      end
-    end
-  end
 end
 

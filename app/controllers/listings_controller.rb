@@ -1,6 +1,6 @@
 class ListingsController < ApplicationController
-  before_action :require_login, except: [:index, :show, :search, :explore]
-  before_action :set_listing, only: [:show, :edit, :update, :destroy, :remove_image, :set_primary_image, :like, :unlike]
+  before_action :require_login, except: [:index, :show, :search]
+  before_action :set_listing, only: [:show, :edit, :update, :destroy, :remove_image, :set_primary_image]
   before_action :authorize_user, only: [:edit, :update, :destroy, :remove_image, :set_primary_image]
 
   def index
@@ -105,35 +105,6 @@ class ListingsController < ApplicationController
       format.html { render :search }
       format.json { render json: @listings }
     end
-  end
-
-  def like
-    @listing = Listing.find(params[:id])
-    
-    if current_user.liked?(@listing)
-      redirect_to @listing, alert: 'You have already liked this listing.'
-    else
-      LikedListing.create!(user: current_user, listing: @listing)
-      redirect_to @listing, notice: 'Listing liked successfully.'
-    end
-  end
-
-  def unlike
-    @listing = Listing.find(params[:id])
-    liked_listing = LikedListing.find_by(user: current_user, listing: @listing)
-    
-    if liked_listing
-      liked_listing.destroy
-      redirect_to @listing, notice: 'Listing unliked successfully.'
-    else
-      redirect_to @listing, alert: 'You have not liked this listing.'
-    end
-  end
-
-  def explore
-    @listings = Listing.where(status: [Listing::STATUS_PUBLISHED, Listing::STATUS_VERIFIED])
-                       .order('RANDOM()')
-                       .limit(20)
   end
 
   private
