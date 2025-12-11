@@ -98,10 +98,15 @@
 
       <div>
         <%= form.label :city, "City", class: "block text-sm font-medium text-gray-300 mb-2" %>
-        <%= form.text_field :city, 
-            class: "w-full px-4 py-2.5 rounded-xl bg-gray-900 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#FFFC00]/50 focus:border-transparent transition-all duration-200",
-            placeholder: "New York" %>
-  </div>
+        <div class="relative">
+          <%= form.text_field :city, 
+              id: "city-input-new",
+              class: "w-full px-4 py-2.5 rounded-xl bg-gray-900 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#FFFC00]/50 focus:border-transparent transition-all duration-200",
+              placeholder: "New York",
+              autocomplete: "off" %>
+          <div id="city-autocomplete-new" class="absolute z-50 w-full mt-1 bg-gray-800 border border-white/10 rounded-xl shadow-lg hidden max-h-60 overflow-y-auto"></div>
+        </div>
+      </div>
 
       <div>
         <%= form.label :owner_email, "Contact Email", class: "block text-sm font-medium text-gray-300 mb-2" %>
@@ -243,4 +248,88 @@ document.addEventListener('DOMContentLoaded', function() {
     imageCount.textContent = `${selectedFiles.files.length}/${maxImages} images`;
   }
 });
+(function() {
+  const cityInput = document.getElementById('city-input-new');
+  const autocompleteDiv = document.getElementById('city-autocomplete-new');
+  let debounceTimer;
+  let selectedIndex = -1;
+  
+  if (!cityInput || !autocompleteDiv) return;
+  
+  cityInput.addEventListener('input', function(e) {
+    const query = e.target.value.trim();
+    
+    clearTimeout(debounceTimer);
+    
+    if (query.length < 2) {
+      autocompleteDiv.classList.add('hidden');
+      return;
+    }
+    
+    debounceTimer = setTimeout(() => {
+      fetch(`/cities/autocomplete?q=${encodeURIComponent(query)}`)
+        .then(response => response.json())
+        .then(cities => {
+          if (cities.length === 0) {
+            autocompleteDiv.classList.add('hidden');
+            return;
+          }
+          
+          autocompleteDiv.innerHTML = cities.map((city, index) => `
+            <div class="city-option px-4 py-2 cursor-pointer hover:bg-white/10 text-white ${index === 0 ? 'bg-white/5' : ''}" 
+                 data-city="${city.replace(/"/g, '&quot;')}" 
+                 data-index="${index}">
+              ${city}
+            </div>
+          `).join('');
+          
+          autocompleteDiv.classList.remove('hidden');
+          selectedIndex = -1;
+          
+          // Add click handlers
+          autocompleteDiv.querySelectorAll('.city-option').forEach(option => {
+            option.addEventListener('click', function() {
+              cityInput.value = this.dataset.city;
+              autocompleteDiv.classList.add('hidden');
+            });
+          });
+        })
+        .catch(() => {
+          autocompleteDiv.classList.add('hidden');
+        });
+    }, 300);
+  });
+  
+  cityInput.addEventListener('keydown', function(e) {
+    const options = autocompleteDiv.querySelectorAll('.city-option');
+    
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      selectedIndex = Math.min(selectedIndex + 1, options.length - 1);
+      updateSelection(options);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      selectedIndex = Math.max(selectedIndex - 1, -1);
+      updateSelection(options);
+    } else if (e.key === 'Enter' && selectedIndex >= 0) {
+      e.preventDefault();
+      options[selectedIndex].click();
+    } else if (e.key === 'Escape') {
+      autocompleteDiv.classList.add('hidden');
+    }
+  });
+  
+  function updateSelection(options) {
+    options.forEach((opt, idx) => {
+      opt.classList.toggle('bg-white/5', idx === selectedIndex);
+    });
+  }
+  
+  // Hide autocomplete when clicking outside
+  document.addEventListener('click', function(e) {
+    if (!cityInput.contains(e.target) && !autocompleteDiv.contains(e.target)) {
+      autocompleteDiv.classList.add('hidden');
+    }
+  });
+})();
 </script>

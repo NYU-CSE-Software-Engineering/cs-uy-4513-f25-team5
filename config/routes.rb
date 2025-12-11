@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   get '/dashboard', to: 'dashboards#show', as: :dashboard
 
   get 'users/:id/listings', to: 'listings#index', as: 'user_listings'
+  get '/cities/autocomplete', to: 'cities#autocomplete', as: :cities_autocomplete
 
   resource :profile, only: [:show, :edit, :update]
 
