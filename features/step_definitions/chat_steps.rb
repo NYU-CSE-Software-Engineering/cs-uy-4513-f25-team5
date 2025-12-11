@@ -108,16 +108,17 @@ When('I visit the conversation with {string}') do |name|
   @conversation ||= Conversation.where(participant_one_id: @me.id, participant_two_id: other.id)
                                 .or(Conversation.where(participant_one_id: other.id, participant_two_id: @me.id))
                                 .first!
-  # Conversation path doesn't exist yet - skip for now
-  visit dashboard_path
-  # TODO: Create conversation show page
+  visit conversation_path(@conversation)
 end
 
 When('I try to visit the conversation between {string} and {string}') do |name1, name2|
-  # Try to visit someone else's conversation
-  # Conversation path doesn't exist yet
-  visit dashboard_path
-  # TODO: Create conversation show page
+  # Try to visit someone else's conversation (should be denied)
+  user1 = @users[name1] || User.find_by!(name: name1)
+  user2 = @users[name2] || User.find_by!(name: name2)
+  conversation = Conversation.where(participant_one_id: user1.id, participant_two_id: user2.id)
+                             .or(Conversation.where(participant_one_id: user2.id, participant_two_id: user1.id))
+                             .first!
+  visit conversation_path(conversation)
 end
 
 When("I try to start a conversation with {string}") do |display_name|
@@ -152,103 +153,50 @@ When('I submit the report') do
 end
 
 Then('I should see {string} in my conversations list') do |name|
-  # Conversations page doesn't exist - check if we're on dashboard (feature not implemented)
-  if current_path == dashboard_path
-    # Feature not implemented - conversations would show on dashboard if it existed
-    # For now, just verify we're on a valid page
-    expect(current_path).to eq(dashboard_path)
-  else
-    expect(page).to have_content(name)
-  end
+  expect(current_path).to eq(conversations_path)
+  expect(page).to have_content(name)
 end
 
 Then('I should see messages in chronological order:') do |table|
-  # Conversation page doesn't exist - check if we're on dashboard
-  if current_path == dashboard_path
-    # Feature not implemented - messages would show if conversation page existed
-    # For now, just verify we're on a valid page
-    expect(current_path).to eq(dashboard_path)
-  else
-    messages = page.all('.message .body').map(&:text)
-    table.hashes.each_with_index do |row, index|
-      expect(messages[index]).to include(row["body"])
-    end
+  messages = page.all('.message .body').map(&:text)
+  table.hashes.each_with_index do |row, index|
+    expect(messages[index]).to include(row["body"])
   end
 end
 
 Then('the message {string} should show {string} as sender') do |message_text, sender_name|
-  # Conversation page doesn't exist - check if we're on dashboard
-  if current_path == dashboard_path
-    # Feature not implemented - messages would show sender if conversation page existed
-    expect(current_path).to eq(dashboard_path)
-  else
-    message_element = page.find('.message', text: message_text)
-    expect(message_element).to have_content(sender_name)
-  end
+  message_element = page.find('.message', text: message_text)
+  expect(message_element).to have_content(sender_name)
 end
 
 Then('each message should have a timestamp') do
-  # Conversation page doesn't exist - check if we're on dashboard
-  if current_path == dashboard_path
-    # Feature not implemented - timestamps would show if conversation page existed
-    expect(current_path).to eq(dashboard_path)
-  else
-    page.all('.message').each do |message|
-      expect(message).to have_css('.timestamp')
-    end
+  page.all('.message').each do |message|
+    expect(message).to have_css('.timestamp')
   end
 end
 
 Then('I should see a validation error') do
-  # Conversation page doesn't exist - check if we're on dashboard
-  if current_path == dashboard_path
-    # Feature not implemented - validation would show if conversation page existed
-    expect(current_path).to eq(dashboard_path)
-  else
-    has_error = page.has_content?("can't be blank") || 
-                page.has_content?("error") || 
-                page.has_css?(".error")
-    expect(has_error).to be true
-  end
+  has_error = page.has_content?("can't be blank") || 
+              page.has_content?("error") || 
+              page.has_css?(".error")
+  expect(has_error).to be true
 end
 
 Then('I should see {string} in the conversation') do |text|
-  # Conversation page doesn't exist - check if we're on dashboard
-  if current_path == dashboard_path
-    # Feature not implemented - message would show if conversation page existed
-    expect(current_path).to eq(dashboard_path)
-  else
-    expect(page).to have_content(text)
-  end
+  expect(page).to have_content(text)
 end
 
 Then('the message should have my name {string} displayed') do |name|
-  # Conversation page doesn't exist - check if we're on dashboard
-  if current_path == dashboard_path
-    # Feature not implemented - name would show if conversation page existed
-    expect(current_path).to eq(dashboard_path)
-  else
-    # Check if the last message shows the user's name
-    messages = page.all('.message, [class*="message"]')
-    expect(messages.last).to have_content(name)
-  end
-rescue
-  # Alternative: just check if name appears on page
-  expect(page).to have_content(name)
+  messages = page.all('.message, [class*="message"]')
+  expect(messages.last).to have_content(name)
 end
 
 Then('the message should have a timestamp') do
-  # Conversation page doesn't exist - check if we're on dashboard
-  if current_path == dashboard_path
-    # Feature not implemented - timestamp would show if conversation page existed
-    expect(current_path).to eq(dashboard_path)
-  else
-    # Check if there's a timestamp element
-    has_timestamp = page.has_css?('.timestamp, [class*="timestamp"], [class*="time"]') ||
-                    page.has_content?(/\d{1,2}:\d{2}/) ||
-                    page.has_content?(/\d{1,2}\/\d{1,2}\/\d{4}/)
-    expect(has_timestamp).to be true
-  end
+  # Check if there's a timestamp element or readable time text
+  has_timestamp = page.has_css?('.timestamp, [class*="timestamp"], [class*="time"]') ||
+                  page.has_content?(/\d{1,2}:\d{2}/) ||
+                  page.has_content?(/\d{1,2}\/\d{1,2}\/\d{4}/)
+  expect(has_timestamp).to be true
 end
 
 Then('no new message should be created') do
