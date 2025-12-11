@@ -1,12 +1,10 @@
 When(/I (?:create|attempt to create) a listing with:/) do |table|  
   visit new_listing_path
   data = table.rows_hash
-  
   fill_in 'Title', with: data['title'] || ''
   fill_in 'Description', with: data['description'] || ''
   fill_in 'Price', with: data['price'] || ''
-  fill_in "city-input-new", with: data["city"] || ''
-
+  fill_in 'City', with: data['city'] || ''
   click_button 'Create Listing'
 
 end

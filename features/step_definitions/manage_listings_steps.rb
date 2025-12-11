@@ -87,8 +87,13 @@ rescue
 end
 
 Then("I should not see {string} on my listings page") do |title|
-  visit listings_path
+  visit user_listings_path(@user)
   expect(page).not_to have_content(title)
+end
+
+# My Listings navigation
+When("I visit my listings page") do
+  visit user_listings_path(@user)
 end
 
 # Access Control Steps
