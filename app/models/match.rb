@@ -45,6 +45,12 @@ class Match < ApplicationRecord
       end
     end
 
+    # Housing status compatibility (10% weight)
+    if user1.housing_status.present? && user2.housing_status.present?
+      housing_score = housing_status_compatibility(user1.housing_status, user2.housing_status)
+      score += housing_score
+    end
+
     # Common liked listings compatibility (15% weight)
     user1_liked = user1.liked_listings.pluck(:listing_id)
     user2_liked = user2.liked_listings.pluck(:listing_id)
@@ -128,6 +134,41 @@ class Match < ApplicationRecord
     end
     
     false
+  end
+
+  # Helper method to calculate housing status compatibility
+  # Returns a score from 0 to 10 based on compatibility
+  def self.housing_status_compatibility(status1, status2)
+    return 0 if status1.blank? || status2.blank?
+    
+    norm1 = status1.to_s.strip
+    norm2 = status2.to_s.strip
+    
+    # Flexible matches with everything
+    return 10 if norm1 == 'Flexible' || norm2 == 'Flexible'
+    
+    # Perfect complementary matches (10 points)
+    # People looking for rooms match with people who have rooms
+    if (norm1 == 'Looking for Room' && (norm2 == 'Have Room Available' || norm2 == 'Looking for Roommate'))
+      return 10
+    end
+    if (norm2 == 'Looking for Room' && (norm1 == 'Have Room Available' || norm1 == 'Looking for Roommate'))
+      return 10
+    end
+    
+    # Moderate match (5 points)
+    # Two people looking for rooms might team up to find a place together
+    if norm1 == 'Looking for Room' && norm2 == 'Looking for Room'
+      return 5
+    end
+    
+    # Two people looking for roommates might have space for each other
+    if norm1 == 'Looking for Roommate' && norm2 == 'Looking for Roommate'
+      return 5
+    end
+    
+    # No compatibility
+    0
   end
 end
 
