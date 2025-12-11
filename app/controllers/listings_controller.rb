@@ -1,7 +1,7 @@
 class ListingsController < ApplicationController
   before_action :require_login, except: [:index, :show, :search]
-  before_action :set_listing, only: [:show, :edit, :update, :destroy]
-  before_action :authorize_user, only: [:edit, :update, :destroy]
+  before_action :set_listing, only: [:show, :edit, :update, :destroy, :remove_image, :set_primary_image]
+  before_action :authorize_user, only: [:edit, :update, :destroy, :remove_image, :set_primary_image]
 
   def index
     @filters = params.slice(:city, :min_price, :max_price, :keywords).permit!.to_h.symbolize_keys
@@ -55,6 +55,32 @@ class ListingsController < ApplicationController
   def destroy
     @listing.destroy
     redirect_to listings_path, notice: 'Listing was successfully deleted.'
+  end
+
+  def remove_image
+    image = @listing.images.find(params[:image_id])
+
+    # Clear primary pointer if the primary image is being removed
+    if @listing.primary_image_id.present? && @listing.primary_image_id.to_s == image.id.to_s
+      @listing.update(primary_image_id: nil)
+    end
+
+    image.purge
+
+    redirect_to edit_listing_path(@listing), notice: 'Image was successfully removed.'
+  rescue ActiveRecord::RecordNotFound
+    redirect_to edit_listing_path(@listing), alert: 'Image not found.'
+  end
+
+  def set_primary_image
+    image = @listing.images.find(params[:image_id])
+    @listing.set_primary_image!(image.id)
+
+    redirect_to edit_listing_path(@listing), notice: 'Primary image updated.'
+  rescue ActiveRecord::RecordNotFound
+    redirect_to edit_listing_path(@listing), alert: 'Image not found.'
+  rescue ActiveRecord::RecordInvalid => e
+    redirect_to edit_listing_path(@listing), alert: e.message
   end
 
   def search
