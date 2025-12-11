@@ -91,6 +91,9 @@ yarn-debug.log*
 temp/
 course/
 
+# Ignore coverage report
+coverage/
+
 # ** block LLM files **
 **/AGENTS.md
 **/CLAUDE.md
