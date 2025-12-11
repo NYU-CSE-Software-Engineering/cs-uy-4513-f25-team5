@@ -81,9 +81,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_08_163458) do
     t.string "status"
     t.boolean "verification_requested", default: false
     t.boolean "verified", default: false
+    t.string "primary_image_id"
     t.text "image_base64"
     t.string "filename"
-    t.string "primary_image_id"
     t.index ["user_id"], name: "index_listings_on_user_id"
   end
 
