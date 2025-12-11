@@ -60,7 +60,11 @@ class User < ApplicationRecord
   def set_default_display_name
     return if display_name.present?
 
-    self.display_name = email.to_s.split('@').first
+    if email.present? && email.include?('@')
+      self.display_name = email.to_s.split('@').first.presence || 'User'
+    else
+      self.display_name = 'User'
+    end
   end
 
   def all_conversations
