@@ -12,29 +12,29 @@ class Match < ApplicationRecord
   before_validation :calculate_compatibility_score, if: -> { compatibility_score.nil? }
 
   def self.calculate_compatibility_score(user1, user2)
-    score = 50.0 # Base score
+    score = 40.0 # Base score
 
-    # Budget compatibility (30% weight)
+    # Budget compatibility (25% weight)
     if user1.budget.present? && user2.budget.present?
       budget_diff = (user1.budget - user2.budget).abs
       budget_avg = (user1.budget + user2.budget) / 2.0
       if budget_avg > 0
         budget_similarity = 1.0 - [budget_diff / budget_avg, 1.0].min
-        score += budget_similarity * 30
+        score += budget_similarity * 25
       end
     end
 
-    # Location compatibility (20% weight)
+    # Location compatibility (15% weight)
     if user1.preferred_location.present? && user2.preferred_location.present?
       if locations_match?(user1.preferred_location, user2.preferred_location)
-        score += 20
+        score += 15
       end
     end
 
-    # Sleep schedule compatibility (20% weight)
+    # Sleep schedule compatibility (15% weight)
     if user1.sleep_schedule.present? && user2.sleep_schedule.present?
       if user1.sleep_schedule.downcase.strip == user2.sleep_schedule.downcase.strip
-        score += 20
+        score += 15
       end
     end
 
@@ -42,6 +42,18 @@ class Match < ApplicationRecord
     if user1.pets.present? && user2.pets.present?
       if pets_compatible?(user1.pets, user2.pets)
         score += 10
+      end
+    end
+
+    # Common liked listings compatibility (15% weight)
+    user1_liked = user1.liked_listings.pluck(:listing_id)
+    user2_liked = user2.liked_listings.pluck(:listing_id)
+    if user1_liked.any? && user2_liked.any?
+      common_listings = (user1_liked & user2_liked).size
+      total_unique_listings = (user1_liked | user2_liked).size
+      if total_unique_listings > 0
+        listing_similarity = common_listings.to_f / total_unique_listings
+        score += listing_similarity * 15
       end
     end
 

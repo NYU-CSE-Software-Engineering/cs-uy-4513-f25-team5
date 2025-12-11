@@ -42,8 +42,21 @@ Rails.application.routes.draw do
   resources :matches, only: [:index, :show] do
     collection do
       post :generate, to: 'matches#generate'
+      get :liked_by_matches, to: 'matches#liked_by_matches'
     end
   end
+
+  # Liked listings routes
+  resources :listings, only: [] do
+    member do
+      post :like, to: 'liked_listings#create'
+      delete :unlike, to: 'liked_listings#destroy'
+    end
+  end
+  resources :liked_listings, only: [:index]
+
+  # Explore page
+  get '/explore', to: 'explore#index', as: :explore
 
   resources :conversations, only: [:index, :show, :create] do
     member do

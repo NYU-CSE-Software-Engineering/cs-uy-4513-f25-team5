@@ -184,7 +184,8 @@ RSpec.describe "Matches", type: :request do
     end
   end
 
-  # Like feature removed per reviewer feedback to simplify UI and reduce schema complexity
+  # Like match feature removed per reviewer feedback to simplify UI and reduce schema complexity
   # Tests removed: POST /matches/:id/like
+  # Note: Liked listings feature (liking housing listings, not matches) is now available
 end
 
