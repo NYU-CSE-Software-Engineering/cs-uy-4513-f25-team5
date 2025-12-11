@@ -40,7 +40,9 @@
               </div>
               <div class="conversation-meta">
                 <% if last_message %>
-                  <span class="timestamp" data-timestamp="<%= last_message.created_at.iso8601 %>"></span>
+                  <span class="timestamp" data-timestamp="<%= last_message.created_at.iso8601 %>">
+                    <%= time_ago_in_words(last_message.created_at) %> ago
+                  </span>
                 <% end %>
               </div>
             </div>

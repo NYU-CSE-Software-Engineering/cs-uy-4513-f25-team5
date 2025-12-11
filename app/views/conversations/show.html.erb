@@ -40,7 +40,7 @@
         <div class="message <%= message.user_id == current_user.id ? 'message-sent' : 'message-received' %>" data-message-id="<%= message.id %>">
           <div class="message-header">
             <span class="message-sender">
-              <%= message.user_id == current_user.id ? 'me' : message.user.display_name %>
+              <%= message.user_id == current_user.id ? 'You' : message.user.display_name %>
             </span>
             <span class="message-time" data-timestamp="<%= message.created_at.iso8601 %>">
               <%= message.created_at.strftime("%b %d, %I:%M %p") %>
@@ -389,7 +389,7 @@
       return `
         <div class="message ${messageClass}" data-message-id="${message.id}">
           <div class="message-header">
-            <span class="message-sender">${isSent ? 'Me' : message.user_name}</span>
+            <span class="message-sender">${isSent ? 'You' : message.user_name}</span>
             <span class="message-time" data-timestamp="${isoTime}">${formattedTime}</span>
           </div>
           <div class="message-body">
