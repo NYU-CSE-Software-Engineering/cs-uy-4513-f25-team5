@@ -44,5 +44,23 @@ class MatchesController < ApplicationController
     redirect_to matches_path, notice: "Match saved to favorites!"
   end
 
+  def liked_listings
+    # Get all matched users
+    matched_user_ids = current_user.matches.pluck(:matched_user_id)
+    
+    # Get listings liked by matched users with the user who liked them
+    @liked_listings = Listing.joins(:liked_listings)
+                             .where(liked_listings: { user_id: matched_user_ids })
+                             .includes(:liked_listings, :user)
+                             .distinct
+    
+    # Create a hash to store which matched users liked each listing
+    @listings_with_likers = {}
+    @liked_listings.each do |listing|
+      likers = listing.liked_by_users.where(id: matched_user_ids)
+      @listings_with_likers[listing.id] = likers
+    end
+  end
+
 end
 

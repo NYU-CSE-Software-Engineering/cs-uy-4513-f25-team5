@@ -12,15 +12,15 @@ class Match < ApplicationRecord
   before_validation :calculate_compatibility_score, if: -> { compatibility_score.nil? }
 
   def self.calculate_compatibility_score(user1, user2)
-    score = 50.0 # Base score
+    score = 40.0 # Base score (reduced to accommodate new factor)
 
-    # Budget compatibility (30% weight)
+    # Budget compatibility (25% weight)
     if user1.budget.present? && user2.budget.present?
       budget_diff = (user1.budget - user2.budget).abs
       budget_avg = (user1.budget + user2.budget) / 2.0
       if budget_avg > 0
         budget_similarity = 1.0 - [budget_diff / budget_avg, 1.0].min
-        score += budget_similarity * 30
+        score += budget_similarity * 25
       end
     end
 
@@ -31,10 +31,10 @@ class Match < ApplicationRecord
       end
     end
 
-    # Sleep schedule compatibility (20% weight)
+    # Sleep schedule compatibility (15% weight)
     if user1.sleep_schedule.present? && user2.sleep_schedule.present?
       if user1.sleep_schedule.downcase == user2.sleep_schedule.downcase
-        score += 20
+        score += 15
       end
     end
 
@@ -42,6 +42,20 @@ class Match < ApplicationRecord
     if user1.pets.present? && user2.pets.present?
       if user1.pets.downcase == user2.pets.downcase
         score += 10
+      end
+    end
+
+    # Common liked listings compatibility (15% weight)
+    user1_liked_ids = user1.liked_listings.pluck(:listing_id)
+    user2_liked_ids = user2.liked_listings.pluck(:listing_id)
+    
+    if user1_liked_ids.any? && user2_liked_ids.any?
+      common_likes = (user1_liked_ids & user2_liked_ids).size
+      total_likes = (user1_liked_ids + user2_liked_ids).uniq.size
+      
+      if total_likes > 0
+        common_ratio = common_likes.to_f / total_likes
+        score += common_ratio * 15
       end
     end
 

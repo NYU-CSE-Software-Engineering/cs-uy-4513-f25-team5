@@ -23,11 +23,14 @@ Rails.application.routes.draw do
   resources :listings, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
     collection do
       get :search
+      get :explore
     end
     member do
       patch :verify, to: 'verification_requests#verify'
       delete 'images/:image_id', to: 'listings#remove_image', as: :remove_image
       patch 'images/:image_id/set_primary', to: 'listings#set_primary_image', as: :set_primary_image
+      post :like
+      delete :unlike
     end
   end
 
@@ -42,6 +45,7 @@ Rails.application.routes.draw do
   resources :matches, only: [:index, :show] do
     collection do
       post :generate, to: 'matches#generate'
+      get :liked_listings
     end
     member do
       post :like, to: 'matches#like'

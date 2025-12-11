@@ -1,8 +1,14 @@
 <p id="notice" class="text-green-600 font-medium mb-2"><%= notice %></p>
 <p id="alert" class="text-red-600 font-medium mb-2"><%= alert %></p>
 <h1 class="text-3xl font-bold mb-6">Potential Matches</h1>
-<div class="actions mb-4">
+<div class="actions mb-4 flex flex-wrap gap-3">
   <%= button_to "Find Matches", generate_matches_path, method: :post, class: "bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded" %>
+  <%= link_to "What Your Matches Liked", liked_listings_matches_path, class: "inline-flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded" do %>
+    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+    </svg>
+    What Your Matches Liked
+  <% end %>
 </div>
 <% if @no_matches_message %>
   <div class="no-matches bg-yellow-100 border-l-4 border-yellow-500 p-4 mb-4">

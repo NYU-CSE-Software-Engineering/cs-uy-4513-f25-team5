@@ -8,6 +8,8 @@ class User < ApplicationRecord
   has_many :messages, dependent: :destroy
   has_many :matches, dependent: :destroy
   has_many :matched_as, class_name: 'Match', foreign_key: 'matched_user_id', dependent: :destroy
+  has_many :liked_listings, dependent: :destroy
+  has_many :liked_listings_records, through: :liked_listings, source: :listing
 
   ROLES = %w[admin member].freeze
 
@@ -44,6 +46,24 @@ class User < ApplicationRecord
     return false if actor == self && admin?
 
     true
+  end
+
+  # Check if user has liked a specific listing
+  def liked?(listing)
+    liked_listings.exists?(listing_id: listing.id)
+  end
+
+  # Get all matched users
+  def matched_users
+    User.where(id: matches.pluck(:matched_user_id))
+  end
+
+  # Get listings liked by matched users
+  def matches_liked_listings
+    matched_user_ids = matches.pluck(:matched_user_id)
+    Listing.joins(:liked_listings)
+           .where(liked_listings: { user_id: matched_user_ids })
+           .distinct
   end
 
   private
